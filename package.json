@@ -1,0 +1,16 @@
+{
+  "name": "hookviz",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "recorder"
+  ],
+  "scripts": {
+    "record": "npm run record --workspace=recorder --",
+    "record:all": "npm run record:all --workspace=recorder"
+  },
+  "allowScripts": {
+    "esbuild@0.24.2": true,
+    "esbuild@0.28.2": true
+  }
+}
