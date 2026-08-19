@@ -6,11 +6,9 @@ import type * as MonacoType from 'monaco-editor';
 import type { Trace, Annotation } from '@/types/trace';
 import { useCodeCursor, useStore } from '@/store';
 
-// Point Monaco loader at the static /monaco/vs assets for offline/deterministic use.
-// We serve monaco-editor from node_modules via Next.js public dir or a custom copy step.
-// For now, use the default CDN loader (safe for v1; offline note documented below).
-// TODO: run `node scripts/copy-monaco.js` to copy monaco assets to public/monaco/vs
-// and then enable: loader.config({ paths: { vs: '/monaco/vs' } });
+// Serve Monaco from /public/monaco/vs (copied from node_modules at setup time)
+// so the editor loads without a CDN fetch and works deterministically.
+loader.config({ paths: { vs: '/monaco/vs' } });
 
 interface Props {
   trace: Trace;
