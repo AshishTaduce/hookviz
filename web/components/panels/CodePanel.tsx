@@ -6,8 +6,21 @@ import type * as MonacoType from 'monaco-editor';
 import type { Trace, Annotation } from '@/types/trace';
 import { useCodeCursor, useStore } from '@/store';
 
-// Serve Monaco from /public/monaco/vs (copied from node_modules at setup time)
-// so the editor loads without a CDN fetch and works deterministically.
+// Serve Monaco from /public/monaco/vs (copied from node_modules at setup time).
+// MonacoEnvironment.getWorkerUrl must return absolute URLs — inside a Web
+// Worker the base URL is blob: (or the worker script URL), so relative paths
+// like /monaco/vs/... can't be resolved by fetch(). Absolute URL fixes it.
+if (typeof window !== 'undefined') {
+  (window as any).MonacoEnvironment = {
+    getWorkerUrl(_moduleId: string, label: string): string {
+      const base = window.location.origin;
+      if (label === 'typescript' || label === 'javascript') {
+        return `${base}/monaco/vs/language/typescript/tsWorker.js`;
+      }
+      return `${base}/monaco/vs/base/worker/workerMain.js`;
+    },
+  };
+}
 loader.config({ paths: { vs: '/monaco/vs' } });
 
 interface Props {
