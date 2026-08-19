@@ -2,3 +2,4 @@ node_modules/
 recorder/.build/
 *.log
 .DS_Store
+.rei/

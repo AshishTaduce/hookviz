@@ -69,17 +69,56 @@ index from stream 1.
 ### Stream 3 — DOM snapshot ("what the user would actually see")
 
 At each `commit`-phase step only (the sole moment DOM actually mutates),
-capture the rendered output via Puppeteer:
+capture the rendered output by reading it straight out of the jsdom instance
+the recorder already renders into, **in-process, no browser**:
 
 ```ts
-const domHTML = await page.evaluate(
-  () => document.getElementById('root')?.outerHTML ?? ''
-);
+const domHTML = document.getElementById('root')?.outerHTML ?? '';
 ```
 
-Stored as `steps[i].dom`, present only on commit steps. The frontend carries
-forward the last known snapshot between commits — no need to store it on
-every step, and no need to snapshot on render/passive-effect steps.
+> **Corrected 2026-08-19 (Marlowe).** Earlier revisions of this section (and
+> doc 04's Claude Code kickoff) specified Puppeteer + `page.evaluate()`. That
+> was stale: there is no browser anywhere in the recorder. React renders into
+> **jsdom** inside a child Node process, driven over CDP against Node's own
+> `--inspect-brk` inspector (see README, "How the recorder actually works").
+> `document` is a live jsdom global in that process — the DOM is directly
+> readable with a synchronous `.outerHTML`, so Puppeteer would add a
+> heavyweight dependency and a *second* JS runtime to reach a DOM we already
+> hold. It is also the wrong tool here: Puppeteer renders in a browser page,
+> but React renders in Node. jsdom's serialization is faithful for our purpose
+> — react-dom drives the DOM through standard DOM APIs, and jsdom serializes
+> the subset React emits (elements, attributes, text, void/boolean attributes)
+> per the HTML spec, the same as a browser. The only divergences are things we
+> never display: computed layout/geometry (jsdom has none) and cosmetic
+> normalization like inline-`style` ordering. The DOM panel shows committed
+> *markup*, so those don't matter. Decision: **jsdom in-process, no Puppeteer.**
+
+**Capture point — the load-bearing subtlety.** Do *not* snapshot at the
+`render-end` boundary the dispatcher emits (`wrapComponent`'s `finally`). That
+fires when the component *function* returns — i.e. during the render phase,
+**before** React reconciles and mutates the DOM. Reading `outerHTML` there
+yields the *previous* commit's markup. Snapshot only *after* commit. The
+recommended mechanism is React's own commit callback, installed alongside the
+dispatcher (`install()`), before `react-dom/client` is imported:
+
+```ts
+globalThis.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
+  supportsFiber: true, isDisabled: false,
+  inject: () => 1, renderers: new Map(),
+  onCommitFiberRoot: () => emit({ t: 'dom', html: document.getElementById('root')?.outerHTML ?? '' }),
+  onCommitFiberUnmount: () => {}, onPostCommitFiberRoot: () => {},
+};
+```
+
+`onCommitFiberRoot` is the canonical "a commit just happened, DOM is updated"
+hook — it is exactly what React DevTools uses, and it fires synchronously
+after the mutation phase. It is a React internal, but a markedly *more* stable
+one than the dispatcher, and it belongs in the same one-file isolation
+(`dispatcher.ts`). `merge.ts` attaches the most-recent `dom` event to the
+synthetic commit step it already inserts on `render-end` (the event arrives
+just after that step is created — see doc 03's merge note). Present only on
+commit steps; the frontend carries forward the last non-null value between
+commits — no need to store it on every step.
 
 This stays fully within the static-recording model: the DOM at a given commit
 is deterministic for a fixed example, so snapshotting it is no different in
@@ -182,8 +221,53 @@ One file per example: `recorder/out/<example-id>.trace.json`
 - **`dom` is null except on commit steps.** Populated from the Stream 3
   snapshot. The frontend carries forward the last non-null value between
   commits rather than re-reading it every step.
-- **`lane`** is null for most hooks; populated for `useTransition` /
-  `useOptimistic` so scheduling priority can be shown deliberately.
+- **`lane`** is null for most steps; populated on the step where a
+  `useTransition` / `useOptimistic` update is *scheduled* so scheduling
+  priority can be shown deliberately. See "Lane / priority capture" below.
+
+### Lane / priority capture (design — Marlowe, 2026-08-19)
+
+Doc 00 commits to capturing lane/priority *explicitly* rather than fighting
+React's non-deterministic concurrent scheduler. The schema had the `lane`
+field but no mechanism. Here is the concrete one.
+
+**Do not read React's internal lane bitmasks.** `fiber.lanes` / root pending
+lanes are numeric, version-specific constants that are meaningless to a
+learner and fragile across React versions — exactly the kind of internal doc
+01 says to isolate, not surface raw. Instead capture the **semantic** lane at
+the *scheduling site*, which the dispatcher already controls by wrapping the
+functions React hands back.
+
+The dispatcher already wraps hook setters (see `wrapSetter` in
+`dispatcher.ts`). Extend that:
+
+- **`useTransition`** returns `[isPending, startTransition]`. Wrap
+  `startTransition`. Inside the wrapper, set a module-level
+  `schedulingLane = 'transition'` (with a nesting depth counter, restored in a
+  `finally`) around the original call. React invokes the passed callback
+  synchronously, so any `setState` fired inside it emits its `enqueue` event
+  while the flag is set. `isPending` is already captured as the hook's
+  memoized value, so the UI can show the pending state for free.
+- **`useOptimistic`** returns `[optimisticState, addOptimistic]`. Wrap
+  `addOptimistic`; its `enqueue` is emitted with `lane = 'optimistic'`.
+- **Normal setters** emit with `lane = schedulingLane ?? null` (i.e. `null` /
+  `'sync'` outside any transition).
+
+Wire-up:
+
+- Extend the `enqueue` `HookEvent` with an optional `lane?: Lane` where
+  `Lane = 'transition' | 'optimistic' | 'sync'`.
+- `merge.ts`: when draining a step's events, if any `enqueue` carries a
+  non-null lane, set `step.lane` to it. (Optional enrichment: the low-priority
+  re-render that results also commits under that lane — the DevTools commit
+  hook's `priorityLevel` arg could tag that commit step too, but the
+  scheduling-site lane is the primary, sufficient signal.)
+
+This is robust (we only ever wrap functions we're given — never read lane
+constants), version-resilient, and localized to `dispatcher.ts` plus one
+optional schema field. `useDeferredValue` also rides transition lanes but
+exposes no schedule function to wrap; its lane surfaces as a low-priority
+re-render and is out of scope for v1 — note it as future work.
 
 ### Schema evolution
 

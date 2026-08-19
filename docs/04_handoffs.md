@@ -187,6 +187,11 @@ CONSTRAINTS:
 
 **Design phase is done (B1/B2/B3) — this is now unblocked.**
 
+> **Corrected 2026-08-19 (Marlowe): this kickoff's Puppeteer instruction was
+> stale** and has been rewritten below. The recorder has no browser — it
+> renders via jsdom in a child Node process. Stream 3 reads the DOM in-process
+> off jsdom, not via Puppeteer. See doc 01, Stream 3.
+
 Point it at the repo. Attach **doc 01 (technical spec)** and **doc 03
 (status)** only — doc 00, 02, and 04 aren't inputs to this task.
 
@@ -194,8 +199,12 @@ Point it at the repo. Attach **doc 01 (technical spec)** and **doc 03
 Working on HookViz — see attached technical spec (01) and status (03).
 
 IMPORTANT: the schema was bumped to v2 today. It now includes meta.annotations
-and steps[i].dom (a DOM snapshot captured on commit-phase steps only, via
-Puppeteer). If any traces exist from before this change, they are schemaVersion
+and steps[i].dom (a DOM snapshot captured on commit-phase steps only). The
+recorder renders via jsdom in-process (no browser), so the snapshot is a
+synchronous read — document.getElementById('root').outerHTML — NOT a Puppeteer
+page.evaluate(). Capture it on React's commit callback, not at render-end (that
+fires pre-commit and gives stale markup). See doc 01, Stream 3, for the exact
+mechanism. If any traces exist from before this change, they are schemaVersion
 1 and are missing both fields — don't treat them as valid without re-recording.
 
 FIRST TASK, before writing any new recorder code:
@@ -213,8 +222,9 @@ forward-compat rule 4 — it's the single coupling to the deferred live-executio
 milestone, cheap now and expensive later.
 
 SECOND TASK: implement Stream 3 (DOM snapshot capture) per doc 01 — on
-commit-phase steps only, via page.evaluate() reading the root element's
-outerHTML.
+commit-phase steps only, reading document.getElementById('root').outerHTML
+directly off the in-process jsdom instance, triggered by React's commit
+callback (__REACT_DEVTOOLS_GLOBAL_HOOK__.onCommitFiberRoot). No Puppeteer.
 
 THEN, verify current state and report back:
 1. Does a schema-v2 trace JSON exist in recorder/out/? Show me one.

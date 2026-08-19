@@ -9,8 +9,9 @@
 > **When updating project knowledge, replace this file. Leave 00–02 alone
 > unless a real decision changed.**
 >
-> **Last updated: 2026-08-17 (later same day — design pass complete, doc 02
-> updated in place, Claude Code kickoff unblocked)**
+> **Last updated: 2026-08-19 (Marlowe — Phase 1 recorder-architecture pass:
+> Stream 3 = jsdom in-process not Puppeteer; lane/priority capture designed;
+> merge.ts confirmed to absorb schema-v2 additively, no redesign)**
 
 ---
 
@@ -39,10 +40,10 @@ policy in doc 01.
 | UI layout decided | ✅ Done — main visualizer screen, DOM panel, annotation layer, experience toggle, and breadcrumb popover navigation all decided |
 | Visual design | ✅ **Done.** Main visualizer screen (B1/B2) plus breadcrumb popover (B3) — see doc 04 section B. No landing/explainer page designed — explicitly out of scope, see doc 00. |
 | Repo scaffold | 🟡 Reference scaffold exists — see caveat below |
-| CDP stepper (`stepper.ts`) | ❓ Reported as "initial recordings done" — needs verification against schema v2 |
-| Dispatcher instrumentation | ❓ Unknown |
-| DOM snapshot capture (Stream 3) | ⬜ Not started — new in schema v2 |
-| Merge + trace output | ❓ Unknown |
+| CDP stepper (`stepper.ts`) | ✅ Working — CDP against Node's `--inspect-brk`, jsdom render, statement breakpoints, React frames blackboxed. Two v1 traces committed (`usestate-counter`, `useeffect-stale-closure`). |
+| Dispatcher instrumentation | ✅ Working — wraps `ReactSharedInternals.H`, records hooks/enqueues/effects. Lane capture NOT yet wired (design now exists, doc 01). |
+| DOM snapshot capture (Stream 3) | ⬜ Not started — design settled: jsdom in-process read on React's commit hook, no Puppeteer (doc 01). |
+| Merge + trace output | ✅ Working for v1 — index-merge + `changed` diff + note extraction. Confirmed to absorb v2 fields additively (see merge.ts finding below). |
 | First validated trace JSON (schema v2) | ⬜ Not started |
 | Web scaffold | ⬜ Not started — **blocked on validated schema-v2 trace, not on design** (design is no longer the blocker) |
 | Panels | ⬜ Not started |
@@ -67,6 +68,37 @@ schemaVersion 1** and does not have DOM snapshots or annotations. It needs
 re-recording once the recorder implements Stream 3 (DOM capture). Don't build
 frontend panels against v1 traces.
 
+### ✅ merge.ts absorbs schema v2 additively — no redesign (Marlowe, 2026-08-19)
+
+Checked whether `merge.ts` needs structural change to carry `dom` +
+`annotations` + `schemaVersion: 2`. It does not. All three are additive:
+
+- **`dom`** — merge already inserts the synthetic commit step on `render-end`.
+  The `dom` event arrives from the child *just after* that step is created
+  (commit is post-`render-end`; see doc 01, Stream 3). Handling: keep a
+  reference to the last-created synthetic commit snapshot and patch its `.dom`
+  when the `dom` event drains. That's a pointer + one new event case, not a
+  restructure. Non-commit steps leave `dom` unset; the frontend carries the
+  last value forward. The dedup pass and `changed`-diff logic don't touch
+  `dom` (it's carried, not diffed), so they're unaffected.
+- **`lane`** — a per-step scalar set when a drained `enqueue` event carries a
+  non-null lane (doc 01, "Lane / priority capture"). Additive; doesn't
+  interact with dedup or diffing.
+- **`meta.annotations`** — per-*example*, not per-step, so it never enters the
+  step-merge loop at all. It's produced by an independent source pass and
+  attached to the returned `meta`. Note: `parseAnnotations` today extracts
+  only `// @note` (per-step notes) and `@title`/`@hook` meta — it does **not**
+  yet produce the richer `meta.annotations[]` markers (comment / function-decl
+  / side-effect / closure). That extractor is new work, but it lives in meta
+  assembly, not the merge loop.
+- **`schemaVersion` (+ `category`)** — plain `meta` constants. Add both to the
+  `TraceMeta` type (`types.ts` currently has neither, nor `annotations`) and
+  set `schemaVersion: 2` in `record.ts`'s meta object.
+
+Bottom line for Finch: implement these as additions to the existing merge, not
+a rewrite. The only ordering subtlety is the `dom` patch-after-commit-step,
+noted above.
+
 ### ⚠️ Scaffold caveat (unchanged)
 
 A reference scaffold was generated (workspaces, package.json files, tsconfig,
@@ -83,8 +115,8 @@ only — do not copy its `instrument/*.ts` files over working code.
    doesn't alter its scope.
 2. **Check the recorder's entry point signature.** Source string vs. file
    path — refactor now if needed (doc 01 forward-compat rule 4).
-3. **Implement Stream 3 (DOM snapshot capture)** — Puppeteer, commit-phase
-   steps only.
+3. **Implement Stream 3 (DOM snapshot capture)** — jsdom in-process read on
+   React's commit hook, commit-phase steps only. NOT Puppeteer (doc 01).
 4. **Re-verify recorder output against schema v2** — `dom` populated on
    commit steps, `meta.annotations` present (even if empty), `schemaVersion:
    2` present.
@@ -104,11 +136,14 @@ out of scope. Breadcrumb navigation is an in-place popover, not a page.
 ## Open questions
 
 **Technical**
-- Does the current recorder output match the doc 01 schema, or did it
-  diverge?
-- Is `lane` / priority capture implemented for concurrent hooks, or
-  deferred?
-- Is `schemaVersion: 2` actually present in the recorder's output yet?
+- ~~Does the current recorder output match the doc 01 schema?~~ **Answered
+  (Marlowe 2026-08-19):** the two committed traces are schemaVersion 1 —
+  no `schemaVersion`, `dom`, `lane`, or `annotations`, and `meta` lacks
+  `category`. Structurally sound otherwise; needs re-recording after Stream 3.
+- ~~Is `lane` / priority capture implemented?~~ **Not implemented; design now
+  exists** (doc 01, "Lane / priority capture"). Deferred to Phase 2 (Finch).
+- ~~Is `schemaVersion: 2` present in output?~~ **No** — still v1. Add to
+  `TraceMeta` and set in `record.ts`.
 
 **Product**
 - Final v1 hook list not locked. Candidate order: `useState`, `useEffect`,
@@ -144,3 +179,7 @@ Append here when something changes, so the reason survives.
 | 2026-08-17 (later still) | **Breadcrumb navigation resolved as an anchored popover, not a page.** Request for a "home page" was flagged against doc 00/02's explicit out-of-scope listing; popover satisfies the actual need (browsing examples) without reopening that decision. | Landing/explainer page stays deferred; popover reuses the VS Code breadcrumb convention already chosen as the aesthetic reference and can share the `⌘K` list component |
 | 2026-08-17 (later still) | **Visual design phase marked done for v1** — main screen (B1/B2) + breadcrumb popover (B3) | Recorder/schema work is now the sole critical path per doc 01's build order |
 | 2026-08-17 (later still) | **Doc 02 updated in place** with the decided Navigation section (was previously an addendum, now merged into the canonical doc) | Doc 02 is the design source of truth and should reflect decisions directly, not via a separate patch file |
+| 2026-08-19 | **Stream 3 DOM capture: jsdom in-process read, not Puppeteer** (Marlowe) | Recorder renders in jsdom in a child Node process — no browser exists. `document` is a live global; `outerHTML` is a synchronous in-process read. Puppeteer would add a heavyweight dep + a second runtime to reach a DOM we already hold, and renders in the wrong place (browser vs Node). jsdom serialization is faithful for displaying committed markup. |
+| 2026-08-19 | **DOM snapshot fires on React's commit callback (`onCommitFiberRoot`), not at `render-end`** (Marlowe) | `render-end` is emitted when the component function returns — pre-commit — so `outerHTML` there is the previous commit's markup. `onCommitFiberRoot` is the canonical post-mutation hook. |
+| 2026-08-19 | **Lane/priority captured semantically at the scheduling site by wrapping `startTransition`/`addOptimistic`, not by reading React lane bitmasks** (Marlowe) | Raw lane constants are numeric, version-specific, and meaningless to learners. Wrapping the scheduler functions we're already handed is robust and version-resilient. |
+| 2026-08-19 | **merge.ts absorbs `dom` + `lane` + `annotations` + `schemaVersion` additively — no redesign** (Marlowe) | All three slot into the existing index-merge; only subtlety is patching `dom` onto the synthetic commit step after it's created. See merge.ts finding above. |
