@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 import catalog from '@/lib/catalog';
 import { getPhaseSegments, PHASE_COLORS } from '@/lib/phase-segments';
 import type { Trace } from '@/types/trace';
@@ -29,11 +30,13 @@ function MiniTimeline({ traceId }: { traceId: string }) {
 }
 
 export default function BreadcrumbPopover() {
-  const { breadcrumbPopover, closePopover, trace } = useStore((s) => ({
-    breadcrumbPopover: s.breadcrumbPopover,
-    closePopover: s.closePopover,
-    trace: s.trace,
-  }));
+  const { breadcrumbPopover, closePopover, trace } = useStore(
+    useShallow((s) => ({
+      breadcrumbPopover: s.breadcrumbPopover,
+      closePopover: s.closePopover,
+      trace: s.trace,
+    }))
+  );
   const router = useRouter();
   const popoverRef = useRef<HTMLDivElement>(null);
 

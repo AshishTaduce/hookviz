@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import type { Trace } from '@/types/trace';
 import { useStore, useStepNote } from '@/store';
+import { useShallow } from 'zustand/react/shallow';
 import { getPhaseSegments, PHASE_COLORS, PHASE_LABELS } from '@/lib/phase-segments';
 import type { PhaseSegment } from '@/types/trace';
 
@@ -14,13 +15,15 @@ export default function Player({ trace }: Props) {
   const stepIndex = useStore((s) => s.stepIndex);
   const isPlaying = useStore((s) => s.isPlaying);
   const speed = useStore((s) => s.speed);
-  const { prev, next, toggle, seek, setSpeed } = useStore((s) => ({
-    prev: s.prev,
-    next: s.next,
-    toggle: s.toggle,
-    seek: s.seek,
-    setSpeed: s.setSpeed,
-  }));
+  const { prev, next, toggle, seek, setSpeed } = useStore(
+    useShallow((s) => ({
+      prev: s.prev,
+      next: s.next,
+      toggle: s.toggle,
+      seek: s.seek,
+      setSpeed: s.setSpeed,
+    }))
+  );
   const note = useStepNote();
   const audience = useStore((s) => s.audience);
 
