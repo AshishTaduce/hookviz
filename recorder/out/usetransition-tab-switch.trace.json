@@ -1,0 +1,1623 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usetransition-tab-switch",
+    "title": "useTransition — marking an update low priority",
+    "hook": "useTransition",
+    "category": "usetransition",
+    "reactVersion": "19.2.8",
+    "source": "// @title useTransition — marking an update low priority\n// @hook useTransition\nimport { useState, useTransition } from 'react';\n\nexport default function TabSwitcher() {\n  const [tab, setTab] = useState('home');\n  // @annotate:comment Concurrent hook | isPending tells you a transition is still in flight; startTransition is the scheduling handle.\n  const [isPending, startTransition] = useTransition();\n\n  // @note startTransition marks the update inside it as low priority — React can interrupt or defer it for more urgent work.\n  const selectTab = (next: string) => {\n    startTransition(() => {\n      setTab(next);\n    });\n  };\n\n  return (\n    <div>\n      <span id=\"tab\">{isPending ? 'pending' : tab}</span>\n      <button id=\"about\" onClick={() => selectTab('about')}>\n        about\n      </button>\n    </div>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#about');\n};\n",
+    "annotations": [
+      {
+        "line": 8,
+        "type": "comment",
+        "label": "Concurrent hook",
+        "detail": "isPending tells you a transition is still in flight; startTransition is the scheduling handle."
+      }
+    ],
+    "recordedAt": "2026-08-19T04:16:23.320Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "startTransition marks the update inside it as low priority — React can interrupt or defer it for more urgent work."
+    },
+    {
+      "i": 3,
+      "line": 17,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 23,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><span id=\"tab\">home</span><button id=\"about\">about</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 9,
+      "line": 20,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 12,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "next",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 13,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "next",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 14,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "next",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [
+            "\"about\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": "transition"
+    },
+    {
+      "i": 13,
+      "line": 15,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "next",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [
+            "\"about\""
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 20,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [
+            "\"about\""
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "startTransition marks the update inside it as low priority — React can interrupt or defer it for more urgent work."
+    },
+    {
+      "i": 18,
+      "line": 17,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"home\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 23,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><span id=\"tab\">pending</span><button id=\"about\">about</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 24,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"home\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"about\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"about\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "startTransition marks the update inside it as low priority — React can interrupt or defer it for more urgent work."
+    },
+    {
+      "i": 27,
+      "line": 17,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"about\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"about\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"about\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"about\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 31,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "tab",
+          "value": "\"about\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "selectTab",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"about\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    }
+  ]
+}

@@ -27,7 +27,7 @@
         "detail": "increment closes over count from this render; calling it later still uses the value captured at definition time, not whatever count is by then."
       }
     ],
-    "recordedAt": "2026-08-19T01:31:20.648Z"
+    "recordedAt": "2026-08-19T04:16:19.300Z"
   },
   "steps": [
     {
@@ -587,7 +587,7 @@
           "status": "scheduled"
         }
       ],
-      "dom": null,
+      "dom": "<div id=\"root\"><div><span id=\"count\">0</span><button id=\"inc\">increment</button></div></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
@@ -1690,7 +1690,7 @@
           "status": "cleanup-pending"
         }
       ],
-      "dom": null,
+      "dom": "<div id=\"root\"></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."

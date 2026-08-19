@@ -39,9 +39,12 @@ defineGlobal('IS_REACT_ACT_ENVIRONMENT', true);
 
 const { install } = await import('./dispatcher.js');
 const React = await import('react');
-const { createRoot } = await import('react-dom/client');
-
+// `install()` must run before `react-dom/client` is imported: react-dom reads
+// `__REACT_DEVTOOLS_GLOBAL_HOOK__` into a module-level `isDevToolsPresent` flag
+// at import time, and every onCommitRoot() call is gated behind that flag —
+// installing the shim later means it's never seen, so DOM events never fire.
 const hookviz = install();
+const { createRoot } = await import('react-dom/client');
 
 const exampleModule = await import(pathToFileURL(compiledExamplePath).href);
 const Component = hookviz.wrapComponent(exampleModule.default);
