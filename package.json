@@ -3,7 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "workspaces": [
-    "recorder"
+    "recorder",
+    "web"
   ],
   "scripts": {
     "record": "npm run record --workspace=recorder --",

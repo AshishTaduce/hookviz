@@ -1,0 +1,137 @@
+/* HookViz global styles — VS Code dark+ vibe */
+
+:root {
+  --bg-base: #1e1e1e;
+  --bg-surface: #252526;
+  --bg-elevated: #2d2d2d;
+  --bg-hover: #2a2d2e;
+  --border: #3c3c3c;
+  --border-focus: #007fd4;
+
+  --text-primary: #cccccc;
+  --text-secondary: #9d9d9d;
+  --text-muted: #6a6a6a;
+  --text-inverse: #1e1e1e;
+
+  /* Phase colors */
+  --phase-render: #3b82f6;
+  --phase-commit: #f59e0b;
+  --phase-passive-effect: #22c55e;
+  --phase-event: #a855f7;
+  --phase-idle: #6b7280;
+
+  /* Accent */
+  --accent: #007fd4;
+  --accent-hover: #1a90e5;
+
+  /* Change highlight */
+  --changed-bg: rgba(255, 200, 0, 0.15);
+  --changed-border: rgba(255, 200, 0, 0.6);
+
+  --mono: 'Consolas', 'Menlo', 'Monaco', 'Cascadia Code', 'Courier New', monospace;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --nav-height: 40px;
+  --player-height: 80px;
+  --panel-border: 1px solid var(--border);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Change highlight animation */
+@keyframes changed-flash {
+  0%   { background: var(--changed-bg); border-color: var(--changed-border); }
+  60%  { background: var(--changed-bg); border-color: var(--changed-border); }
+  100% { background: transparent; border-color: transparent; }
+}
+
+.changed-row {
+  animation: changed-flash 600ms ease-out forwards;
+  border-left: 2px solid transparent;
+  padding-left: 4px;
+  margin-left: -6px;
+}
+
+/* DOM flash */
+@keyframes dom-flash {
+  0%   { outline: 2px solid var(--phase-commit); outline-offset: -2px; }
+  70%  { outline: 2px solid var(--phase-commit); outline-offset: -2px; }
+  100% { outline: 2px solid transparent; outline-offset: -2px; }
+}
+
+.dom-flash {
+  animation: dom-flash 500ms ease-out forwards;
+}
+
+/* Panel headers */
+.panel-header {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 10px;
+  background: var(--bg-surface);
+  border-bottom: var(--panel-border);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* Monospace used in all data panels */
+.mono {
+  font-family: var(--mono);
+}
+
+/* Phase badge */
+.phase-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--mono);
+}
+
+.phase-render       { background: rgba(59, 130, 246, 0.2); color: var(--phase-render); }
+.phase-commit       { background: rgba(245, 158, 11, 0.2); color: var(--phase-commit); }
+.phase-passive-effect { background: rgba(34, 197, 94, 0.2); color: var(--phase-passive-effect); }
+.phase-event        { background: rgba(168, 85, 247, 0.2); color: var(--phase-event); }
+.phase-idle         { background: rgba(107, 114, 128, 0.2); color: var(--phase-idle); }
+
+/* Effect status badges */
+.effect-scheduled    { color: #f59e0b; }
+.effect-fired        { color: #22c55e; }
+.effect-cleanup-pending { color: #f97316; }
+.effect-cleaned-up   { color: #6b7280; }
+
+/* Annotation glyph marker shapes via CSS */
+.hv-annot { display: inline-block; width: 10px; height: 10px; }
+.hv-annot-comment       { background: #9d9d9d; border-radius: 2px; }
+.hv-annot-function-decl { background: #4fc1ff; border-radius: 50%; }
+.hv-annot-side-effect   { background: #f59e0b; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+.hv-annot-closure       { background: #a855f7; border-radius: 2px; transform: rotate(45deg); }
