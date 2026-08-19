@@ -1,26 +1,50 @@
 {
   "meta": {
+    "schemaVersion": 2,
     "id": "usestate-counter",
     "title": "useState — basic counter",
     "hook": "useState",
+    "category": "usestate",
     "reactVersion": "19.2.8",
-    "source": "// @title useState — basic counter\n// @hook useState\nimport { useState, useEffect } from 'react';\n\nexport default function Counter() {\n  // @note useState returns the current value and a setter. On mount it returns the initial value.\n  const [count, setCount] = useState(0);\n  const [step] = useState(1);\n\n  // @note This effect is scheduled during render but only fires after commit.\n  useEffect(() => {\n    document.title = `Count: ${count}`;\n    return () => {\n      document.title = 'cleaned up';\n    };\n  }, [count]);\n\n  // @note `count` here is captured from this render's closure — it never changes mid-render.\n  const increment = () => {\n    setCount(count + step);\n  };\n\n  return (\n    <div>\n      <span id=\"count\">{count}</span>\n      <button id=\"inc\" onClick={increment}>\n        increment\n      </button>\n    </div>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#inc');\n  click('#inc');\n};\n",
-    "recordedAt": "2026-08-16T21:24:40.424Z"
+    "source": "// @title useState — basic counter\n// @hook useState\nimport { useState, useEffect } from 'react';\n\n// @annotate:function-decl Component declaration | Counter is a function component — it re-runs top to bottom on every render.\nexport default function Counter() {\n  // @note useState returns the current value and a setter. On mount it returns the initial value.\n  const [count, setCount] = useState(0);\n  const [step] = useState(1);\n\n  // @note This effect is scheduled during render but only fires after commit.\n  // @annotate:side-effect document.title assignment | Mutating document.title directly reaches outside React's render output — a side effect, which is exactly why it's fenced inside useEffect instead of the component body.\n  useEffect(() => {\n    document.title = `Count: ${count}`;\n    return () => {\n      document.title = 'cleaned up';\n    };\n  }, [count]);\n\n  // @note `count` here is captured from this render's closure — it never changes mid-render.\n  // @annotate:closure Closure over count | increment closes over count from this render; calling it later still uses the value captured at definition time, not whatever count is by then.\n  const increment = () => {\n    setCount(count + step);\n  };\n\n  return (\n    <div>\n      <span id=\"count\">{count}</span>\n      <button id=\"inc\" onClick={increment}>\n        increment\n      </button>\n    </div>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#inc');\n  click('#inc');\n};\n",
+    "annotations": [
+      {
+        "line": 6,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "Counter is a function component — it re-runs top to bottom on every render."
+      },
+      {
+        "line": 13,
+        "type": "side-effect",
+        "label": "document.title assignment",
+        "detail": "Mutating document.title directly reaches outside React's render output — a side effect, which is exactly why it's fenced inside useEffect instead of the component body."
+      },
+      {
+        "line": 22,
+        "type": "closure",
+        "label": "Closure over count",
+        "detail": "increment closes over count from this render; calling it later still uses the value captured at definition time, not whatever count is by then."
+      }
+    ],
+    "recordedAt": "2026-08-19T01:31:20.648Z"
   },
   "steps": [
     {
       "i": 0,
-      "line": 7,
+      "line": 8,
       "phase": "render",
       "renderCount": 1,
       "variables": [],
       "hooks": [],
       "effects": [],
+      "dom": null,
+      "lane": null,
       "note": "useState returns the current value and a setter. On mount it returns the initial value."
     },
     {
       "i": 1,
-      "line": 8,
+      "line": 9,
       "phase": "render",
       "renderCount": 1,
       "variables": [
@@ -47,11 +71,13 @@
           "changed": true
         }
       ],
-      "effects": []
+      "effects": [],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 2,
-      "line": 11,
+      "line": 13,
       "phase": "render",
       "renderCount": 1,
       "variables": [
@@ -93,11 +119,13 @@
         }
       ],
       "effects": [],
+      "dom": null,
+      "lane": null,
       "note": "This effect is scheduled during render but only fires after commit."
     },
     {
       "i": 3,
-      "line": 19,
+      "line": 22,
       "phase": "render",
       "renderCount": 1,
       "variables": [
@@ -157,148 +185,12 @@
           "status": "scheduled"
         }
       ],
+      "dom": null,
+      "lane": null,
       "note": "`count` here is captured from this render's closure — it never changes mid-render."
     },
     {
       "i": 4,
-      "line": 23,
-      "phase": "render",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "count",
-          "value": "0",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setCount",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "step",
-          "value": "1",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "increment",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": true
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "0"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e2",
-          "deps": [
-            "0"
-          ],
-          "status": "scheduled"
-        }
-      ]
-    },
-    {
-      "i": 5,
-      "line": 25,
-      "phase": "render",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "count",
-          "value": "0",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setCount",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "step",
-          "value": "1",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "increment",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "0"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e2",
-          "deps": [
-            "0"
-          ],
-          "status": "scheduled"
-        }
-      ]
-    },
-    {
-      "i": 6,
       "line": 26,
       "phase": "render",
       "renderCount": 1,
@@ -325,6 +217,77 @@
           "name": "increment",
           "value": "ƒ anonymous()",
           "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "0"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "step",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "increment",
+          "value": "ƒ anonymous()",
+          "kind": "function",
           "changed": false
         }
       ],
@@ -364,11 +327,84 @@
           ],
           "status": "scheduled"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "step",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "increment",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "0"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 7,
-      "line": 24,
+      "line": 27,
       "phase": "render",
       "renderCount": 1,
       "variables": [
@@ -433,11 +469,13 @@
           ],
           "status": "scheduled"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 8,
-      "line": 29,
+      "line": 32,
       "phase": "render",
       "renderCount": 1,
       "variables": [
@@ -502,11 +540,13 @@
           ],
           "status": "scheduled"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 9,
-      "line": 29,
+      "line": 32,
       "phase": "commit",
       "renderCount": 1,
       "variables": [],
@@ -547,12 +587,14 @@
           "status": "scheduled"
         }
       ],
+      "dom": null,
+      "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
     },
     {
       "i": 10,
-      "line": 12,
+      "line": 14,
       "phase": "passive-effect",
       "renderCount": 1,
       "variables": [
@@ -611,73 +653,12 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 11,
-      "line": 13,
-      "phase": "passive-effect",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "count",
-          "value": "0",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setCount",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "step",
-          "value": "1",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "0"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e2",
-          "deps": [
-            "0"
-          ],
-          "status": "fired"
-        }
-      ]
-    },
-    {
-      "i": 12,
       "line": 15,
       "phase": "passive-effect",
       "renderCount": 1,
@@ -737,11 +718,78 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 17,
+      "phase": "passive-effect",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "step",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "0"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 13,
-      "line": 20,
+      "line": 23,
       "phase": "event",
       "renderCount": 1,
       "variables": [
@@ -800,11 +848,13 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 14,
-      "line": 21,
+      "line": 24,
       "phase": "event",
       "renderCount": 1,
       "variables": [
@@ -865,11 +915,13 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 15,
-      "line": 20,
+      "line": 23,
       "phase": "event",
       "renderCount": 1,
       "variables": [
@@ -930,11 +982,13 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 16,
-      "line": 21,
+      "line": 24,
       "phase": "event",
       "renderCount": 1,
       "variables": [
@@ -996,11 +1050,13 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 17,
-      "line": 7,
+      "line": 8,
       "phase": "render",
       "renderCount": 2,
       "variables": [],
@@ -1041,11 +1097,13 @@
           "status": "fired"
         }
       ],
+      "dom": null,
+      "lane": null,
       "note": "useState returns the current value and a setter. On mount it returns the initial value."
     },
     {
       "i": 18,
-      "line": 8,
+      "line": 9,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -1098,11 +1156,13 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 19,
-      "line": 11,
+      "line": 13,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -1162,11 +1222,13 @@
           "status": "fired"
         }
       ],
+      "dom": null,
+      "lane": null,
       "note": "This effect is scheduled during render but only fires after commit."
     },
     {
       "i": 20,
-      "line": 19,
+      "line": 22,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -1226,148 +1288,12 @@
           "status": "cleanup-pending"
         }
       ],
+      "dom": null,
+      "lane": null,
       "note": "`count` here is captured from this render's closure — it never changes mid-render."
     },
     {
       "i": 21,
-      "line": 23,
-      "phase": "render",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "count",
-          "value": "1",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setCount",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "step",
-          "value": "1",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "increment",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": true
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "1"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e2",
-          "deps": [
-            "1"
-          ],
-          "status": "cleanup-pending"
-        }
-      ]
-    },
-    {
-      "i": 22,
-      "line": 25,
-      "phase": "render",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "count",
-          "value": "1",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setCount",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "step",
-          "value": "1",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "increment",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "1"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e2",
-          "deps": [
-            "1"
-          ],
-          "status": "cleanup-pending"
-        }
-      ]
-    },
-    {
-      "i": 23,
       "line": 26,
       "phase": "render",
       "renderCount": 2,
@@ -1394,6 +1320,77 @@
           "name": "increment",
           "value": "ƒ anonymous()",
           "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "1"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "1"
+          ],
+          "status": "cleanup-pending"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "step",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "increment",
+          "value": "ƒ anonymous()",
+          "kind": "function",
           "changed": false
         }
       ],
@@ -1433,11 +1430,84 @@
           ],
           "status": "cleanup-pending"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "step",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "increment",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "1"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "1"
+          ],
+          "status": "cleanup-pending"
+        }
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 24,
-      "line": 24,
+      "line": 27,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -1502,11 +1572,13 @@
           ],
           "status": "cleanup-pending"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 25,
-      "line": 29,
+      "line": 32,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -1571,11 +1643,13 @@
           ],
           "status": "cleanup-pending"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 26,
-      "line": 29,
+      "line": 32,
       "phase": "commit",
       "renderCount": 2,
       "variables": [],
@@ -1616,12 +1690,14 @@
           "status": "cleanup-pending"
         }
       ],
+      "dom": null,
+      "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
     },
     {
       "i": 27,
-      "line": 14,
+      "line": 16,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -1680,11 +1756,13 @@
           ],
           "status": "cleaned-up"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 28,
-      "line": 15,
+      "line": 17,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -1743,11 +1821,13 @@
           ],
           "status": "cleaned-up"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 29,
-      "line": 12,
+      "line": 14,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -1806,11 +1886,13 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 30,
-      "line": 13,
+      "line": 15,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -1869,11 +1951,13 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 31,
-      "line": 15,
+      "line": 17,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -1932,11 +2016,13 @@
           ],
           "status": "fired"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 32,
-      "line": 14,
+      "line": 16,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -1995,11 +2081,13 @@
           ],
           "status": "cleaned-up"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 33,
-      "line": 15,
+      "line": 17,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -2058,7 +2146,9 @@
           ],
           "status": "cleaned-up"
         }
-      ]
+      ],
+      "dom": null,
+      "lane": null
     }
   ]
 }

@@ -2,6 +2,18 @@ export type Phase = 'render' | 'commit' | 'passive-effect' | 'idle' | 'event';
 
 export type EffectStatus = 'scheduled' | 'fired' | 'cleanup-pending' | 'cleaned-up';
 
+/** Semantic scheduling priority, captured at the call site — never a React lane bitmask. See dispatcher.ts. */
+export type Lane = 'transition' | 'optimistic';
+
+export type AnnotationType = 'comment' | 'function-decl' | 'side-effect' | 'closure';
+
+export interface Annotation {
+  line: number;
+  type: AnnotationType;
+  label: string;
+  detail: string;
+}
+
 export interface Variable {
   name: string;
   value: string;
@@ -40,15 +52,24 @@ export interface Step {
    * breakpoint can fire — but the phase still has to be visible in the player.
    */
   synthetic?: boolean;
+  /** Rendered markup, set only on commit-phase steps. See Stream 3 in doc 01. */
+  dom?: string | null;
+  /** Set on the step where a useTransition/useOptimistic update is scheduled; null otherwise. */
+  lane?: Lane | null;
 }
 
 export interface TraceMeta {
+  schemaVersion: number;
   id: string;
   title: string;
   hook: string;
+  /** Groups examples for breadcrumb navigation — the hook name lowercased by default. */
+  category: string;
   reactVersion: string;
   source: string;
   recordedAt: string;
+  /** Hand-authored, line-anchored markers. Optional — an unannotated example still works. */
+  annotations?: Annotation[];
 }
 
 export interface Trace {
@@ -64,9 +85,10 @@ export type HookEvent =
   | { t: 'render-start'; renderCount: number }
   | { t: 'render-end' }
   | { t: 'hook'; index: number; hookType: string; memoized: string; deps: string[] | null }
-  | { t: 'enqueue'; index: number; update: string }
+  | { t: 'enqueue'; index: number; update: string; lane?: Lane | null }
   | { t: 'effect-scheduled'; id: string; deps: string[] | null }
   | { t: 'effect-fired'; id: string }
   | { t: 'effect-cleanup-pending'; id: string }
   | { t: 'effect-cleaned-up'; id: string }
-  | { t: 'phase'; phase: Phase };
+  | { t: 'phase'; phase: Phase }
+  | { t: 'dom'; html: string };

@@ -18,13 +18,23 @@ export interface CompiledExample {
   rawSourceMap: string;
 }
 
-export async function compileExample(id: string): Promise<CompiledExample> {
+/**
+ * Compiles example source held in memory — the live-mode-facing path (doc 01
+ * forward-compat rule 4). `resolveDir` anchors relative imports the same way a
+ * real file on disk would; examples/ have none today, but user-submitted
+ * source in live mode might.
+ */
+export async function compileSource(id: string, source: string, resolveDir = EXAMPLES_DIR): Promise<CompiledExample> {
   await mkdir(BUILD_DIR, { recursive: true });
-  const sourcePath = path.join(EXAMPLES_DIR, `${id}.tsx`);
   const outPath = path.join(BUILD_DIR, `${id}.js`);
 
   await esbuild.build({
-    entryPoints: [sourcePath],
+    stdin: {
+      contents: source,
+      sourcefile: `${id}.tsx`,
+      loader: 'tsx',
+      resolveDir,
+    },
     outfile: outPath,
     bundle: false,
     format: 'esm',
@@ -39,11 +49,18 @@ export async function compileExample(id: string): Promise<CompiledExample> {
 
   return {
     id,
-    sourcePath,
+    sourcePath: path.join(resolveDir, `${id}.tsx`),
     outPath,
-    source: await readFile(sourcePath, 'utf8'),
+    source,
     rawSourceMap: await readFile(`${outPath}.map`, 'utf8'),
   };
+}
+
+/** Thin file-reading wrapper over `compileSource` for the on-disk `examples/` set. */
+export async function compileExample(id: string): Promise<CompiledExample> {
+  const sourcePath = path.join(EXAMPLES_DIR, `${id}.tsx`);
+  const source = await readFile(sourcePath, 'utf8');
+  return compileSource(id, source);
 }
 
 export async function compileRunner(): Promise<string> {
