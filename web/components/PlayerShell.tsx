@@ -68,13 +68,14 @@ export default function PlayerShell({ trace }: Props) {
           borderBottom: 'var(--panel-border)',
         }}
       >
-        {/* Left: Code panel */}
+        {/* Left: Code panel — height:100% needed so Monaco's height="100%" resolves */}
         <div
           style={{
             borderRight: 'var(--panel-border)',
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
+            height: '100%',
           }}
         >
           <CodePanel trace={trace} />
