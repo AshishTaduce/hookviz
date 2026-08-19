@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import type { Trace } from '@/types/trace';
 import { useStore } from '@/store';
 import TopNav from '@/components/TopNav';
-import CodePanel from '@/components/panels/CodePanel';
+// Monaco is browser-only — dynamic import with ssr:false prevents Next.js
+// from attempting to server-render it (which would fail and break chunking).
+const CodePanel = dynamic(() => import('@/components/panels/CodePanel'), { ssr: false });
 import DomPanel from '@/components/panels/DomPanel';
 import HooksPanel from '@/components/panels/HooksPanel';
 import EffectsPanel from '@/components/panels/EffectsPanel';
