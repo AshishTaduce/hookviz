@@ -196,10 +196,13 @@ export const useStore = create<StoreState>()(
 // (useShallow on array-valued selectors; scalar ones use default ref equality)
 // ---------------------------------------------------------------------------
 
+// useShallow on every selector that returns an object or array — Zustand's
+// useSyncExternalStore requires getSnapshot to return a stable reference, or
+// React will loop infinitely detecting a "new" value on every render.
 export const useCurrentStep = () =>
-  useStore((s) =>
+  useStore(useShallow((s) =>
     s.mode === 'replay' && s.trace ? s.trace.steps[s.stepIndex] : null
-  );
+  ));
 
 export const useDomHtml = () =>
   useStore((s) => s.trace?.steps[s.stepIndex]?.dom ?? null);
@@ -214,10 +217,10 @@ export const useVariables = () =>
   useStore(useShallow((s) => s.trace?.steps[s.stepIndex]?.variables));
 
 export const useCodeCursor = () =>
-  useStore((s) => {
+  useStore(useShallow((s) => {
     const st = s.trace?.steps[s.stepIndex];
     return st ? { line: st.line, phase: st.phase } : null;
-  });
+  }));
 
 export const useStepNote = () =>
   useStore((s) => s.trace?.steps[s.stepIndex]?.note ?? null);
