@@ -17,6 +17,9 @@ export default function TopNav({ trace }: Props) {
   // Derive a short example label from title (strip the "hook — " prefix)
   const exampleLabel = title.replace(/^[^—]+—\s*/, '');
 
+  // Only show category when it's a real grouping, not just the hook slug
+  const showCategory = category.toLowerCase() !== hook.toLowerCase();
+
   return (
     <nav
       style={{
@@ -44,17 +47,20 @@ export default function TopNav({ trace }: Props) {
 
       <Separator />
 
-      {/* Category */}
-      <button
-        className="breadcrumb-btn"
-        onClick={() => openPopover('category')}
-        style={breadcrumbStyle}
-        title={`All ${category} examples`}
-      >
-        {category}
-      </button>
-
-      <Separator />
+      {/* Category — only shown when it differs from the hook slug */}
+      {showCategory && (
+        <>
+          <button
+            className="breadcrumb-btn"
+            onClick={() => openPopover('category')}
+            style={breadcrumbStyle}
+            title={`All ${category} examples`}
+          >
+            {category}
+          </button>
+          <Separator />
+        </>
+      )}
 
       {/* Hook */}
       <button
