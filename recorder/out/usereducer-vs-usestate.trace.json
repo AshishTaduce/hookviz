@@ -1,0 +1,1928 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usereducer-vs-usestate",
+    "title": "useReducer — coordinated state beats scattered setters",
+    "hook": "useReducer",
+    "category": "usereducer",
+    "reactVersion": "19.2.8",
+    "source": "// @title useReducer — coordinated state beats scattered setters\n// @hook useReducer\nimport { useReducer } from 'react';\n\n// @annotate:function-decl Type declarations | State and Action types make every possible transition explicit and checkable. There's no way to put the form into an impossible state like { submitting: false, error: 'network timeout', submitted: true } simultaneously.\ntype State =\n  | { status: 'idle' }\n  | { status: 'submitting' }\n  | { status: 'error'; message: string }\n  | { status: 'success' };\n\ntype Action =\n  | { type: 'submit' }\n  | { type: 'error'; message: string }\n  | { type: 'success' }\n  | { type: 'reset' };\n\n// @annotate:function-decl Reducer function | The reducer is a state machine — it maps (current state, action) → next state. All valid transitions live in one place. Impossible combinations simply don't appear as cases.\nfunction reducer(_state: State, action: Action): State {\n  switch (action.type) {\n    case 'submit':  return { status: 'submitting' };\n    case 'error':   return { status: 'error', message: action.message };\n    case 'success': return { status: 'success' };\n    case 'reset':   return { status: 'idle' };\n  }\n}\n\n// @annotate:function-decl Component declaration | Form drives the state machine via dispatch. The component only chooses which action to send — the reducer enforces what's valid. This prevents the impossible-state bugs that plague scattered useState setters (isSubmitting + isError + isSuccess as three separate booleans).\nexport default function Form() {\n  const [state, dispatch] = useReducer(reducer, { status: 'idle' });\n\n  const handleSubmit = async () => {\n    dispatch({ type: 'submit' });\n    // Simulate network\n    await Promise.resolve();\n    dispatch({ type: 'success' });\n  };\n\n  const handleError = () => {\n    dispatch({ type: 'submit' });\n    dispatch({ type: 'error', message: 'network timeout' });\n  };\n\n  return (\n    <div>\n      <span id=\"status\">{state.status}</span>\n      {state.status === 'error' && <span id=\"msg\">{state.message}</span>}\n      <button id=\"submit\" onClick={handleSubmit} disabled={state.status === 'submitting'}>\n        submit\n      </button>\n      <button id=\"error-btn\" onClick={handleError}>simulate error</button>\n      <button id=\"reset\" onClick={() => dispatch({ type: 'reset' })}>reset</button>\n    </div>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#error-btn');  // submitting → error in two dispatches\n  click('#reset');      // back to idle\n  click('#submit');     // submitting → success\n};\n",
+    "annotations": [
+      {
+        "line": 6,
+        "type": "function-decl",
+        "label": "Type declarations",
+        "detail": "State and Action types make every possible transition explicit and checkable. There's no way to put the form into an impossible state like { submitting: false, error: 'network timeout', submitted: true } simultaneously."
+      },
+      {
+        "line": 19,
+        "type": "function-decl",
+        "label": "Reducer function",
+        "detail": "The reducer is a state machine — it maps (current state, action) → next state. All valid transitions live in one place. Impossible combinations simply don't appear as cases."
+      },
+      {
+        "line": 29,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "Form drives the state machine via dispatch. The component only chooses which action to send — the reducer enforces what's valid. This prevents the impossible-state bugs that plague scattered useState setters (isSubmitting + isError + isSuccess as three separate booleans)."
+      }
+    ],
+    "recordedAt": "2026-08-19T12:58:12.425Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 39,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 3,
+      "line": 44,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 46,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 48,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 51,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 52,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 45,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 53,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 53,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><span id=\"status\">idle</span><button id=\"submit\">submit</button><button id=\"error-btn\">simulate error</button><button id=\"reset\">reset</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 11,
+      "line": 40,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 41,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [
+            "{\"type\":\"submit\"}"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 42,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [
+            "{\"type\":\"submit\"}",
+            "{\"type\":\"error\",\"message\":\"network timeout\"}"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 52,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [
+            "{\"type\":\"submit\"}",
+            "{\"type\":\"error\",\"message\":\"network timeout\"}"
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 52,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [
+            "{\"type\":\"submit\"}",
+            "{\"type\":\"error\",\"message\":\"network timeout\"}",
+            "{\"type\":\"reset\"}"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 33,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [
+            "{\"type\":\"submit\"}",
+            "{\"type\":\"error\",\"message\":\"network timeout\"}",
+            "{\"type\":\"reset\"}"
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 35,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [
+            "{\"type\":\"submit\"}",
+            "{\"type\":\"error\",\"message\":\"network timeout\"}",
+            "{\"type\":\"reset\"}",
+            "{\"type\":\"submit\"}"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"submit\"}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"submit\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"error\",\"message\":\"network timeout\"}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"error\",\"message\":\"network timeout\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"error\",\"message\":\"network timeout\"}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"reset\"}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 24,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"error\",\"message\":\"network timeout\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"reset\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"submit\"}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"idle\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"submit\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"idle\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 39,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 44,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 46,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 31,
+      "line": 48,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 32,
+      "line": 51,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 33,
+      "line": 52,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 34,
+      "line": 45,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 35,
+      "line": 53,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 36,
+      "line": 53,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><span id=\"status\">submitting</span><button id=\"submit\" disabled=\"\">submit</button><button id=\"error-btn\">simulate error</button><button id=\"reset\">reset</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 37,
+      "line": 36,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 38,
+      "line": 37,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [
+            "{\"type\":\"success\"}"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 39,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 40,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"success\"}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 41,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "_state",
+          "value": "{\"status\":\"submitting\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"success\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"submitting\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 42,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"success\"}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 43,
+      "line": 39,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"success\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 44,
+      "line": 44,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"success\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 45,
+      "line": 46,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"success\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 46,
+      "line": 48,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"success\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 47,
+      "line": 51,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"success\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 48,
+      "line": 52,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"success\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 49,
+      "line": 45,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"success\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 50,
+      "line": 53,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"status\":\"success\"}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSubmit",
+          "value": "ƒ async()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleError",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 51,
+      "line": 53,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 52,
+      "line": 53,
+      "phase": "idle",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"status\":\"success\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    }
+  ]
+}

@@ -1,0 +1,6453 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usetransition-ispending",
+    "title": "useTransition — isPending keeps the UI responsive",
+    "hook": "useTransition",
+    "category": "usetransition",
+    "reactVersion": "19.2.8",
+    "source": "// @title useTransition — isPending keeps the UI responsive\n// @hook useTransition\nimport { useState, useTransition, memo } from 'react';\n\n// A list large enough to make React work — not truly \"slow\" in jsdom,\n// but the scheduling semantics are the same regardless of list size.\nconst ALL_ITEMS = Array.from({ length: 20 }, (_, i) => `item-${i + 1}`);\n\n// @annotate:function-decl Memoized heavy list | SlowList re-renders whenever its `filter` prop changes. In a real app this might be thousands of rows or a complex tree. React can interrupt and defer this work when it's inside a transition.\nconst SlowList = memo(function SlowList({ filter }: { filter: string }) {\n  const filtered = ALL_ITEMS.filter((item) => item.includes(filter));\n  return (\n    <ul id=\"list\">\n      {filtered.map((item) => <li key={item}>{item}</li>)}\n    </ul>\n  );\n});\n\n// @annotate:function-decl Component declaration | Search keeps two pieces of state: inputValue (urgent — updated immediately so the input feels responsive) and deferredFilter (non-urgent — wrapped in startTransition so React can defer re-rendering SlowList while the user is still typing).\nexport default function Search() {\n  const [inputValue, setInputValue] = useState('');\n  const [filter, setFilter] = useState('');\n  const [isPending, startTransition] = useTransition();\n\n  // @note inputValue updates immediately (urgent) so the input character appears\n  // in the box without delay. The SlowList re-render is wrapped in startTransition\n  // (non-urgent) so React can interrupt it if another keystroke arrives first.\n  // isPending is true from the moment startTransition is called until React\n  // finishes all the deferred work inside it.\n  // @annotate:comment isPending = deferred work in flight | isPending becomes true the moment startTransition fires and stays true until React commits all the renders scheduled inside the transition. Use it to show a loading indicator while the heavy update catches up.\n  const handleChange = (value: string) => {\n    setInputValue(value); // urgent: update the input immediately\n    startTransition(() => {\n      setFilter(value);   // deferred: let React schedule this at lower priority\n    });\n  };\n\n  return (\n    <div>\n      <input\n        id=\"search\"\n        value={inputValue}\n        onChange={(e) => handleChange(e.target.value)}\n        placeholder=\"filter items...\"\n      />\n      {isPending && <span id=\"pending\">updating…</span>}\n      <SlowList filter={filter} />\n    </div>\n  );\n}\n\nexport const scenario = async ({ type }: { type: (s: string, v: string) => void }) => {\n  type('#search', 'item-1');\n  type('#search', 'item-1');\n};\n",
+    "annotations": [
+      {
+        "line": 10,
+        "type": "function-decl",
+        "label": "Memoized heavy list",
+        "detail": "SlowList re-renders whenever its `filter` prop changes. In a real app this might be thousands of rows or a complex tree. React can interrupt and defer this work when it's inside a transition."
+      },
+      {
+        "line": 20,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "Search keeps two pieces of state: inputValue (urgent — updated immediately so the input feels responsive) and deferredFilter (non-urgent — wrapped in startTransition so React can defer re-rendering SlowList while the user is still typing)."
+      },
+      {
+        "line": 31,
+        "type": "comment",
+        "label": "isPending = deferred work in flight",
+        "detail": "isPending becomes true the moment startTransition fires and stays true until React commits all the renders scheduled inside the transition. Use it to show a loading indicator while the heavy update catches up."
+      }
+    ],
+    "recordedAt": "2026-08-19T12:58:49.467Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 3,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "inputValue updates immediately (urgent) so the input character appears"
+    },
+    {
+      "i": 4,
+      "line": 38,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 40,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 47,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 39,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 48,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 48,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"search\" placeholder=\"filter items...\" value=\"\"><ul id=\"list\"><li>item-1</li><li>item-2</li><li>item-3</li><li>item-4</li><li>item-5</li><li>item-6</li><li>item-7</li><li>item-8</li><li>item-9</li><li>item-10</li><li>item-11</li><li>item-12</li><li>item-13</li><li>item-14</li><li>item-15</li><li>item-16</li><li>item-17</li><li>item-18</li><li>item-19</li><li>item-20</li></ul></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 10,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-2\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-3\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-4\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-5\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-6\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-7\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-8\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-9\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-10\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-11\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-12\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-13\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 24,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-14\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-15\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-16\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-17\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-18\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-19\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-20\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 31,
+      "line": 12,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "filtered",
+          "value": "[\"item-1\",\"item-2\",\"item-3\",\"item-4\",\"item-5\",\"item-6\",\"item-7\",\"item-8\",\"item-9\",\"item-10\",\"item-11\",\"item-12\",\"item-13\",\"item-14\",\"item-15\",\"item-16\",\"item-17\",\"item-18\",\"item-19\",\"item-20\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 32,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "filtered",
+          "value": "[\"item-1\",\"item-2\",\"item-3\",\"item-4\",\"item-5\",\"item-6\",\"item-7\",\"item-8\",\"item-9\",\"item-10\",\"item-11\",\"item-12\",\"item-13\",\"item-14\",\"item-15\",\"item-16\",\"item-17\",\"item-18\",\"item-19\",\"item-20\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 33,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 34,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-2\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 35,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-3\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 36,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-4\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 37,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-5\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 38,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-6\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 39,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-7\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 40,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-8\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 41,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-9\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 42,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-10\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 43,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-11\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 44,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-12\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 45,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-13\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 46,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-14\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 47,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-15\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 48,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-16\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 49,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-17\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 50,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-18\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 51,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-19\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 52,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-20\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 53,
+      "line": 13,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "filtered",
+          "value": "[\"item-1\",\"item-2\",\"item-3\",\"item-4\",\"item-5\",\"item-6\",\"item-7\",\"item-8\",\"item-9\",\"item-10\",\"item-11\",\"item-12\",\"item-13\",\"item-14\",\"item-15\",\"item-16\",\"item-17\",\"item-18\",\"item-19\",\"item-20\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 54,
+      "line": 15,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 55,
+      "line": 43,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$nla2pt32xh' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 56,
+      "line": 32,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 57,
+      "line": 33,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"item-1\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 58,
+      "line": 34,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"item-1\""
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 59,
+      "line": 35,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"item-1\""
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"item-1\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": "transition"
+    },
+    {
+      "i": 60,
+      "line": 36,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"item-1\""
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"item-1\""
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 61,
+      "line": 43,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$nla2pt32xh' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"item-1\""
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"item-1\""
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 62,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 63,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 64,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 65,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "inputValue updates immediately (urgent) so the input character appears"
+    },
+    {
+      "i": 66,
+      "line": 38,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 67,
+      "line": 40,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 68,
+      "line": 46,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 69,
+      "line": 47,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 70,
+      "line": 39,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 71,
+      "line": 48,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 72,
+      "line": 48,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"search\" placeholder=\"filter items...\" value=\"item-1\"><span id=\"pending\">updating…</span><ul id=\"list\"><li>item-1</li><li>item-2</li><li>item-3</li><li>item-4</li><li>item-5</li><li>item-6</li><li>item-7</li><li>item-8</li><li>item-9</li><li>item-10</li><li>item-11</li><li>item-12</li><li>item-13</li><li>item-14</li><li>item-15</li><li>item-16</li><li>item-17</li><li>item-18</li><li>item-19</li><li>item-20</li></ul></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 73,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 74,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 75,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 76,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "inputValue updates immediately (urgent) so the input character appears"
+    },
+    {
+      "i": 77,
+      "line": 38,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 78,
+      "line": 40,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 79,
+      "line": 47,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 80,
+      "line": 39,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 81,
+      "line": 48,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "inputValue",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setInputValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setFilter",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "isPending",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleChange",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 82,
+      "line": 48,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 83,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 84,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 85,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-2\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 86,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-3\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 87,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-4\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 88,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-5\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 89,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-6\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 90,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-7\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 91,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-8\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 92,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-9\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 93,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-10\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 94,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-11\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 95,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-12\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 96,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-13\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 97,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-14\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 98,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-15\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 99,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-16\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 100,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-17\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 101,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-18\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 102,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-19\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 103,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-20\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 104,
+      "line": 12,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "filtered",
+          "value": "[\"item-1\",\"item-10\",\"item-11\",\"item-12\",\"item-13\",\"item-14\",\"item-15\",\"item-16\",\"item-17\",\"item-18\",\"item-19\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 105,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "filtered",
+          "value": "[\"item-1\",\"item-10\",\"item-11\",\"item-12\",\"item-13\",\"item-14\",\"item-15\",\"item-16\",\"item-17\",\"item-18\",\"item-19\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 106,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 107,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-10\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 108,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-11\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 109,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-12\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 110,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-13\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 111,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-14\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 112,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-15\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 113,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-16\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 114,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-17\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 115,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-18\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 116,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"item-19\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 117,
+      "line": 13,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "filtered",
+          "value": "[\"item-1\",\"item-10\",\"item-11\",\"item-12\",\"item-13\",\"item-14\",\"item-15\",\"item-16\",\"item-17\",\"item-18\",\"item-19\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 118,
+      "line": 15,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "filter",
+          "value": "\"item-1\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"item-1\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    }
+  ]
+}

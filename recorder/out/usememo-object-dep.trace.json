@@ -1,0 +1,4585 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usememo-object-dep",
+    "title": "useMemo — why inline objects in deps defeat memoization",
+    "hook": "useMemo",
+    "category": "usememo",
+    "reactVersion": "19.2.8",
+    "source": "// @title useMemo — why inline objects in deps defeat memoization\n// @hook useMemo\nimport { useState, useMemo } from 'react';\n\nfunction computeTotal(config: { items: number[]; multiplier: number }): number {\n  return config.items.reduce((sum, n) => sum + n * config.multiplier, 0);\n}\n\n// @annotate:function-decl Component declaration | ObjectDepDemo shows the most common useMemo trap: passing an inline object as a dep. The object is a new reference every render, so the memo never caches — it's equivalent to no memo at all.\nexport default function ObjectDepDemo() {\n  const [multiplier, setMultiplier] = useState(2);\n  const [unrelated, setUnrelated] = useState(0);\n  const items = [1, 2, 3, 4, 5];\n\n  // @note The dep `{ items, multiplier }` is an inline object literal — a new\n  // reference on every render. React compares deps by Object.is, so this always\n  // fails the equality check and recomputes every time, even when multiplier hasn't changed.\n  // @annotate:closure Inline object dep = no cache | { items, multiplier } is constructed fresh each render. React sees a new object reference every time, so the \"did deps change?\" check is always true. Remove the object wrapper and depend on the primitives directly.\n  const brokenTotal = useMemo(\n    () => computeTotal({ items, multiplier }),\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n    [{ items, multiplier }] // ← wrong: new object every render\n  );\n\n  // @note Depending on the primitives directly — not wrapped in an object —\n  // gives React stable references to compare. Only recomputes when multiplier changes.\n  const correctTotal = useMemo(\n    () => computeTotal({ items, multiplier }),\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n    [multiplier] // ← items is module-stable; multiplier is a primitive\n  );\n\n  return (\n    <div>\n      <span id=\"broken\">{brokenTotal}</span>\n      <span id=\"correct\">{correctTotal}</span>\n      <button id=\"bump-unrelated\" onClick={() => setUnrelated((n) => n + 1)}>\n        re-render (unrelated: {unrelated})\n      </button>\n      <button id=\"bump-mult\" onClick={() => setMultiplier((m) => m + 1)}>\n        multiplier: {multiplier}\n      </button>\n    </div>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#bump-unrelated'); // triggers broken memo to recompute, correct memo stays cached\n  click('#bump-mult');      // both recompute — multiplier changed\n};\n",
+    "annotations": [
+      {
+        "line": 10,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "ObjectDepDemo shows the most common useMemo trap: passing an inline object as a dep. The object is a new reference every render, so the memo never caches — it's equivalent to no memo at all."
+      },
+      {
+        "line": 19,
+        "type": "closure",
+        "label": "Inline object dep = no cache",
+        "detail": "{ items, multiplier } is constructed fresh each render. React sees a new object reference every time, so the \"did deps change?\" check is always true. Remove the object wrapper and depend on the primitives directly."
+      }
+    ],
+    "recordedAt": "2026-08-19T12:57:56.633Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 12,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 3,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "The dep `{ items, multiplier }` is an inline object literal — a new"
+    },
+    {
+      "i": 4,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "6",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "3",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "12",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "4",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "20",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "5",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "Depending on the primitives directly — not wrapped in an object —"
+    },
+    {
+      "i": 14,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "6",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "3",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "12",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "4",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "20",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "5",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "correctTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 24,
+      "line": 35,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 36,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 37,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 40,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 43,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "30",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 43,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><span id=\"broken\">30</span><span id=\"correct\">30</span><button id=\"bump-unrelated\">re-render (unrelated: 0)</button><button id=\"bump-mult\">multiplier: 2</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 31,
+      "line": 37,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 32,
+      "line": 37,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "n",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 33,
+      "line": 37,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 34,
+      "line": 40,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 35,
+      "line": 40,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 36,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 37,
+      "line": 40,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "m",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "multiplier",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 38,
+      "line": 12,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 39,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 40,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "The dep `{ items, multiplier }` is an inline object literal — a new"
+    },
+    {
+      "i": 41,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 42,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 43,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 44,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "3",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 45,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "9",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "3",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 46,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "18",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "4",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 47,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "30",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "5",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 48,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 49,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":2}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 50,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": true
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "Depending on the primitives directly — not wrapped in an object —"
+    },
+    {
+      "i": 51,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 52,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 53,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 54,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "3",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 55,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "9",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "3",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 56,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "18",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "4",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 57,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "30",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "n",
+          "value": "5",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 58,
+      "line": 6,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "config",
+          "value": "{\"items\":[1,2,3,4,5],\"multiplier\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 59,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "30",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 60,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "correctTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "3"
+          ],
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 61,
+      "line": 35,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "3"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 62,
+      "line": 36,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "3"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 63,
+      "line": 37,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "3"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 64,
+      "line": 40,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "3"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 65,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "3"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 66,
+      "line": 43,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "multiplier",
+          "value": "3",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMultiplier",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "unrelated",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setUnrelated",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "items",
+          "value": "[1,2,3,4,5]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "brokenTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "correctTotal",
+          "value": "45",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "3"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 67,
+      "line": 43,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "3"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 68,
+      "line": 43,
+      "phase": "idle",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "3",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "{\"items\":[1,2,3,4,5],\"multiplier\":3}"
+          ],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useMemo",
+          "memoized": "45",
+          "queue": [],
+          "deps": [
+            "3"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    }
+  ]
+}

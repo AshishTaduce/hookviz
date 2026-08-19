@@ -43,6 +43,7 @@ const GLYPH_CLASSES: Record<string, string> = {
 export default function CodePanel({ trace }: Props) {
   const cursor = useCodeCursor();
   const audience = useStore((s) => s.audience);
+  const fontSize = useStore((s) => s.fontSize);
 
   const editorRef = useRef<MonacoType.editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<typeof MonacoType | null>(null);
@@ -134,6 +135,11 @@ export default function CodePanel({ trace }: Props) {
     annotCol.set(buildAnnotDecorations(monaco, audience === 'guided'));
   }, [audience, buildAnnotDecorations]);
 
+  // Sync Monaco font size when user changes zoom level
+  useEffect(() => {
+    editorRef.current?.updateOptions({ fontSize });
+  }, [fontSize]);
+
   // Cleanup hover provider on unmount
   useEffect(() => {
     return () => {
@@ -157,7 +163,7 @@ export default function CodePanel({ trace }: Props) {
             glyphMargin: true,
             scrollBeyondLastLine: false,
             renderLineHighlight: 'none', // we handle highlight via decorations
-            fontSize: 13,
+            fontSize,
             fontFamily: 'Consolas, Menlo, Monaco, "Cascadia Code", "Courier New", monospace',
             scrollbar: {
               vertical: 'auto',

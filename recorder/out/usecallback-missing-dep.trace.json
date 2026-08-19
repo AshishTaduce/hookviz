@@ -1,0 +1,2750 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usecallback-missing-dep",
+    "title": "useCallback — stale closure from a missing dependency",
+    "hook": "useCallback",
+    "category": "usecallback",
+    "reactVersion": "19.2.8",
+    "source": "// @title useCallback — stale closure from a missing dependency\n// @hook useCallback\nimport { useState, useCallback } from 'react';\n\n// @annotate:function-decl Component declaration | StaleCbDemo shows what happens when useCallback omits a variable from its dep array: the callback freezes the value it closed over at creation time and never updates, even when the underlying state changes.\nexport default function StaleCbDemo() {\n  const [count, setCount] = useState(0);\n  const [log, setLog] = useState<string[]>([]);\n\n  // @note Empty dep array means this callback is created once — at mount.\n  // `count` inside it is frozen at 0 forever. Every call logs \"saw: 0\"\n  // no matter how many times count has been incremented since mount.\n  // @annotate:closure Stale closure — count frozen at 0 | The callback closes over count from the render that created it. Empty deps means it's never recreated, so `count` inside is always the mount-time value regardless of current state.\n  const stalePeek = useCallback(() => {\n    setLog((l) => [...l, `stale saw: ${count}`]);\n  }, []); // ← missing dep: count\n\n  // @note Listing count as a dep means useCallback recreates the function\n  // whenever count changes — the new closure captures the latest value.\n  // @annotate:comment Correct dep list | Adding count to the dep array re-creates the callback on every count change. The new closure sees the fresh value. The tradeoff: child components receiving this callback will also re-render when count changes.\n  const freshPeek = useCallback(() => {\n    setLog((l) => [...l, `fresh saw: ${count}`]);\n  }, [count]);\n\n  return (\n    <div>\n      <button id=\"inc\" onClick={() => setCount((c) => c + 1)}>count: {count}</button>\n      <button id=\"stale\" onClick={stalePeek}>stale peek</button>\n      <button id=\"fresh\" onClick={freshPeek}>fresh peek</button>\n      <ul id=\"log\">\n        {log.map((entry, i) => <li key={i}>{entry}</li>)}\n      </ul>\n    </div>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#inc');\n  click('#inc');\n  click('#stale'); // logs \"stale saw: 0\" — count is 2 but callback sees mount value\n  click('#fresh'); // logs \"fresh saw: 2\"\n};\n",
+    "annotations": [
+      {
+        "line": 6,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "StaleCbDemo shows what happens when useCallback omits a variable from its dep array: the callback freezes the value it closed over at creation time and never updates, even when the underlying state changes."
+      },
+      {
+        "line": 14,
+        "type": "closure",
+        "label": "Stale closure — count frozen at 0",
+        "detail": "The callback closes over count from the render that created it. Empty deps means it's never recreated, so `count` inside is always the mount-time value regardless of current state."
+      },
+      {
+        "line": 21,
+        "type": "comment",
+        "label": "Correct dep list",
+        "detail": "Adding count to the dep array re-creates the callback on every count change. The new closure sees the fresh value. The tradeoff: child components receiving this callback will also re-render when count changes."
+      }
+    ],
+    "recordedAt": "2026-08-19T12:57:10.629Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 14,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "Empty dep array means this callback is created once — at mount."
+    },
+    {
+      "i": 3,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "Listing count as a dep means useCallback recreates the function"
+    },
+    {
+      "i": 4,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 33,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><button id=\"inc\">count: 0</button><button id=\"stale\">stale peek</button><button id=\"fresh\">fresh peek</button><ul id=\"log\"></ul></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 13,
+      "line": 27,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 27,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "c",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 27,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 27,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()",
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 15,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()",
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 16,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()",
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 22,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()",
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 23,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()",
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [
+            "ƒ anonymous()",
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "c",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 24,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "l",
+          "value": "[]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "l",
+          "value": "[\"stale saw: 0\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 14,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "Empty dep array means this callback is created once — at mount."
+    },
+    {
+      "i": 27,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "0"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "Listing count as a dep means useCallback recreates the function"
+    },
+    {
+      "i": 28,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 31,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 32,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 33,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "entry",
+          "value": "\"stale saw: 0\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "i",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 34,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "entry",
+          "value": "\"fresh saw: 0\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "i",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 35,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 36,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 37,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setLog",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "stalePeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "freshPeek",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "[\"stale saw: 0\",\"fresh saw: 0\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [
+            "2"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    }
+  ]
+}

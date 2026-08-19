@@ -27,7 +27,7 @@
         "detail": "Every state change goes through one function with one input and one output. This makes state transitions enumerable, testable, and reversible — unlike multiple useState setters scattered across handlers."
       }
     ],
-    "recordedAt": "2026-08-19T11:53:16.846Z"
+    "recordedAt": "2026-08-19T12:58:02.968Z"
   },
   "steps": [
     {
@@ -1007,48 +1007,6 @@
           "changed": false
         }
       ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useReducer",
-          "memoized": "{\"count\":0}",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        }
-      ],
-      "effects": [],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 32,
-      "line": 29,
-      "phase": "commit",
-      "renderCount": 2,
-      "variables": [],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useReducer",
-          "memoized": "{\"count\":0}",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        }
-      ],
-      "effects": [],
-      "dom": "<div id=\"root\"></div>",
-      "lane": null,
-      "synthetic": true,
-      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
-    },
-    {
-      "i": 33,
-      "line": 29,
-      "phase": "idle",
-      "renderCount": 2,
-      "variables": [],
       "hooks": [
         {
           "index": 0,

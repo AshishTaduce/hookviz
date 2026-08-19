@@ -21,7 +21,7 @@
         "detail": "App holds the theme state and wraps its subtree in a Provider. The value prop is what consumers receive — changing it triggers re-renders in all subscribed consumers."
       }
     ],
-    "recordedAt": "2026-08-19T11:52:47.120Z"
+    "recordedAt": "2026-08-19T12:57:23.024Z"
   },
   "steps": [
     {

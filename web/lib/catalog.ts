@@ -4,16 +4,34 @@ import type { CatalogEntry } from '@/types/trace';
 // Re-run: npm run prebuild (in web/)
 const catalog: CatalogEntry[] = [
   {
+    "id": "usecallback-missing-dep",
+    "title": "useCallback — stale closure from a missing dependency",
+    "hook": "useCallback",
+    "category": "usecallback"
+  },
+  {
     "id": "usecallback-stable-handler",
     "title": "useCallback — stable function identity across renders",
     "hook": "useCallback",
     "category": "usecallback"
   },
   {
+    "id": "usecontext-split-context",
+    "title": "useContext — avoid re-renders by splitting context",
+    "hook": "useContext",
+    "category": "usecontext"
+  },
+  {
     "id": "usecontext-theme",
     "title": "useContext — reading a shared value without prop drilling",
     "hook": "useContext",
     "category": "usecontext"
+  },
+  {
+    "id": "useeffect-cleanup",
+    "title": "useEffect — cleanup prevents memory leaks",
+    "hook": "useEffect",
+    "category": "useeffect"
   },
   {
     "id": "useeffect-stale-closure",
@@ -28,10 +46,28 @@ const catalog: CatalogEntry[] = [
     "category": "usememo"
   },
   {
+    "id": "usememo-object-dep",
+    "title": "useMemo — why inline objects in deps defeat memoization",
+    "hook": "useMemo",
+    "category": "usememo"
+  },
+  {
     "id": "usereducer-counter",
     "title": "useReducer — managing state with dispatch",
     "hook": "useReducer",
     "category": "usereducer"
+  },
+  {
+    "id": "usereducer-vs-usestate",
+    "title": "useReducer — coordinated state beats scattered setters",
+    "hook": "useReducer",
+    "category": "usereducer"
+  },
+  {
+    "id": "useref-dom-ref",
+    "title": "useRef — accessing a DOM node imperatively",
+    "hook": "useRef",
+    "category": "useref"
   },
   {
     "id": "useref-render-counter",
@@ -40,10 +76,22 @@ const catalog: CatalogEntry[] = [
     "category": "useref"
   },
   {
+    "id": "usestate-batching",
+    "title": "useState — why two setCount calls only increment once",
+    "hook": "useState",
+    "category": "usestate"
+  },
+  {
     "id": "usestate-counter",
     "title": "useState — basic counter",
     "hook": "useState",
     "category": "usestate"
+  },
+  {
+    "id": "usetransition-ispending",
+    "title": "useTransition — isPending keeps the UI responsive",
+    "hook": "useTransition",
+    "category": "usetransition"
   },
   {
     "id": "usetransition-tab-switch",

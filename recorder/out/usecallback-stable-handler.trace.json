@@ -27,7 +27,7 @@
         "detail": "The callback closes over setCount (a stable setter — React guarantees it never changes). Empty deps: no captured values that change, so the cached function is always valid."
       }
     ],
-    "recordedAt": "2026-08-19T11:52:40.773Z"
+    "recordedAt": "2026-08-19T12:57:14.224Z"
   },
   "steps": [
     {

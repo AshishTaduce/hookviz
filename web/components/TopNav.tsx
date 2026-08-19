@@ -11,6 +11,9 @@ export default function TopNav({ trace }: Props) {
   const audience = useStore((s) => s.audience);
   const setAudience = useStore((s) => s.setAudience);
   const openPopover = useStore((s) => s.openPopover);
+  const fontSize = useStore((s) => s.fontSize);
+  const increaseFontSize = useStore((s) => s.increaseFontSize);
+  const decreaseFontSize = useStore((s) => s.decreaseFontSize);
 
   const { category, hook, title } = trace.meta;
 
@@ -107,6 +110,29 @@ export default function TopNav({ trace }: Props) {
         {audience === 'guided' ? '◑ Guided' : '◐ Expert'}
       </button>
 
+      {/* Font size controls */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+        <button
+          onClick={decreaseFontSize}
+          disabled={fontSize <= 10}
+          title="Decrease font size"
+          style={{ ...zoomBtnStyle, opacity: fontSize <= 10 ? 0.3 : 1 }}
+        >
+          A−
+        </button>
+        <span style={{ color: 'var(--text-muted)', fontSize: '11px', minWidth: '24px', textAlign: 'center' }}>
+          {fontSize}
+        </span>
+        <button
+          onClick={increaseFontSize}
+          disabled={fontSize >= 20}
+          title="Increase font size"
+          style={{ ...zoomBtnStyle, opacity: fontSize >= 20 ? 0.3 : 1 }}
+        >
+          A+
+        </button>
+      </div>
+
       {/* ⌘K placeholder */}
       <button
         style={{
@@ -135,6 +161,18 @@ function Separator() {
     </span>
   );
 }
+
+const zoomBtnStyle: React.CSSProperties = {
+  background: 'none',
+  border: 'none',
+  color: 'var(--text-muted)',
+  cursor: 'pointer',
+  fontFamily: 'var(--sans)',
+  fontSize: '11px',
+  padding: '2px 5px',
+  borderRadius: '3px',
+  lineHeight: 1.5,
+};
 
 const breadcrumbStyle: React.CSSProperties = {
   background: 'none',

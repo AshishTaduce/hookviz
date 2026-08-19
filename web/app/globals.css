@@ -34,6 +34,7 @@
   --nav-height: 40px;
   --player-height: 80px;
   --panel-border: 1px solid var(--border);
+  --ui-font-size: 13px;
 }
 
 *, *::before, *::after {
@@ -103,6 +104,12 @@ html, body {
 /* Monospace used in all data panels */
 .mono {
   font-family: var(--mono);
+  font-size: var(--ui-font-size);
+}
+
+/* Data panel content — respects zoom */
+.panel-content {
+  font-size: var(--ui-font-size);
 }
 
 /* Phase badge */

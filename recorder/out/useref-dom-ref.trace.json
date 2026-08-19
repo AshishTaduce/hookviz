@@ -1,0 +1,1448 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "useref-dom-ref",
+    "title": "useRef — accessing a DOM node imperatively",
+    "hook": "useRef",
+    "category": "useref",
+    "reactVersion": "19.2.8",
+    "source": "// @title useRef — accessing a DOM node imperatively\n// @hook useRef\nimport { useRef, useState } from 'react';\n\n// @annotate:function-decl Component declaration | FocusOnMount shows how to attach a ref to a real DOM node and read or mutate it imperatively — bypassing React's declarative data flow for operations that have no state equivalent.\nexport default function FocusOnMount() {\n  const inputRef = useRef<HTMLInputElement>(null);\n  const [note, setNote] = useState('');\n\n  // @note After the first render, ref.current points to the actual <input> DOM node.\n  // Calling .focus() is an imperative mutation React doesn't know about — that's the point.\n  // @annotate:comment Escape hatch for DOM | useRef is React's sanctioned escape hatch. ref.current gives you the raw DOM node so you can call browser APIs (focus, scroll, measure, play/pause) that have no declarative equivalent.\n  const handleFocus = () => {\n    inputRef.current?.focus();\n    setNote('focused via ref');\n  };\n\n  // @annotate:closure inputRef is stable | ref is the same object across renders; only .current changes. The handler always reads the latest DOM node, never a stale snapshot, because refs are mutable containers, not state.\n  const handleSelect = () => {\n    inputRef.current?.select();\n    setNote('selected via ref');\n  };\n\n  return (\n    <div>\n      <input id=\"input\" ref={inputRef} defaultValue=\"select me\" />\n      <button id=\"focus-btn\" onClick={handleFocus}>focus</button>\n      <button id=\"select-btn\" onClick={handleSelect}>select all</button>\n      <span id=\"note\">{note}</span>\n    </div>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#focus-btn');\n  click('#select-btn');\n};\n",
+    "annotations": [
+      {
+        "line": 6,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "FocusOnMount shows how to attach a ref to a real DOM node and read or mutate it imperatively — bypassing React's declarative data flow for operations that have no state equivalent."
+      },
+      {
+        "line": 13,
+        "type": "comment",
+        "label": "Escape hatch for DOM",
+        "detail": "useRef is React's sanctioned escape hatch. ref.current gives you the raw DOM node so you can call browser APIs (focus, scroll, measure, play/pause) that have no declarative equivalent."
+      },
+      {
+        "line": 19,
+        "type": "closure",
+        "label": "inputRef is stable",
+        "detail": "ref is the same object across renders; only .current changes. The handler always reads the latest DOM node, never a stale snapshot, because refs are mutable containers, not state."
+      }
+    ],
+    "recordedAt": "2026-08-19T12:58:18.064Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "After the first render, ref.current points to the actual <input> DOM node."
+    },
+    {
+      "i": 3,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "{\"current\":null}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 30,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"input\" value=\"select me\"><button id=\"focus-btn\">focus</button><button id=\"select-btn\">select all</button><span id=\"note\"></span></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 12,
+      "line": 14,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 15,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 16,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"focused via ref\""
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 20,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"focused via ref\""
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 21,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"focused via ref\""
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 22,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"focused via ref\"",
+            "\"selected via ref\""
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "null",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"selected via ref\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"selected via ref\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "After the first render, ref.current points to the actual <input> DOM node."
+    },
+    {
+      "i": 21,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"selected via ref\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"selected via ref\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"selected via ref\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"selected via ref\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"selected via ref\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"selected via ref\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 24,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"selected via ref\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"selected via ref\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"selected via ref\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"selected via ref\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"selected via ref\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"selected via ref\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"selected via ref\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"selected via ref\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "inputRef",
+          "value": "[object Object]",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "note",
+          "value": "\"selected via ref\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setNote",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleFocus",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleSelect",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useRef",
+          "memoized": "{\"__reactFiber$rthryx7zv1n\":{\"tag\":5,\"key\":null,\"elementType\":\"input\",\"type\":\"input\",\"stateNode\":\"[Circular]\",\"return\":{\"tag\":5,\"key\":null,\"elementType\":\"div\",\"type\":\"div\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":{\"children\":[{\"type\":\"input\",\"key\":null,\"props\":{\"id\":\"input\",\"ref\":{\"current\":\"[Circular]\"},\"defaultValue\":\"select me\"},\"_owner\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":{\"tag\":1,\"containerInfo\":{\"__reactContainer$rthryx7zv1n\":{\"tag\":3,\"key\":null,\"elementType\":null,\"type\":null,\"stateNode\":\"[Circular]\",\"return\":null,\"child\":{\"tag\":0,\"key\":null,\"elementType\":\"ƒ FocusOnMount()\",\"type\":\"ƒ FocusOnMount()\",\"stateNode\":null,\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":{},\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":null},\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3839.623707,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":[\"useRef\",\"useState\"]},\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":{\"baseState\":{\"element\":{\"type\":\"ƒ FocusOnMount()\",\"key\":null,\"props\":\"[Circular]\",\"_owner\":null,\"_store\":{}},\"isDehydrated\":false,\"cache\":{\"controller\":{},\"data\":{},\"refCount\":1}},\"firstBaseUpdate\":null,\"lastBaseUpdate\":null,\"shared\":{\"pending\":null,\"lanes\":0,\"hiddenCallbacks\":null},\"callbacks\":null},\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":0,\"actualStartTime\":3838.716855,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"_reactListeningwolgjcga37\":true},\"pendingChildren\":null,\"current\":\"[Circular]\",\"pingCache\":null,\"timeoutHandle\":-1,\"cancelPendingCommit\":null,\"context\":{},\"pendingContext\":null,\"next\":null,\"callbackNode\":null,\"callbackPriority\":2,\"expirationTimes\":[-1,4088.219764,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],\"pendingLanes\":2,\"suspendedLanes\":0,\"pingedLanes\":0,\"warmLanes\":0,\"expiredLanes\":0,\"errorRecoveryDisabledLanes\":0,\"shellSuspendCounter\":0,\"entangledLanes\":0,\"entanglements\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"hiddenUpdates\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\"identifierPrefix\":\"\",\"onUncaughtError\":\"ƒ defaultOnUncaughtError()\",\"onCaughtError\":\"ƒ defaultOnCaughtError()\",\"onRecoverableError\":\"ƒ defaultOnRecoverableError()\",\"pooledCache\":null,\"pooledCacheLanes\":0,\"formState\":null,\"incompleteTransitions\":{},\"effectDuration\":0,\"passiveEffectDuration\":0,\"memoizedUpdaters\":{},\"pendingUpdatersLaneMap\":[{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}],\"_debugRootType\":\"createRoot()\"},\"return\":null,\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":null,\"memoizedProps\":null,\"updateQueue\":\"[Circular]\",\"memoizedState\":\"[Circular]\",\"dependencies\":null,\"mode\":3,\"flags\":1024,\"subtreeFlags\":72352259,\"deletions\":null,\"lanes\":0,\"childLanes\":2,\"alternate\":\"[Circular]\",\"actualDuration\":1711.4034180000008,\"actualStartTime\":881.019862,\"selfBaseDuration\":2.023998000000006,\"treeBaseDuration\":1689.5924570000002,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":null,\"_debugTask\":null,\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":{\"memoizedState\":\"[Circular]\",\"baseState\":null,\"baseQueue\":null,\"queue\":null,\"next\":{\"memoizedState\":\"\",\"baseState\":\"\",\"baseQueue\":null,\"queue\":{\"pending\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"selected via ref\",\"hasEagerState\":false,\"eagerState\":null,\"next\":{\"lane\":2,\"revertLane\":0,\"gesture\":null,\"action\":\"focused via ref\",\"hasEagerState\":true,\"eagerState\":\"focused via ref\",\"next\":\"[Circular]\"}},\"lanes\":0,\"dispatch\":\"ƒ bound dispatchSetState()\",\"lastRenderedReducer\":\"ƒ basicStateReducer()\",\"lastRenderedState\":\"\"},\"next\":null}},\"dependencies\":null,\"mode\":3,\"flags\":67108865,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":2,\"childLanes\":0,\"alternate\":\"[Circular]\",\"actualDuration\":1709.222316000001,\"actualStartTime\":883.048728,\"selfBaseDuration\":1684.5035930000001,\"treeBaseDuration\":1687.5684590000003,\"_debugInfo\":null,\"_debugOwner\":null,\"_debugStack\":\"[Circular]\",\"_debugTask\":\"[Circular]\",\"_debugNeedsRemount\":false,\"_debugHookTypes\":\"[Circular]\"},\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"focus-btn\",\"onClick\":\"ƒ handleFocus()\",\"children\":\"focus\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"button\",\"key\":null,\"props\":{\"id\":\"select-btn\",\"onClick\":\"ƒ handleSelect()\",\"children\":\"select all\"},\"_owner\":\"[Circular]\",\"_store\":{}},{\"type\":\"span\",\"key\":null,\"props\":{\"id\":\"note\",\"children\":\"\"},\"_owner\":\"[Circular]\",\"_store\":{}}]}},\"return\":\"[Circular]\",\"child\":\"[Circular]\",\"sibling\":null,\"index\":0,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":0,\"subtreeFlags\":5243392,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":24.707950000000892,\"actualStartTime\":2567.563264,\"selfBaseDuration\":2.5677660000001197,\"treeBaseDuration\":3.0648660000001655,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"button\",\"type\":\"button\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":{\"tag\":5,\"key\":null,\"elementType\":\"span\",\"type\":\"span\",\"stateNode\":{\"__reactFiber$rthryx7zv1n\":\"[Circular]\",\"__reactProps$rthryx7zv1n\":\"[Circular]\"},\"return\":\"[Circular]\",\"child\":null,\"sibling\":null,\"index\":3,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":1.067681000000448,\"actualStartTime\":2590.275791,\"selfBaseDuration\":0.06827900000007503,\"treeBaseDuration\":0.06827900000007503,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":2,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":0.7194079999999303,\"actualStartTime\":2589.54842,\"selfBaseDuration\":0.05483400000002803,\"treeBaseDuration\":0.05483400000002803,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":1,\"ref\":null,\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":1048576,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":3.3452760000000126,\"actualStartTime\":2586.194537,\"selfBaseDuration\":0.06408400000009351,\"treeBaseDuration\":0.06408400000009351,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"index\":0,\"ref\":\"[Circular]\",\"refCleanup\":null,\"pendingProps\":\"[Circular]\",\"memoizedProps\":\"[Circular]\",\"updateQueue\":null,\"memoizedState\":null,\"dependencies\":null,\"mode\":3,\"flags\":5243392,\"subtreeFlags\":0,\"deletions\":null,\"lanes\":0,\"childLanes\":0,\"alternate\":null,\"actualDuration\":15.853071,\"actualStartTime\":2570.141124,\"selfBaseDuration\":0.30990299999984927,\"treeBaseDuration\":0.30990299999984927,\"_debugInfo\":null,\"_debugOwner\":\"[Circular]\",\"_debugStack\":{},\"_debugTask\":{\"run\":\"ƒ run()\"},\"_debugNeedsRemount\":false,\"_debugHookTypes\":null},\"__reactProps$rthryx7zv1n\":\"[Circular]\",\"__reactEvents$rthryx7zv1n\":{},\"value\":\"select me\",\"_valueTracker\":{\"getValue\":\"ƒ getValue()\",\"setValue\":\"ƒ setValue()\",\"stopTracking\":\"ƒ stopTracking()\"}}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"selected via ref\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    }
+  ]
+}

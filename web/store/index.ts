@@ -37,10 +37,13 @@ type UISlice = {
     | { open: false }
     | { open: true; scope: 'root' | 'category' | 'hook' | 'example' };
   commandPaletteOpen: boolean;
+  fontSize: number; // base UI font size, 10–20px
   setAudience: (a: 'guided' | 'expert') => void;
   openPopover: (scope: 'root' | 'category' | 'hook' | 'example') => void;
   closePopover: () => void;
   toggleCommandPalette: () => void;
+  increaseFontSize: () => void;
+  decreaseFontSize: () => void;
 };
 
 export type StoreState = TraceSlice & PlaybackSlice & UISlice;
@@ -166,6 +169,7 @@ export const useStore = create<StoreState>()(
       audience: 'guided',
       breadcrumbPopover: { open: false },
       commandPaletteOpen: false,
+      fontSize: 13,
 
       setAudience: (a) => set({ audience: a }),
 
@@ -175,6 +179,12 @@ export const useStore = create<StoreState>()(
 
       toggleCommandPalette: () =>
         set((s) => ({ commandPaletteOpen: !s.commandPaletteOpen })),
+
+      increaseFontSize: () =>
+        set((s) => ({ fontSize: Math.min(20, s.fontSize + 1) })),
+
+      decreaseFontSize: () =>
+        set((s) => ({ fontSize: Math.max(10, s.fontSize - 1) })),
     }),
     {
       name: 'hookviz.ui',
@@ -182,6 +192,7 @@ export const useStore = create<StoreState>()(
       // Only persist UISlice preferences — not trace data or playback state
       partialize: (state) => ({
         audience: state.audience,
+        fontSize: state.fontSize,
       }),
       // skipHydration prevents the SSR→client mismatch: the server renders
       // with default state; the client rehydrates from localStorage explicitly

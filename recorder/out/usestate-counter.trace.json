@@ -27,7 +27,7 @@
         "detail": "increment closes over count from this render; calling it later still uses the value captured at definition time, not whatever count is by then."
       }
     ],
-    "recordedAt": "2026-08-19T11:53:31.155Z"
+    "recordedAt": "2026-08-19T12:58:31.398Z"
   },
   "steps": [
     {
@@ -2110,6 +2110,52 @@
           "changed": false
         }
       ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "1"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "1"
+          ],
+          "status": "cleaned-up"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 34,
+      "line": 17,
+      "phase": "idle",
+      "renderCount": 2,
+      "variables": [],
       "hooks": [
         {
           "index": 0,

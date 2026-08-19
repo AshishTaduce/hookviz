@@ -23,12 +23,18 @@ interface Props {
 // the four-zone layout.
 export default function PlayerShell({ trace }: Props) {
   const loadTrace = useStore((s) => s.loadTrace);
+  const fontSize = useStore((s) => s.fontSize);
+
+  // Sync font size to CSS variable so all panels pick it up automatically
+  useEffect(() => {
+    document.documentElement.style.setProperty('--ui-font-size', `${fontSize}px`);
+  }, [fontSize]);
 
   // Seed the store with the server-provided trace immediately.
   // This avoids the async import inside loadTrace for the initial page load,
   // but we still call loadTrace to set status/traceId correctly.
   useEffect(() => {
-    // Rehydrate persisted UI prefs (audience) from localStorage now that we're
+    // Rehydrate persisted UI prefs (audience, fontSize) from localStorage now that we're
     // on the client. skipHydration:true in the store means this never ran on
     // the server, so there's no SSR/client mismatch.
     useStore.persist.rehydrate();
