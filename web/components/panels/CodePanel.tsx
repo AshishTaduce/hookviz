@@ -12,12 +12,17 @@ import { useCodeCursor, useStore } from '@/store';
 // like /monaco/vs/... can't be resolved by fetch(). Absolute URL fixes it.
 if (typeof window !== 'undefined') {
   (window as any).MonacoEnvironment = {
-    getWorkerUrl(_moduleId: string, label: string): string {
-      const base = window.location.origin;
-      if (label === 'typescript' || label === 'javascript') {
-        return `${base}/monaco/vs/language/typescript/tsWorker.js`;
-      }
-      return `${base}/monaco/vs/base/worker/workerMain.js`;
+    // We only need Monaco's tokenizer (syntax highlighting), which runs on
+    // the main thread. The TypeScript language-service worker (type checking,
+    // completions, hover types) is unnecessary for a read-only display editor
+    // and causes loader errors because tsWorker.js is an AMD module that needs
+    // workerMain.js's define() bootstrap to run. Return a no-op blob worker
+    // so Monaco doesn't error out trying to start language services it won't use.
+    getWorker(_workerId: string, _label: string): Worker {
+      const blob = new Blob(['self.onmessage=function(){}'], {
+        type: 'application/javascript',
+      });
+      return new Worker(URL.createObjectURL(blob));
     },
   };
 }
