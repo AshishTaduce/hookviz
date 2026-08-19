@@ -166,7 +166,7 @@ export default function CodePanel({ trace }: Props) {
             overviewRulerLanes: 0,
             hideCursorInOverviewRuler: true,
             overviewRulerBorder: false,
-            automaticLayout: false, // we use CSS grid sizing
+            automaticLayout: true,
             wordWrap: 'off',
             contextmenu: false,
             folding: false,

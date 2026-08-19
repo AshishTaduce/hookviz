@@ -64,6 +64,7 @@ export default function PlayerShell({ trace }: Props) {
           display: 'grid',
           gridTemplateColumns: '1fr 380px',
           overflow: 'hidden',
+          height: '100%',
           borderTop: 'var(--panel-border)',
           borderBottom: 'var(--panel-border)',
         }}
