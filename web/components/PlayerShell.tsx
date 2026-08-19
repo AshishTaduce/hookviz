@@ -25,6 +25,11 @@ export default function PlayerShell({ trace }: Props) {
   // This avoids the async import inside loadTrace for the initial page load,
   // but we still call loadTrace to set status/traceId correctly.
   useEffect(() => {
+    // Rehydrate persisted UI prefs (audience) from localStorage now that we're
+    // on the client. skipHydration:true in the store means this never ran on
+    // the server, so there's no SSR/client mismatch.
+    useStore.persist.rehydrate();
+
     // We have the trace already; directly set it rather than re-importing.
     useStore.setState({
       trace,

@@ -183,6 +183,10 @@ export const useStore = create<StoreState>()(
       partialize: (state) => ({
         audience: state.audience,
       }),
+      // skipHydration prevents the SSR→client mismatch: the server renders
+      // with default state; the client rehydrates from localStorage explicitly
+      // via useStore.persist.rehydrate() in PlayerShell after mount.
+      skipHydration: true,
     }
   )
 );
