@@ -1,0 +1,1003 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usecallback-stable-handler",
+    "title": "useCallback — stable function identity across renders",
+    "hook": "useCallback",
+    "category": "usecallback",
+    "reactVersion": "19.2.8",
+    "source": "// @title useCallback — stable function identity across renders\n// @hook useCallback\nimport { useState, useCallback, memo } from 'react';\n\n// @annotate:comment Memoized child | MyButton is wrapped with React.memo — it only re-renders when its props change by reference. Passing the same function reference across renders is what makes this work.\nconst MyButton = memo(function MyButton({\n  onClick,\n  label,\n}: {\n  onClick: () => void;\n  label: string;\n}) {\n  return (\n    <button id=\"btn\" onClick={onClick}>\n      {label}\n    </button>\n  );\n});\n\n// @annotate:function-decl Component declaration | Parent holds count state and passes a callback to a memoized child. Without useCallback every re-render creates a new function reference, defeating React.memo.\nexport default function Parent() {\n  const [count, setCount] = useState(0);\n\n  // @note useCallback returns the same function reference as long as its deps haven't changed. The empty dep array means handleClick is created once and reused forever.\n  // @annotate:closure Stable callback identity | The callback closes over setCount (a stable setter — React guarantees it never changes). Empty deps: no captured values that change, so the cached function is always valid.\n  const handleClick = useCallback(() => {\n    setCount((c) => c + 1);\n  }, []);\n\n  return (\n    <div>\n      <span id=\"count\">{count}</span>\n      <MyButton onClick={handleClick} label=\"increment\" />\n    </div>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#btn');\n  click('#btn');\n};\n",
+    "annotations": [
+      {
+        "line": 6,
+        "type": "comment",
+        "label": "Memoized child",
+        "detail": "MyButton is wrapped with React.memo — it only re-renders when its props change by reference. Passing the same function reference across renders is what makes this work."
+      },
+      {
+        "line": 21,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "Parent holds count state and passes a callback to a memoized child. Without useCallback every re-render creates a new function reference, defeating React.memo."
+      },
+      {
+        "line": 26,
+        "type": "closure",
+        "label": "Stable callback identity",
+        "detail": "The callback closes over setCount (a stable setter — React guarantees it never changes). Empty deps: no captured values that change, so the cached function is always valid."
+      }
+    ],
+    "recordedAt": "2026-08-19T11:52:40.773Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useCallback returns the same function reference as long as its deps haven't changed. The empty dep array means handleClick is created once and reused forever."
+    },
+    {
+      "i": 2,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 3,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "count",
+          "value": "0",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 34,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><span id=\"count\">0</span><button id=\"btn\">increment</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 8,
+      "line": 13,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "onClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "label",
+          "value": "\"increment\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "onClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "label",
+          "value": "\"increment\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 16,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "onClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "label",
+          "value": "\"increment\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 27,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 27,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "c",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 28,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 27,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 28,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [
+            "ƒ anonymous()",
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "c",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useCallback returns the same function reference as long as its deps haven't changed. The empty dep array means handleClick is created once and reused forever."
+    },
+    {
+      "i": 19,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "handleClick",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useCallback",
+          "memoized": "ƒ anonymous()",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    }
+  ]
+}

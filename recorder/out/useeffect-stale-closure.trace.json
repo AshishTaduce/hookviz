@@ -27,7 +27,7 @@
         "detail": "renders.current is mutated directly in the component body, not inside an effect. It's tolerated for refs (they don't trigger re-renders), but it's still a side effect happening during render."
       }
     ],
-    "recordedAt": "2026-08-19T04:16:14.805Z"
+    "recordedAt": "2026-08-19T11:52:54.053Z"
   },
   "steps": [
     {
@@ -1965,7 +1965,7 @@
           "status": "scheduled"
         }
       ],
-      "dom": "<div id=\"root\"></div>",
+      "dom": "<div id=\"root\"><button id=\"inc\">2</button></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
@@ -2061,65 +2061,6 @@
           "changed": false
         }
       ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "2",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useRef",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [],
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "2"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e2",
-          "deps": [],
-          "status": "fired"
-        },
-        {
-          "id": "e3",
-          "deps": [
-            "2"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 30,
-      "line": 20,
-      "phase": "idle",
-      "renderCount": 2,
-      "variables": [],
       "hooks": [
         {
           "index": 0,

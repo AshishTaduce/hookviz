@@ -1,0 +1,3061 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usememo-filter-list",
+    "title": "useMemo — skipping an expensive recalculation",
+    "hook": "useMemo",
+    "category": "usememo",
+    "reactVersion": "19.2.8",
+    "source": "// @title useMemo — skipping an expensive recalculation\n// @hook useMemo\nimport { useState, useMemo } from 'react';\n\n// Stable reference: defined outside the component, never triggers memo recalculation\nconst ITEMS = ['apple', 'apricot', 'banana', 'blueberry', 'cherry', 'cranberry'];\n\nfunction expensiveFilter(items: string[], query: string): string[] {\n  return items.filter((item) => item.includes(query));\n}\n\n// @annotate:function-decl Component declaration | FilterList re-filters a list as the query changes. useMemo caches the result so the filter only runs when its inputs actually change.\nexport default function FilterList() {\n  const [query, setQuery] = useState('');\n\n  // @note useMemo caches the return value between renders. React checks each dep by Object.is; only when query changes does it re-run expensiveFilter.\n  // @annotate:closure Cached computation | The memo callback closes over query. ITEMS is defined outside the component so its reference is always the same — only query drives recalculation.\n  const filtered = useMemo(() => expensiveFilter(ITEMS, query), [query]);\n\n  return (\n    <div>\n      <input\n        id=\"filter\"\n        value={query}\n        onChange={(e) => setQuery(e.target.value)}\n        placeholder=\"filter...\"\n      />\n      <ul id=\"list\">\n        {filtered.map((item) => <li key={item}>{item}</li>)}\n      </ul>\n    </div>\n  );\n}\n\nexport const scenario = async ({ type }: { type: (s: string, v: string) => void }) => {\n  type('#filter', 'a');\n  type('#filter', 'ap');\n};\n",
+    "annotations": [
+      {
+        "line": 13,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "FilterList re-filters a list as the query changes. useMemo caches the result so the filter only runs when its inputs actually change."
+      },
+      {
+        "line": 18,
+        "type": "closure",
+        "label": "Cached computation",
+        "detail": "The memo callback closes over query. ITEMS is defined outside the component so its reference is always the same — only query drives recalculation."
+      }
+    ],
+    "recordedAt": "2026-08-19T11:53:07.930Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 14,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useMemo caches the return value between renders. React checks each dep by Object.is; only when query changes does it re-run expensiveFilter."
+    },
+    {
+      "i": 2,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "items",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 3,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apple\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apricot\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"banana\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"blueberry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"cherry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"cranberry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "items",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useMemo caches the return value between renders. React checks each dep by Object.is; only when query changes does it re-run expensiveFilter."
+    },
+    {
+      "i": 11,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apple\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apricot\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"banana\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"blueberry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"cherry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"cranberry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 31,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"filter\" placeholder=\"filter...\" value=\"\"><ul id=\"list\"><li>apple</li><li>apricot</li><li>banana</li><li>blueberry</li><li>cherry</li><li>cranberry</li></ul></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 24,
+      "line": 25,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$ii6mktbd94' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 25,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$ii6mktbd94' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "query",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"a\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 14,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useMemo caches the return value between renders. React checks each dep by Object.is; only when query changes does it re-run expensiveFilter."
+    },
+    {
+      "i": 28,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "items",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apple\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apricot\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 31,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"banana\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 32,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"blueberry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 33,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"cherry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 34,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"cranberry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 35,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "items",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 36,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useMemo caches the return value between renders. React checks each dep by Object.is; only when query changes does it re-run expensiveFilter."
+    },
+    {
+      "i": 37,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 38,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 39,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 40,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apple\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 41,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apricot\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 42,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"banana\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 43,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"cranberry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 44,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 45,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 46,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 47,
+      "line": 31,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"filter\" placeholder=\"filter...\" value=\"a\"><ul id=\"list\"><li>apple</li><li>apricot</li><li>banana</li><li>cranberry</li></ul></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 48,
+      "line": 25,
+      "phase": "event",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$ii6mktbd94' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 49,
+      "line": 25,
+      "phase": "event",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$ii6mktbd94' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "query",
+          "value": "\"a\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [
+            "\"ap\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 50,
+      "line": 14,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"a\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 51,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useMemo caches the return value between renders. React checks each dep by Object.is; only when query changes does it re-run expensiveFilter."
+    },
+    {
+      "i": 52,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "items",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 53,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apple\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 54,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apricot\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 55,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"banana\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 56,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"blueberry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 57,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"cherry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 58,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"cranberry\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 59,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "items",
+          "value": "[\"apple\",\"apricot\",\"banana\",\"blueberry\",\"cherry\",\"cranberry\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 60,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\",\"banana\",\"cranberry\"]",
+          "queue": [],
+          "deps": [
+            "\"a\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useMemo caches the return value between renders. React checks each dep by Object.is; only when query changes does it re-run expensiveFilter."
+    },
+    {
+      "i": 61,
+      "line": 20,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\"]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\"]",
+          "queue": [],
+          "deps": [
+            "\"ap\""
+          ],
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 62,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\"]",
+          "queue": [],
+          "deps": [
+            "\"ap\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 63,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\"]",
+          "queue": [],
+          "deps": [
+            "\"ap\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 64,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apple\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\"]",
+          "queue": [],
+          "deps": [
+            "\"ap\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 65,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "item",
+          "value": "\"apricot\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\"]",
+          "queue": [],
+          "deps": [
+            "\"ap\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 66,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\"]",
+          "kind": "array",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\"]",
+          "queue": [],
+          "deps": [
+            "\"ap\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 67,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\"]",
+          "queue": [],
+          "deps": [
+            "\"ap\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 68,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "query",
+          "value": "\"ap\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setQuery",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "filtered",
+          "value": "[\"apple\",\"apricot\"]",
+          "kind": "array",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\"]",
+          "queue": [],
+          "deps": [
+            "\"ap\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 69,
+      "line": 31,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"ap\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useMemo",
+          "memoized": "[\"apple\",\"apricot\"]",
+          "queue": [],
+          "deps": [
+            "\"ap\""
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    }
+  ]
+}

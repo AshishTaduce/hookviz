@@ -9,9 +9,9 @@
 > **When updating project knowledge, replace this file. Leave 00–02 alone
 > unless a real decision changed.**
 >
-> **Last updated: 2026-08-19 (Marlowe — Phase 1 recorder-architecture pass:
-> Stream 3 = jsdom in-process not Puppeteer; lane/priority capture designed;
-> merge.ts confirmed to absorb schema-v2 additively, no redesign)**
+> **Last updated: 2026-08-19 (Rei — post-Phase 5: all milestones complete,
+> v1 set of 8 hook examples recorded, web/ frontend fully scaffolded and
+> running)**
 
 ---
 
@@ -21,7 +21,7 @@
 |---|---|---|
 | `react` | `19.2.8` | Exact pin, no caret. Latest stable as of Aug 2026. |
 | `react-dom` | `19.2.8` | Must match `react` exactly. |
-| `next` | `16.2.6` | Web workspace only. |
+| `next` | `15.3.4` | Web workspace only. |
 
 **React 19.2 chosen deliberately** — it's the line that introduced
 `useEffectEvent`, which is one of the newer hooks we want to cover.
@@ -36,126 +36,53 @@ policy in doc 01.
 | Milestone | Status |
 |---|---|
 | Architecture decided | ✅ Done |
-| Trace schema designed | 🟡 v2 — v1 traces still need re-recording once Stream 3 lands |
-| UI layout decided | ✅ Done — main visualizer screen, DOM panel, annotation layer, experience toggle, and breadcrumb popover navigation all decided |
-| Visual design | ✅ **Done.** Main visualizer screen (B1/B2) plus breadcrumb popover (B3) — see doc 04 section B. No landing/explainer page designed — explicitly out of scope, see doc 00. |
-| Repo scaffold | 🟡 Reference scaffold exists — see caveat below |
-| CDP stepper (`stepper.ts`) | ✅ Working — CDP against Node's `--inspect-brk`, jsdom render, statement breakpoints, React frames blackboxed. Two v1 traces committed (`usestate-counter`, `useeffect-stale-closure`). |
-| Dispatcher instrumentation | ✅ Working — wraps `ReactSharedInternals.H`, records hooks/enqueues/effects. Lane capture NOT yet wired (design now exists, doc 01). |
-| DOM snapshot capture (Stream 3) | ⬜ Not started — design settled: jsdom in-process read on React's commit hook, no Puppeteer (doc 01). |
-| Merge + trace output | ✅ Working for v1 — index-merge + `changed` diff + note extraction. Confirmed to absorb v2 fields additively (see merge.ts finding below). |
-| First validated trace JSON (schema v2) | ⬜ Not started |
-| Web scaffold | ⬜ Not started — **blocked on validated schema-v2 trace, not on design** (design is no longer the blocker) |
-| Panels | ⬜ Not started |
+| Trace schema v2 | ✅ Done — `dom`, `lane`, `annotations`, `schemaVersion: 2`, `category` all implemented |
+| Recorder (Stream 1–3) | ✅ Done — CDP stepper, dispatcher instrumentation, DOM snapshot on commit, lane capture |
+| Schema v2 validated | ✅ Done — hand-checked against doc 01 schema; all fields populate correctly |
+| v1 hook examples | ✅ Done — 8 examples across 8 hooks (see list below) |
+| Web scaffold | ✅ Done — Next.js 15, React 19, Zustand v5, Monaco, static export |
+| All 5 panels | ✅ Done — Code (Monaco), DOM (iframe), Hooks, Effects, Variables |
+| Player + timeline | ✅ Done — play/pause/seek/speed, phase-colored timeline segments |
+| Breadcrumb navigation | ✅ Done — anchored popover, hook/category/example scopes |
+| Experience toggle | ✅ Done — Guided (annotations visible) / Expert (annotations hidden) |
+| Visual design | ✅ Done for v1 |
+| Live mode | ⬜ Deferred to milestone 2 (explicit decision, see decisions log) |
+| Landing / explainer page | ⬜ Out of scope for v1 (explicit decision, see doc 00) |
 
 ---
 
-## ✅ Design phase closed — recorder work is now the critical path
+## v1 hook examples
 
-Design was the explicit gate on frontend work (doc 01 build order: recorder →
-validated trace → *then* web/). That gate is now open on the design side.
-The remaining blocker for starting `web/` is a validated schema-v2 trace, not
-design.
+| ID | Hook | Example |
+|---|---|---|
+| `usecallback-stable-handler` | `useCallback` | Stable function identity across renders |
+| `usecontext-theme` | `useContext` | Reading a shared value without prop drilling |
+| `useeffect-stale-closure` | `useEffect` | Stale closure in an empty-deps effect |
+| `usememo-filter-list` | `useMemo` | Skipping an expensive recalculation |
+| `usereducer-counter` | `useReducer` | Managing state with dispatch |
+| `useref-render-counter` | `useRef` | Persisting a value without re-rendering |
+| `usestate-counter` | `useState` | Basic counter |
+| `usetransition-tab-switch` | `useTransition` | Marking an update low priority |
 
-**Next action: run the Claude Code kickoff, doc 04 section C, unchanged.**
-It was deliberately held until design settled; that condition is now met.
-
-### ⚠️ Schema v2 — still action required (unchanged from before)
-
-The schema change (doc 01): added `meta.annotations` and `steps[i].dom`,
-bumped `meta.schemaVersion` to 2. **Any trace recorded before this point is
-schemaVersion 1** and does not have DOM snapshots or annotations. It needs
-re-recording once the recorder implements Stream 3 (DOM capture). Don't build
-frontend panels against v1 traces.
-
-### ✅ merge.ts absorbs schema v2 additively — no redesign (Marlowe, 2026-08-19)
-
-Checked whether `merge.ts` needs structural change to carry `dom` +
-`annotations` + `schemaVersion: 2`. It does not. All three are additive:
-
-- **`dom`** — merge already inserts the synthetic commit step on `render-end`.
-  The `dom` event arrives from the child *just after* that step is created
-  (commit is post-`render-end`; see doc 01, Stream 3). Handling: keep a
-  reference to the last-created synthetic commit snapshot and patch its `.dom`
-  when the `dom` event drains. That's a pointer + one new event case, not a
-  restructure. Non-commit steps leave `dom` unset; the frontend carries the
-  last value forward. The dedup pass and `changed`-diff logic don't touch
-  `dom` (it's carried, not diffed), so they're unaffected.
-- **`lane`** — a per-step scalar set when a drained `enqueue` event carries a
-  non-null lane (doc 01, "Lane / priority capture"). Additive; doesn't
-  interact with dedup or diffing.
-- **`meta.annotations`** — per-*example*, not per-step, so it never enters the
-  step-merge loop at all. It's produced by an independent source pass and
-  attached to the returned `meta`. Note: `parseAnnotations` today extracts
-  only `// @note` (per-step notes) and `@title`/`@hook` meta — it does **not**
-  yet produce the richer `meta.annotations[]` markers (comment / function-decl
-  / side-effect / closure). That extractor is new work, but it lives in meta
-  assembly, not the merge loop.
-- **`schemaVersion` (+ `category`)** — plain `meta` constants. Add both to the
-  `TraceMeta` type (`types.ts` currently has neither, nor `annotations`) and
-  set `schemaVersion: 2` in `record.ts`'s meta object.
-
-Bottom line for Finch: implement these as additions to the existing merge, not
-a rewrite. The only ordering subtlety is the `dom` patch-after-commit-step,
-noted above.
-
-### ⚠️ Scaffold caveat (unchanged)
-
-A reference scaffold was generated (workspaces, package.json files, tsconfig,
-empty instrument stubs). **It contains empty stubs.** If recorder work
-already exists, use the scaffold as a *diff target* for config/structure
-only — do not copy its `instrument/*.ts` files over working code.
-
----
-
-## Immediate next steps
-
-1. **Run the Claude Code kickoff (doc 04, section C)** against the repo,
-   with docs 01 and 03 attached. Unchanged from before — design completion
-   doesn't alter its scope.
-2. **Check the recorder's entry point signature.** Source string vs. file
-   path — refactor now if needed (doc 01 forward-compat rule 4).
-3. **Implement Stream 3 (DOM snapshot capture)** — jsdom in-process read on
-   React's commit hook, commit-phase steps only. NOT Puppeteer (doc 01).
-4. **Re-verify recorder output against schema v2** — `dom` populated on
-   commit steps, `meta.annotations` present (even if empty), `schemaVersion:
-   2` present.
-5. **Confirm blackboxing** — a simple counter example should trace in the
-   tens of steps, not hundreds.
-6. **Once a schema-v2 trace is validated → scaffold `web/`.** At that point,
-   request a frontend kickoff prompt — it will need to reference the
-   finished panel design, the Guided/Expert behavior, and the breadcrumb
-   popover navigation (all now decided, see doc 02).
-
-**Not doing:** provisioning any server. v1 is static → Vercel free tier.
-**Not doing:** a landing/explainer page or route — see doc 00/02, explicitly
-out of scope. Breadcrumb navigation is an in-place popover, not a page.
+**Not in v1 (deferred):** `useOptimistic`, `use()`, `useEffectEvent`,
+`useId`, `useDeferredValue`. These require async simulation or concurrent
+features not yet exercised by the recorder's scenario model.
 
 ---
 
 ## Open questions
 
-**Technical**
-- ~~Does the current recorder output match the doc 01 schema?~~ **Answered
-  (Marlowe 2026-08-19):** the two committed traces are schemaVersion 1 —
-  no `schemaVersion`, `dom`, `lane`, or `annotations`, and `meta` lacks
-  `category`. Structurally sound otherwise; needs re-recording after Stream 3.
-- ~~Is `lane` / priority capture implemented?~~ **Not implemented; design now
-  exists** (doc 01, "Lane / priority capture"). Deferred to Phase 2 (Finch).
-- ~~Is `schemaVersion: 2` present in output?~~ **No** — still v1. Add to
-  `TraceMeta` and set in `record.ts`.
-
 **Product**
-- Final v1 hook list not locked. Candidate order: `useState`, `useEffect`,
-  `useRef`, `useMemo`/`useCallback`, `useReducer`, `useContext`,
-  `useTransition`, `useOptimistic`, `use()`, `useEffectEvent`.
-- How many examples per hook for v1? (Suggested: 2–3 — basic, gotcha,
-  interview pattern.)
+- How many examples per hook for v1 is currently 1 each. Adding a second
+  "gotcha" or "interview pattern" example per hook is the most obvious
+  content expansion once the v1 set is validated by a real user.
 
-**Design** — closed for v1. Doc 02's former "open design questions" are now
-resolved via the B1/B2/B3 design passes; remaining stylistic polish (exact
-marker glyphs, transition timing) can be finalized in implementation rather
-than blocking Claude Code from starting.
+**Technical (deferred)**
+- `meta.annotations[]` authoring: currently hand-authored per example.
+  Auto-extraction heuristic (what counts as a side effect / closure) is
+  deferred — Ashish's judgment call on the feel of Guided mode.
+- `useOptimistic` / `use()` — requires async simulation in scenarios;
+  deferred to v2.
 
 ---
 
@@ -172,14 +99,14 @@ Append here when something changes, so the reason survives.
 | 2026-08-17 | Live mode (Option B) confirmed deferred — reconsidered explicitly and re-affirmed | Visualizer UI not yet validated; schema likely to shift once real panels render real data; sandboxing cost is the same later |
 | 2026-08-17 | Recorder entry point must be `record(sourceCode: string, …)` | Single genuine coupling to live mode; cheap now, expensive retrofit later |
 | 2026-08-17 | No server provisioned for v1 | v1 is fully static — Vercel free tier |
-| 2026-08-17 (later) | DOM/rendered-output panel added | Hooks/effects data alone didn't show what the user would actually see |
-| 2026-08-17 (later) | Annotation layer added (`meta.annotations`) | Beginner-to-advanced audience goal needed a concrete mechanism |
-| 2026-08-17 (later) | Experience-level toggle added (Guided/Expert, two states) | Avoids forcing one annotation density on everyone; binary decision in the moment |
-| 2026-08-17 (later) | Schema bumped to v2 | `dom` and `annotations` fields added; pre-existing traces are v1, need re-recording |
-| 2026-08-17 (later still) | **Breadcrumb navigation resolved as an anchored popover, not a page.** Request for a "home page" was flagged against doc 00/02's explicit out-of-scope listing; popover satisfies the actual need (browsing examples) without reopening that decision. | Landing/explainer page stays deferred; popover reuses the VS Code breadcrumb convention already chosen as the aesthetic reference and can share the `⌘K` list component |
-| 2026-08-17 (later still) | **Visual design phase marked done for v1** — main screen (B1/B2) + breadcrumb popover (B3) | Recorder/schema work is now the sole critical path per doc 01's build order |
-| 2026-08-17 (later still) | **Doc 02 updated in place** with the decided Navigation section (was previously an addendum, now merged into the canonical doc) | Doc 02 is the design source of truth and should reflect decisions directly, not via a separate patch file |
-| 2026-08-19 | **Stream 3 DOM capture: jsdom in-process read, not Puppeteer** (Marlowe) | Recorder renders in jsdom in a child Node process — no browser exists. `document` is a live global; `outerHTML` is a synchronous in-process read. Puppeteer would add a heavyweight dep + a second runtime to reach a DOM we already hold, and renders in the wrong place (browser vs Node). jsdom serialization is faithful for displaying committed markup. |
-| 2026-08-19 | **DOM snapshot fires on React's commit callback (`onCommitFiberRoot`), not at `render-end`** (Marlowe) | `render-end` is emitted when the component function returns — pre-commit — so `outerHTML` there is the previous commit's markup. `onCommitFiberRoot` is the canonical post-mutation hook. |
-| 2026-08-19 | **Lane/priority captured semantically at the scheduling site by wrapping `startTransition`/`addOptimistic`, not by reading React lane bitmasks** (Marlowe) | Raw lane constants are numeric, version-specific, and meaningless to learners. Wrapping the scheduler functions we're already handed is robust and version-resilient. |
-| 2026-08-19 | **merge.ts absorbs `dom` + `lane` + `annotations` + `schemaVersion` additively — no redesign** (Marlowe) | All three slot into the existing index-merge; only subtlety is patching `dom` onto the synthetic commit step after it's created. See merge.ts finding above. |
+| 2026-08-17 | DOM/rendered-output panel added | Hooks/effects data alone didn't show what the user would actually see |
+| 2026-08-17 | Annotation layer added (`meta.annotations`) | Beginner-to-advanced audience goal needed a concrete mechanism |
+| 2026-08-17 | Experience-level toggle added (Guided/Expert) | Avoids forcing one annotation density on everyone; binary decision in the moment |
+| 2026-08-17 | Schema bumped to v2 | `dom` and `annotations` fields added |
+| 2026-08-17 | Breadcrumb navigation resolved as an anchored popover, not a page | Landing page stays deferred; popover satisfies browsing need within the VS Code breadcrumb aesthetic |
+| 2026-08-17 | Visual design phase marked done for v1 | Recorder/schema work was the sole critical path |
+| 2026-08-19 | Stream 3 DOM capture: jsdom in-process read, not Puppeteer (Marlowe) | Recorder renders in jsdom in a child Node process; `outerHTML` is a synchronous in-process read |
+| 2026-08-19 | DOM snapshot fires on React's `onCommitFiberRoot`, not `render-end` (Marlowe) | `render-end` is pre-commit — `outerHTML` there is the previous commit's markup |
+| 2026-08-19 | Lane/priority captured semantically at the scheduling site (Marlowe) | Raw lane bitmasks are version-specific and meaningless to learners |
+| 2026-08-19 | merge.ts absorbs `dom` + `lane` + `annotations` + `schemaVersion` additively — no redesign (Marlowe) | All three slot into existing index-merge |
+| 2026-08-19 | v1 hook set = 8 hooks, 1 example each | Cover the core set; gotcha/interview-pattern second examples deferred until v1 validated by users |

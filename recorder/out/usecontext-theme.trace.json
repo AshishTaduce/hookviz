@@ -1,0 +1,892 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usecontext-theme",
+    "title": "useContext — reading a shared value without prop drilling",
+    "hook": "useContext",
+    "category": "usecontext",
+    "reactVersion": "19.2.8",
+    "source": "// @title useContext — reading a shared value without prop drilling\n// @hook useContext\nimport { createContext, useContext, useState } from 'react';\n\ntype Theme = 'light' | 'dark';\n\nconst ThemeContext = createContext<Theme>('light');\n\n// @annotate:comment Consumer reads context without props | ThemedBox receives no props. useContext subscribes it directly to the nearest ThemeContext.Provider — React re-renders it whenever the provider's value changes, no prop threading required.\nfunction ThemedBox() {\n  // @note useContext subscribes this component to context changes. Any re-render of a Provider with a changed value propagates down to all consumers, skipping memo boundaries.\n  const theme = useContext(ThemeContext);\n  return (\n    <div\n      id=\"box\"\n      style={{\n        background: theme === 'dark' ? '#1e1e1e' : '#ffffff',\n        color: theme === 'dark' ? '#cccccc' : '#111111',\n        padding: '8px',\n        borderRadius: '4px',\n      }}\n    >\n      {theme}\n    </div>\n  );\n}\n\n// @annotate:function-decl Component declaration | App holds the theme state and wraps its subtree in a Provider. The value prop is what consumers receive — changing it triggers re-renders in all subscribed consumers.\nexport default function App() {\n  const [theme, setTheme] = useState<Theme>('light');\n\n  return (\n    <ThemeContext.Provider value={theme}>\n      <ThemedBox />\n      <button\n        id=\"toggle\"\n        onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}\n      >\n        toggle\n      </button>\n    </ThemeContext.Provider>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#toggle');\n};\n",
+    "annotations": [
+      {
+        "line": 10,
+        "type": "comment",
+        "label": "Consumer reads context without props",
+        "detail": "ThemedBox receives no props. useContext subscribes it directly to the nearest ThemeContext.Provider — React re-renders it whenever the provider's value changes, no prop threading required."
+      },
+      {
+        "line": 29,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "App holds the theme state and wraps its subtree in a Provider. The value prop is what consumers receive — changing it triggers re-renders in all subscribed consumers."
+      }
+    ],
+    "recordedAt": "2026-08-19T11:52:47.120Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"light\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"light\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 3,
+      "line": 35,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"light\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"light\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 41,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"light\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 41,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div id=\"box\" style=\"background: rgb(255, 255, 255); color: rgb(17, 17, 17); padding: 8px; border-radius: 4px;\">light</div><button id=\"toggle\">toggle</button></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 7,
+      "line": 12,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useContext subscribes this component to context changes. Any re-render of a Provider with a changed value propagates down to all consumers, skipping memo boundaries."
+    },
+    {
+      "i": 8,
+      "line": 13,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"light\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"light\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 24,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"light\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 37,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 37,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"light\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 37,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 35,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 41,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 41,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 21,
+      "line": 12,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"light\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useContext subscribes this component to context changes. Any re-render of a Provider with a changed value propagates down to all consumers, skipping memo boundaries."
+    },
+    {
+      "i": 22,
+      "line": 13,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 14,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 24,
+      "line": 24,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 24,
+      "phase": "idle",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useContext",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    }
+  ]
+}

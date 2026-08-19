@@ -1,0 +1,1067 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usereducer-counter",
+    "title": "useReducer — managing state with dispatch",
+    "hook": "useReducer",
+    "category": "usereducer",
+    "reactVersion": "19.2.8",
+    "source": "// @title useReducer — managing state with dispatch\n// @hook useReducer\nimport { useReducer } from 'react';\n\ntype State = { count: number };\ntype Action = { type: 'increment' } | { type: 'decrement' } | { type: 'reset' };\n\n// @annotate:function-decl Reducer function | A reducer is a pure function — given current state and an action, it returns next state. No side effects, no mutations, no async work.\nfunction reducer(state: State, action: Action): State {\n  switch (action.type) {\n    case 'increment': return { count: state.count + 1 };\n    case 'decrement': return { count: Math.max(0, state.count - 1) };\n    case 'reset':     return { count: 0 };\n  }\n}\n\n// @annotate:function-decl Component declaration | Counter delegates all state transitions to reducer — the component only decides which action to dispatch, never how state changes.\nexport default function Counter() {\n  // @note useReducer returns [currentState, dispatch]. Dispatch sends an action object to reducer; the return value becomes the next state.\n  // @annotate:comment Predictable transitions | Every state change goes through one function with one input and one output. This makes state transitions enumerable, testable, and reversible — unlike multiple useState setters scattered across handlers.\n  const [state, dispatch] = useReducer(reducer, { count: 0 });\n\n  return (\n    <div>\n      <span id=\"count\">{state.count}</span>\n      <button id=\"inc\" onClick={() => dispatch({ type: 'increment' })}>+</button>\n      <button id=\"dec\" onClick={() => dispatch({ type: 'decrement' })}>−</button>\n      <button id=\"reset\" onClick={() => dispatch({ type: 'reset' })}>reset</button>\n    </div>\n  );\n}\n\nexport const scenario = async ({ click }: { click: (s: string) => void }) => {\n  click('#inc');\n  click('#inc');\n  click('#dec');\n  click('#reset');\n};\n",
+    "annotations": [
+      {
+        "line": 9,
+        "type": "function-decl",
+        "label": "Reducer function",
+        "detail": "A reducer is a pure function — given current state and an action, it returns next state. No side effects, no mutations, no async work."
+      },
+      {
+        "line": 18,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "Counter delegates all state transitions to reducer — the component only decides which action to dispatch, never how state changes."
+      },
+      {
+        "line": 21,
+        "type": "comment",
+        "label": "Predictable transitions",
+        "detail": "Every state change goes through one function with one input and one output. This makes state transitions enumerable, testable, and reversible — unlike multiple useState setters scattered across handlers."
+      }
+    ],
+    "recordedAt": "2026-08-19T11:53:16.846Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useReducer returns [currentState, dispatch]. Dispatch sends an action object to reducer; the return value becomes the next state."
+    },
+    {
+      "i": 1,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 3,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 29,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><span id=\"count\">0</span><button id=\"inc\">+</button><button id=\"dec\">−</button><button id=\"reset\">reset</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 9,
+      "line": 26,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 26,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [
+            "{\"type\":\"increment\"}"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 26,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [
+            "{\"type\":\"increment\"}",
+            "{\"type\":\"increment\"}"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 27,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [
+            "{\"type\":\"increment\"}",
+            "{\"type\":\"increment\"}"
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 27,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [
+            "{\"type\":\"increment\"}",
+            "{\"type\":\"increment\"}",
+            "{\"type\":\"decrement\"}"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 28,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [
+            "{\"type\":\"increment\"}",
+            "{\"type\":\"increment\"}",
+            "{\"type\":\"decrement\"}"
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 28,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [
+            "{\"type\":\"increment\"}",
+            "{\"type\":\"increment\"}",
+            "{\"type\":\"decrement\"}",
+            "{\"type\":\"reset\"}"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useReducer returns [currentState, dispatch]. Dispatch sends an action object to reducer; the return value becomes the next state."
+    },
+    {
+      "i": 17,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"increment\"}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"increment\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":1}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"increment\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":1}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"increment\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":2}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"decrement\"}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 12,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":2}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"decrement\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":1}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"reset\"}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 24,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":1}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "action",
+          "value": "{\"type\":\"reset\"}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 31,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "state",
+          "value": "{\"count\":0}",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "dispatch",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 32,
+      "line": 29,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 33,
+      "line": 29,
+      "phase": "idle",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useReducer",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    }
+  ]
+}

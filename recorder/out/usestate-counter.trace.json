@@ -27,7 +27,7 @@
         "detail": "increment closes over count from this render; calling it later still uses the value captured at definition time, not whatever count is by then."
       }
     ],
-    "recordedAt": "2026-08-19T04:16:19.300Z"
+    "recordedAt": "2026-08-19T11:53:31.155Z"
   },
   "steps": [
     {

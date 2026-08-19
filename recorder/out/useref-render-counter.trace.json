@@ -1,0 +1,1317 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "useref-render-counter",
+    "title": "useRef — persisting a value without re-rendering",
+    "hook": "useRef",
+    "category": "useref",
+    "reactVersion": "19.2.8",
+    "source": "// @title useRef — persisting a value without re-rendering\n// @hook useRef\nimport { useRef, useState } from 'react';\n\n// @annotate:function-decl Component declaration | RenderCounter shows the difference between state and a ref: state triggers re-renders when it changes; mutating ref.current is invisible to the scheduler.\nexport default function RenderCounter() {\n  const [value, setValue] = useState('');\n  // @note useRef returns a stable container object — the same object reference across every render. Mutating .current never causes a re-render.\n  // @annotate:comment Mutable container, not reactive | ref.current is a plain object property. React doesn't track reads or writes to it — no subscription, no re-render, no stale-closure hazard.\n  const renderCount = useRef(0);\n  renderCount.current += 1;\n\n  return (\n    <div>\n      <input\n        id=\"input\"\n        value={value}\n        onChange={(e) => setValue(e.target.value)}\n        placeholder=\"type here\"\n      />\n      <span id=\"renders\">renders: {renderCount.current}</span>\n    </div>\n  );\n}\n\nexport const scenario = async ({ type }: { type: (s: string, v: string) => void }) => {\n  type('#input', 'h');\n  type('#input', 'hi');\n};\n",
+    "annotations": [
+      {
+        "line": 6,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "RenderCounter shows the difference between state and a ref: state triggers re-renders when it changes; mutating ref.current is invisible to the scheduler."
+      },
+      {
+        "line": 10,
+        "type": "comment",
+        "label": "Mutable container, not reactive",
+        "detail": "ref.current is a plain object property. React doesn't track reads or writes to it — no subscription, no re-render, no stale-closure hazard."
+      }
+    ],
+    "recordedAt": "2026-08-19T11:53:23.676Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useRef returns a stable container object — the same object reference across every render. Mutating .current never causes a re-render."
+    },
+    {
+      "i": 2,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":0}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 3,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":1}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":1}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":1}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 14,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":1}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":1}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 22,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"input\" placeholder=\"type here\" value=\"\"><span id=\"renders\">renders: 1</span></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 9,
+      "line": 18,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$0cpsp78ppzkt' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 18,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$0cpsp78ppzkt' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"h\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"h\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "0",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useRef returns a stable container object — the same object reference across every render. Mutating .current never causes a re-render."
+    },
+    {
+      "i": 13,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"h\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":1}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"h\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":2}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"h\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"h\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 14,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"h\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"h\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":2}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 22,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"input\" placeholder=\"type here\" value=\"h\"><span id=\"renders\">renders: 2</span></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 20,
+      "line": 18,
+      "phase": "event",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$0cpsp78ppzkt' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 18,
+      "phase": "event",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$0cpsp78ppzkt' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [
+            "\"hi\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"h\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"hi\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"hi\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useRef returns a stable container object — the same object reference across every render. Mutating .current never causes a re-render."
+    },
+    {
+      "i": 24,
+      "line": 11,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"hi\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":2}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"hi\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"hi\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":3}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"hi\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"hi\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"hi\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"hi\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"hi\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 14,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"hi\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"hi\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "value",
+          "value": "\"hi\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setValue",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "renderCount",
+          "value": "{\"current\":3}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"hi\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 22,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"hi\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"input\" placeholder=\"type here\" value=\"hi\"><span id=\"renders\">renders: 3</span></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    }
+  ]
+}
