@@ -1,6 +1,5 @@
 {
   "buildCommand": "npm run build -w web",
   "outputDirectory": "web/out",
-  "installCommand": "npm install && mkdir -p web/public/monaco && cp -r node_modules/monaco-editor/min/vs web/public/monaco/vs",
   "framework": "nextjs"
 }

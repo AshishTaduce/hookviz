@@ -3,9 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "predev": "rm -rf .next",
+    "predev": "rm -rf .next && node scripts/copy-monaco.mjs",
     "dev": "next dev",
-    "prebuild": "rm -rf .next && tsx lib/generate-catalog.ts",
+    "prebuild": "rm -rf .next && node scripts/copy-monaco.mjs && tsx lib/generate-catalog.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -13,7 +13,7 @@
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
     "monaco-editor": "^0.52.2",
-    "next": "15.3.4",
+    "next": "^15.5.29",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zustand": "^5.0.0"
