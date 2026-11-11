@@ -154,7 +154,13 @@ export function mergeSteps(
           phase = ev.phase;
           break;
         case 'dom':
-          if (lastCommitSnapshot) lastCommitSnapshot.dom = ev.html;
+          // One dom event per commit. Consume the pointer so a later event without a render
+          // of its own (the final unmount commits an empty root) cannot overwrite the DOM of
+          // the last real commit.
+          if (lastCommitSnapshot) {
+            lastCommitSnapshot.dom = ev.html;
+            lastCommitSnapshot = null;
+          }
           break;
       }
     }

@@ -28,8 +28,20 @@ const catalog: CatalogEntry[] = [
     "category": "usecontext"
   },
   {
+    "id": "usedeferredvalue-lag",
+    "title": "useDeferredValue — urgent render first, deferred render after",
+    "hook": "useDeferredValue",
+    "category": "usedeferredvalue"
+  },
+  {
     "id": "useeffect-cleanup",
     "title": "useEffect — cleanup prevents memory leaks",
+    "hook": "useEffect",
+    "category": "useeffect"
+  },
+  {
+    "id": "useeffect-fetch-race",
+    "title": "useEffect — out-of-order responses overwrite newer data",
     "hook": "useEffect",
     "category": "useeffect"
   },
@@ -62,6 +74,12 @@ const catalog: CatalogEntry[] = [
     "title": "useMemo — why inline objects in deps defeat memoization",
     "hook": "useMemo",
     "category": "usememo"
+  },
+  {
+    "id": "useoptimistic-pending",
+    "title": "useOptimistic — show the result now, confirm when the server answers",
+    "hook": "useOptimistic",
+    "category": "useoptimistic"
   },
   {
     "id": "usereducer-counter",

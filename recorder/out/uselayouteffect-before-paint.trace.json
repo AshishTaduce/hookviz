@@ -27,7 +27,7 @@
         "detail": "useLayoutEffect blocks painting. Use it to measure the DOM and adjust synchronously (tooltip position, scroll restore). Keep the work tiny, because it delays every frame."
       }
     ],
-    "recordedAt": "2026-11-11T20:29:08.419Z"
+    "recordedAt": "2026-11-11T21:42:23.331Z"
   },
   "steps": [
     {

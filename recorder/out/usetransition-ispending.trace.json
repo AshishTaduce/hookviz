@@ -27,7 +27,7 @@
         "detail": "isPending becomes true the moment startTransition fires and stays true until React commits all the renders scheduled inside the transition. Use it to show a loading indicator while the heavy update catches up."
       }
     ],
-    "recordedAt": "2026-08-19T12:58:49.467Z"
+    "recordedAt": "2026-11-11T21:44:12.968Z"
   },
   "steps": [
     {
@@ -2835,7 +2835,7 @@
       "variables": [
         {
           "name": "e",
-          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$nla2pt32xh' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$8frjhkrtu9e' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
           "kind": "object",
           "changed": true
         },
@@ -3249,7 +3249,7 @@
       "variables": [
         {
           "name": "e",
-          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$nla2pt32xh' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$8frjhkrtu9e' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
           "kind": "object",
           "changed": true
         },
@@ -4692,7 +4692,7 @@
         }
       ],
       "effects": [],
-      "dom": null,
+      "dom": "<div id=\"root\"><div><input id=\"search\" placeholder=\"filter items...\" value=\"item-1\"><ul id=\"list\"><li>item-1</li><li>item-10</li><li>item-11</li><li>item-12</li><li>item-13</li><li>item-14</li><li>item-15</li><li>item-16</li><li>item-17</li><li>item-18</li><li>item-19</li></ul></div></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."

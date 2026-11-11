@@ -27,7 +27,7 @@
         "detail": "setCount(c => c + 1) receives the value from the previous queued update, not the closed-over snapshot. The two calls chain: 0 → 1 → 2."
       }
     ],
-    "recordedAt": "2026-08-19T12:58:27.083Z"
+    "recordedAt": "2026-11-11T21:43:39.914Z"
   },
   "steps": [
     {
@@ -513,117 +513,6 @@
     },
     {
       "i": 13,
-      "line": 22,
-      "phase": "event",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "count",
-          "value": "0",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setCount",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [
-            "1",
-            "1"
-          ],
-          "deps": null,
-          "changed": false
-        }
-      ],
-      "effects": [],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 14,
-      "line": 23,
-      "phase": "event",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "count",
-          "value": "0",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setCount",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [
-            "1",
-            "1",
-            "ƒ anonymous()"
-          ],
-          "deps": null,
-          "changed": true
-        }
-      ],
-      "effects": [],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 15,
-      "line": 24,
-      "phase": "event",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "count",
-          "value": "0",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setCount",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [
-            "1",
-            "1",
-            "ƒ anonymous()",
-            "ƒ anonymous()"
-          ],
-          "deps": null,
-          "changed": true
-        }
-      ],
-      "effects": [],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 16,
       "line": 7,
       "phase": "render",
       "renderCount": 2,
@@ -643,20 +532,14 @@
       "lane": null
     },
     {
-      "i": 17,
-      "line": 22,
+      "i": 14,
+      "line": 13,
       "phase": "render",
       "renderCount": 2,
       "variables": [
         {
-          "name": "c",
-          "value": "1",
-          "kind": "number",
-          "changed": true
-        },
-        {
           "name": "count",
-          "value": "0",
+          "value": "1",
           "kind": "number",
           "changed": true
         },
@@ -671,7 +554,138 @@
         {
           "index": 0,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "Both setCount calls read the same `count` from this render's closure."
+    },
+    {
+      "i": 15,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "doubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "Functional updates are queued, not merged — each receives the latest"
+    },
+    {
+      "i": 16,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "doubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "correctDoubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "doubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "correctDoubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
           "queue": [],
           "deps": null,
           "changed": false
@@ -683,19 +697,215 @@
     },
     {
       "i": 18,
-      "line": 23,
+      "line": 29,
       "phase": "render",
       "renderCount": 2,
       "variables": [
         {
-          "name": "c",
-          "value": "2",
+          "name": "count",
+          "value": "1",
           "kind": "number",
-          "changed": true
+          "changed": false
         },
         {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "doubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "correctDoubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
           "name": "count",
-          "value": "0",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "doubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "correctDoubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "doubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "correctDoubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "doubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "correctDoubleIncrement",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 31,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><span id=\"count\">1</span><button id=\"wrong\">+2 (broken)</button><button id=\"correct\">+2 (fixed)</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 23,
+      "line": 22,
+      "phase": "event",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
           "kind": "number",
           "changed": false
         },
@@ -710,7 +920,7 @@
         {
           "index": 0,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
           "queue": [],
           "deps": null,
           "changed": false
@@ -721,10 +931,179 @@
       "lane": null
     },
     {
-      "i": 19,
+      "i": 24,
+      "line": 23,
+      "phase": "event",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 24,
+      "phase": "event",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [
+            "ƒ anonymous()",
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "c",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "c",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
       "line": 13,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 3,
       "variables": [
         {
           "name": "count",
@@ -755,10 +1134,10 @@
       "note": "Both setCount calls read the same `count` from this render's closure."
     },
     {
-      "i": 20,
+      "i": 30,
       "line": 21,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 3,
       "variables": [
         {
           "name": "count",
@@ -795,10 +1174,10 @@
       "note": "Functional updates are queued, not merged — each receives the latest"
     },
     {
-      "i": 21,
+      "i": 31,
       "line": 26,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 3,
       "variables": [
         {
           "name": "count",
@@ -840,10 +1219,10 @@
       "lane": null
     },
     {
-      "i": 22,
+      "i": 32,
       "line": 28,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 3,
       "variables": [
         {
           "name": "count",
@@ -885,10 +1264,10 @@
       "lane": null
     },
     {
-      "i": 23,
+      "i": 33,
       "line": 29,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 3,
       "variables": [
         {
           "name": "count",
@@ -930,10 +1309,10 @@
       "lane": null
     },
     {
-      "i": 24,
+      "i": 34,
       "line": 30,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 3,
       "variables": [
         {
           "name": "count",
@@ -975,10 +1354,10 @@
       "lane": null
     },
     {
-      "i": 25,
+      "i": 35,
       "line": 27,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 3,
       "variables": [
         {
           "name": "count",
@@ -1020,10 +1399,10 @@
       "lane": null
     },
     {
-      "i": 26,
+      "i": 36,
       "line": 31,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 3,
       "variables": [
         {
           "name": "count",
@@ -1065,10 +1444,10 @@
       "lane": null
     },
     {
-      "i": 27,
+      "i": 37,
       "line": 31,
       "phase": "commit",
-      "renderCount": 2,
+      "renderCount": 3,
       "variables": [],
       "hooks": [
         {
@@ -1081,30 +1460,10 @@
         }
       ],
       "effects": [],
-      "dom": "<div id=\"root\"></div>",
+      "dom": "<div id=\"root\"><div><span id=\"count\">3</span><button id=\"wrong\">+2 (broken)</button><button id=\"correct\">+2 (fixed)</button></div></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
-    },
-    {
-      "i": 28,
-      "line": 31,
-      "phase": "idle",
-      "renderCount": 2,
-      "variables": [],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "3",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        }
-      ],
-      "effects": [],
-      "dom": null,
-      "lane": null
     }
   ]
 }

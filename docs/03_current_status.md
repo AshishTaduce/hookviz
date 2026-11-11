@@ -9,8 +9,8 @@
 > **When updating project knowledge, replace this file. Leave 00–02 alone
 > unless a real decision changed.**
 >
-> **Last updated: 2026-11-11 (19 examples recorded; deployed to Vercel;
-> Next.js 15.5.29)**
+> **Last updated: 2026-11-11 (22 examples recorded, incl. async; deployed to Vercel;
+> Next.js 15.5.29; recorder: virtual clock + flush fixes)**
 
 ---
 
@@ -38,7 +38,7 @@ policy in doc 01.
 | Trace schema v2 | ✅ Done — `dom`, `lane`, `annotations`, `schemaVersion: 2`, `category` all implemented |
 | Recorder (Stream 1–3) | ✅ Done — CDP stepper, dispatcher instrumentation, DOM snapshot on commit, lane capture |
 | Schema v2 validated | ✅ Done — hand-checked against doc 01 schema; all fields populate correctly |
-| v1 hook examples | ✅ Done — 19 examples (8 original hooks + gotcha/second examples + `useLayoutEffect`); the table below lists the original 8 |
+| v1 hook examples | ✅ Done — 22 examples (8 original hooks + gotcha/second examples + `useLayoutEffect`, `useDeferredValue`, `useOptimistic`, async fetch race); the table below lists the original 8 |
 | Web scaffold | ✅ Done — Next.js 15, React 19, Zustand v5, Monaco, static export |
 | All 5 panels | ✅ Done — Code (Monaco), DOM (iframe), Hooks, Effects, Variables |
 | Player + timeline | ✅ Done — play/pause/seek/speed, phase-colored timeline segments |
@@ -63,9 +63,8 @@ policy in doc 01.
 | `usestate-counter` | `useState` | Basic counter |
 | `usetransition-tab-switch` | `useTransition` | Marking an update low priority |
 
-**Not in v1 (deferred):** `useOptimistic`, `use()`, `useEffectEvent`,
-`useId`, `useDeferredValue`. These require async simulation or concurrent
-features not yet exercised by the recorder's scenario model.
+**Still not covered:** `use()`, `useEffectEvent`, `useId`. (`useOptimistic` and
+`useDeferredValue` are now covered, since the recorder has a virtual clock.)
 
 ---
 
@@ -109,3 +108,24 @@ Append here when something changes, so the reason survives.
 | 2026-08-19 | Lane/priority captured semantically at the scheduling site (Marlowe) | Raw lane bitmasks are version-specific and meaningless to learners |
 | 2026-08-19 | merge.ts absorbs `dom` + `lane` + `annotations` + `schemaVersion` additively — no redesign (Marlowe) | All three slot into existing index-merge |
 | 2026-08-19 | v1 hook set = 8 hooks, 1 example each | Cover the core set; gotcha/interview-pattern second examples deferred until v1 validated by users |
+
+
+---
+
+## Recorder changes (2026-11-11)
+
+- **Virtual clock.** Examples get fake `setTimeout`/`setInterval` that only advance via
+  `tick(ms)`, one `act()` per timer callback. Traces no longer depend on debugger speed, so
+  async examples (fetch race, optimistic update) record deterministically, and timer ids are
+  small integers instead of Node `Timeout` internals. React's own timers stay real.
+- **Per-event flushing.** `click`/`type` run in their own `act()` and the scenario is no longer
+  wrapped in one big `act()`. Effect-triggered re-renders now commit between events instead of
+  being swallowed by the next click or the final unmount.
+- **Final-frame fix (`merge.ts`).** The unmount's empty-root `dom` event used to overwrite the
+  DOM of the last real commit, so every trace's last frame was empty. Each commit now consumes
+  exactly one `dom` event.
+- **Tail race fix.** The runner stays alive until the parent has drained the last events.
+- Re-recorded all 22 traces (the old ones ended before the result of the last interaction).
+- Known issue, not fixed: the Variables panel can show raw `TypeError: Converting circular
+  structure…` text for DOM-holding objects. An attempt to improve the display in `stepper.ts`
+  made recording stall, so it was reverted.

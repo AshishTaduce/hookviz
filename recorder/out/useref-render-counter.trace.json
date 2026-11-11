@@ -21,7 +21,7 @@
         "detail": "ref.current is a plain object property. React doesn't track reads or writes to it — no subscription, no re-render, no stale-closure hazard."
       }
     ],
-    "recordedAt": "2026-08-19T12:58:22.595Z"
+    "recordedAt": "2026-11-11T21:43:34.588Z"
   },
   "steps": [
     {
@@ -389,7 +389,7 @@
       "variables": [
         {
           "name": "e",
-          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$6sl4fiv66' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$8ltdwcrylpe' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
           "kind": "object",
           "changed": true
         },
@@ -430,7 +430,7 @@
       "variables": [
         {
           "name": "e",
-          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$6sl4fiv66' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$8ltdwcrylpe' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
           "kind": "object",
           "changed": false
         },
@@ -855,7 +855,7 @@
       "variables": [
         {
           "name": "e",
-          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$6sl4fiv66' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$8ltdwcrylpe' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
           "kind": "object",
           "changed": true
         },
@@ -896,7 +896,7 @@
       "variables": [
         {
           "name": "e",
-          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$6sl4fiv66' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$8ltdwcrylpe' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
           "kind": "object",
           "changed": false
         },
@@ -1308,7 +1308,7 @@
         }
       ],
       "effects": [],
-      "dom": "<div id=\"root\"></div>",
+      "dom": "<div id=\"root\"><div><input id=\"input\" placeholder=\"type here\" value=\"hi\"><span id=\"renders\">renders: 3</span></div></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."

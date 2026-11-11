@@ -1,0 +1,2551 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "usedeferredvalue-lag",
+    "title": "useDeferredValue — urgent render first, deferred render after",
+    "hook": "useDeferredValue",
+    "category": "usedeferredvalue",
+    "reactVersion": "19.2.8",
+    "source": "// @title useDeferredValue — urgent render first, deferred render after\n// @hook useDeferredValue\nimport { useState, useDeferredValue } from 'react';\n\n// @annotate:function-decl Component declaration | Typeahead renders the typed text immediately and a deferred copy of it that lags one render behind. React does the urgent update first and the deferred one in a follow-up render.\nexport default function Typeahead() {\n  const [text, setText] = useState('');\n\n  // @note useDeferredValue returns the OLD value during the urgent render and the\n  // new value in a second, lower-priority render. Input stays responsive because the\n  // expensive part of the UI (the list below) reads the deferred copy.\n  // @annotate:comment Deferred copy lags on purpose | Compare the two numbers on the frame right after typing: text is already updated, deferred still shows the previous value. The next render catches it up.\n  const deferred = useDeferredValue(text);\n\n  return (\n    <div>\n      <input id=\"box\" value={text} onChange={(e) => setText(e.target.value)} />\n      <p>\n        typed: <span id=\"typed\">{text}</span>\n      </p>\n      <p>\n        deferred: <span id=\"deferred\">{deferred}</span>\n      </p>\n    </div>\n  );\n}\n\nexport const scenario = async ({\n  type,\n  tick,\n}: {\n  type: (s: string, v: string) => void;\n  tick: (ms?: number) => Promise<void>;\n}) => {\n  type('#box', 'r');\n  await tick(50);\n  type('#box', 're');\n  await tick(50);\n};\n",
+    "annotations": [
+      {
+        "line": 6,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "Typeahead renders the typed text immediately and a deferred copy of it that lags one render behind. React does the urgent update first and the deferred one in a follow-up render."
+      },
+      {
+        "line": 13,
+        "type": "comment",
+        "label": "Deferred copy lags on purpose",
+        "detail": "Compare the two numbers on the frame right after typing: text is already updated, deferred still shows the previous value. The next render catches it up."
+      }
+    ],
+    "recordedAt": "2026-11-11T21:41:24.869Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useDeferredValue returns the OLD value during the urgent render and the"
+    },
+    {
+      "i": 2,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 3,
+      "line": 17,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 24,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"box\" value=\"\"><p>typed: <span id=\"typed\"></span></p><p>deferred: <span id=\"deferred\"></span></p></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 11,
+      "line": 17,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$01d8otiaxhq' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 17,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$01d8otiaxhq' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [
+            "\"r\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useDeferredValue returns the OLD value during the urgent render and the"
+    },
+    {
+      "i": 15,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 17,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 24,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"box\" value=\"r\"><p>typed: <span id=\"typed\">r</span></p><p>deferred: <span id=\"deferred\"></span></p></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 24,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useDeferredValue returns the OLD value during the urgent render and the"
+    },
+    {
+      "i": 26,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 17,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 31,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 32,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 33,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 34,
+      "line": 24,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"box\" value=\"r\"><p>typed: <span id=\"typed\">r</span></p><p>deferred: <span id=\"deferred\">r</span></p></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 35,
+      "line": 17,
+      "phase": "event",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$01d8otiaxhq' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": true
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 36,
+      "line": 17,
+      "phase": "event",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "e",
+          "value": "TypeError: Converting circular structure to JSON\n    --> starting at object with constructor 'HTMLInputElement'\n    |     property '__reactFiber$01d8otiaxhq' -> object with constructor 'FiberNode'\n    --- property 'stateNode' closes the circle",
+          "kind": "object",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [
+            "\"re\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 37,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 38,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useDeferredValue returns the OLD value during the urgent render and the"
+    },
+    {
+      "i": 39,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 40,
+      "line": 17,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 41,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 42,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 43,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 44,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 45,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 46,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"r\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 47,
+      "line": 24,
+      "phase": "commit",
+      "renderCount": 4,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"box\" value=\"re\"><p>typed: <span id=\"typed\">re</span></p><p>deferred: <span id=\"deferred\">r</span></p></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 48,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 49,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"r\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useDeferredValue returns the OLD value during the urgent render and the"
+    },
+    {
+      "i": 50,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 51,
+      "line": 17,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 52,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 53,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 54,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 55,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 56,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 57,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setText",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "deferred",
+          "value": "\"re\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 58,
+      "line": 24,
+      "phase": "commit",
+      "renderCount": 5,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useDeferredValue",
+          "memoized": "\"re\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><input id=\"box\" value=\"re\"><p>typed: <span id=\"typed\">re</span></p><p>deferred: <span id=\"deferred\">re</span></p></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    }
+  ]
+}

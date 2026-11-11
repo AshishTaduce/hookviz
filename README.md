@@ -16,7 +16,7 @@ HookViz records a React component's execution at the V8 statement level, capture
 - **Effects Queue** — passive effects with status: scheduled → fired → cleanup pending → cleaned up
 - **Variables** — local variable values at the current statement
 - **Player** — play/pause/step/seek, phase-colored timeline, speed control (0.5×–4×)
-- **Breadcrumb navigation** — switch between all 19 examples in-place
+- **Breadcrumb navigation** — switch between all 22 examples in-place
 - **Guided/Expert toggle** — show/hide educational annotations in the gutter
 - **Font zoom** — A−/A+ controls to adjust panel and editor font size
 
@@ -31,6 +31,7 @@ HookViz records a React component's execution at the V8 statement level, capture
 | `useState` | derived state | mirroring state in an effect renders a stale frame; derive it instead |
 | `useEffect` | stale closure | empty dep array freezes a value at mount |
 | `useEffect` | cleanup | how cleanup prevents interval/subscription leaks |
+| `useEffect` | fetch race | out-of-order async responses overwrite newer data; cleanup flag fixes it |
 | `useEffect` | inline object dep | an object created during render re-runs the effect every render |
 | `useLayoutEffect` | before paint | layout effects run before paint, `useEffect` after, whatever the declaration order |
 | `useRef` | render counter | mutable container that doesn't trigger re-renders |
@@ -41,6 +42,8 @@ HookViz records a React component's execution at the V8 statement level, capture
 | `useCallback` | missing dep | stale closure from an incomplete dep array |
 | `useReducer` | counter | increment/decrement/reset via dispatch |
 | `useReducer` | form state machine | why dispatch beats scattered `useState` setters |
+| `useDeferredValue` | typeahead lag | urgent render first, deferred copy catches up in a second render |
+| `useOptimistic` | pending item | show the result now, replace it when the (fake) server answers |
 | `useContext` | theme toggle | Provider → consumer without prop drilling |
 | `useContext` | split context | avoid unnecessary re-renders by splitting contexts |
 | `useTransition` | tab switch | low-priority update with `startTransition` |

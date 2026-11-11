@@ -6,7 +6,7 @@
     "hook": "useState",
     "category": "usestate",
     "reactVersion": "19.2.8",
-    "source": "// @title useState — derived state mirrored in an effect lags a render behind\n// @hook useState\nimport { useState, useEffect } from 'react';\n\n// @annotate:function-decl Component declaration | Cart shows the same total two ways: copied into its own state by an effect, and computed directly during render. Compare the two numbers on the frame right after you add an item.\nexport default function Cart() {\n  const [prices, setPrices] = useState<number[]>([10]);\n  const [mirroredTotal, setMirroredTotal] = useState(10);\n  const [, forceRender] = useState(0);\n\n  // @note This is the anti-pattern: total is fully determined by prices, yet it is\n  // stored as separate state and synced in an effect. After setPrices, React renders\n  // once with the NEW prices but the OLD mirroredTotal, commits that inconsistent\n  // frame, runs this effect, then renders a second time to fix it.\n  // @annotate:side-effect Syncing state in an effect | Effects are for talking to things outside React. Copying one piece of state into another costs an extra render pass and shows users a frame where the two disagree.\n  useEffect(() => {\n    setMirroredTotal(prices.reduce((sum, p) => sum + p, 0));\n  }, [prices]);\n\n  // @note The fix: derive it. Anything computable from props or state should be\n  // calculated during render. It is always in sync, with no effect and no extra render.\n  // @annotate:comment Derived during render | No state, no effect. If the calculation is expensive, wrap it in useMemo, but start with a plain expression.\n  const derivedTotal = prices.reduce((sum, p) => sum + p, 0);\n\n  return (\n    <div>\n      <p>\n        mirrored: <span id=\"mirrored\">{mirroredTotal}</span>\n      </p>\n      <p>\n        derived: <span id=\"derived\">{derivedTotal}</span>\n      </p>\n      <button id=\"add\" onClick={() => setPrices((p) => [...p, 10])}>\n        add $10\n      </button>\n      <button id=\"rerender\" onClick={() => forceRender((n) => n + 1)}>\n        re-render\n      </button>\n    </div>\n  );\n}\n\nexport const scenario = async ({\n  click,\n  tick,\n}: {\n  click: (s: string) => void;\n  tick: (ms?: number) => Promise<void>;\n}) => {\n  click('#add'); // derived is 20 immediately; mirrored is still 10 on this frame\n  await tick(400);\n  click('#rerender'); // next render: the effect's update lands and mirrored catches up\n  await tick(400);\n};\n",
+    "source": "// @title useState — derived state mirrored in an effect lags a render behind\n// @hook useState\nimport { useState, useEffect } from 'react';\n\n// @annotate:function-decl Component declaration | Cart shows the same total two ways: copied into its own state by an effect, and computed directly during render. Compare the two numbers on the frame right after you add an item.\nexport default function Cart() {\n  const [prices, setPrices] = useState<number[]>([10]);\n  const [mirroredTotal, setMirroredTotal] = useState(10);\n\n  // @note This is the anti-pattern: total is fully determined by prices, yet it is\n  // stored as separate state and synced in an effect. After setPrices, React renders\n  // once with the NEW prices but the OLD mirroredTotal, commits that inconsistent\n  // frame, runs this effect, then renders a second time to fix it.\n  // @annotate:side-effect Syncing state in an effect | Effects are for talking to things outside React. Copying one piece of state into another costs an extra render pass and shows users a frame where the two disagree.\n  useEffect(() => {\n    setMirroredTotal(prices.reduce((sum, p) => sum + p, 0));\n  }, [prices]);\n\n  // @note The fix: derive it. Anything computable from props or state should be\n  // calculated during render. It is always in sync, with no effect and no extra render.\n  // @annotate:comment Derived during render | No state, no effect. If the calculation is expensive, wrap it in useMemo, but start with a plain expression.\n  const derivedTotal = prices.reduce((sum, p) => sum + p, 0);\n\n  return (\n    <div>\n      <p>\n        mirrored: <span id=\"mirrored\">{mirroredTotal}</span>\n      </p>\n      <p>\n        derived: <span id=\"derived\">{derivedTotal}</span>\n      </p>\n      <button id=\"add\" onClick={() => setPrices((p) => [...p, 10])}>\n        add $10\n      </button>\n    </div>\n  );\n}\n\nexport const scenario = async ({\n  click,\n  tick,\n}: {\n  click: (s: string) => void;\n  tick: (ms?: number) => Promise<void>;\n}) => {\n  click('#add'); // derived is 20 immediately; mirrored is still 10 on this frame\n  await tick(50); // the effect fires and a second render lets mirrored catch up\n};\n",
     "annotations": [
       {
         "line": 6,
@@ -15,19 +15,19 @@
         "detail": "Cart shows the same total two ways: copied into its own state by an effect, and computed directly during render. Compare the two numbers on the frame right after you add an item."
       },
       {
-        "line": 16,
+        "line": 15,
         "type": "side-effect",
         "label": "Syncing state in an effect",
         "detail": "Effects are for talking to things outside React. Copying one piece of state into another costs an extra render pass and shows users a frame where the two disagree."
       },
       {
-        "line": 23,
+        "line": 22,
         "type": "comment",
         "label": "Derived during render",
         "detail": "No state, no effect. If the calculation is expensive, wrap it in useMemo, but start with a plain expression."
       }
     ],
-    "recordedAt": "2026-11-11T20:31:50.669Z"
+    "recordedAt": "2026-11-11T21:43:54.945Z"
   },
   "steps": [
     {
@@ -76,7 +76,7 @@
     },
     {
       "i": 2,
-      "line": 9,
+      "line": 15,
       "phase": "render",
       "renderCount": 1,
       "variables": [
@@ -118,73 +118,6 @@
           "index": 1,
           "type": "useState",
           "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": true
-        }
-      ],
-      "effects": [],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 3,
-      "line": 16,
-      "phase": "render",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": true
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
           "queue": [],
           "deps": null,
           "changed": true
@@ -196,8 +129,8 @@
       "note": "This is the anti-pattern: total is fully determined by prices, yet it is"
     },
     {
-      "i": 4,
-      "line": 23,
+      "i": 3,
+      "line": 22,
       "phase": "render",
       "renderCount": 1,
       "variables": [
@@ -224,12 +157,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -251,14 +178,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -270,7 +189,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -282,8 +201,8 @@
       "note": "The fix: derive it. Anything computable from props or state should be"
     },
     {
-      "i": 5,
-      "line": 23,
+      "i": 4,
+      "line": 22,
       "phase": "render",
       "renderCount": 1,
       "variables": [
@@ -316,12 +235,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -343,14 +256,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -362,7 +267,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -374,189 +279,84 @@
       "note": "The fix: derive it. Anything computable from props or state should be"
     },
     {
+      "i": 5,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10]"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
       "i": 6,
-      "line": 25,
-      "phase": "render",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": true
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": true
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 7,
-      "line": 28,
-      "phase": "render",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 8,
       "line": 27,
       "phase": "render",
       "renderCount": 1,
@@ -586,12 +386,6 @@
           "changed": false
         },
         {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
           "name": "derivedTotal",
           "value": "10",
           "kind": "number",
@@ -617,14 +411,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -636,7 +422,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -647,371 +433,7 @@
       "lane": null
     },
     {
-      "i": 9,
-      "line": 31,
-      "phase": "render",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 10,
-      "line": 30,
-      "phase": "render",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 11,
-      "line": 33,
-      "phase": "render",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 12,
-      "line": 36,
-      "phase": "render",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 13,
+      "i": 7,
       "line": 26,
       "phase": "render",
       "renderCount": 1,
@@ -1041,12 +463,6 @@
           "changed": false
         },
         {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
           "name": "derivedTotal",
           "value": "10",
           "kind": "number",
@@ -1072,14 +488,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1091,7 +499,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -1102,8 +510,8 @@
       "lane": null
     },
     {
-      "i": 14,
-      "line": 39,
+      "i": 8,
+      "line": 30,
       "phase": "render",
       "renderCount": 1,
       "variables": [
@@ -1132,7 +540,78 @@
           "changed": false
         },
         {
-          "name": "forceRender",
+          "name": "derivedTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10]"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -1163,14 +642,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1182,7 +653,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -1193,8 +664,239 @@
       "lane": null
     },
     {
-      "i": 15,
-      "line": 39,
+      "i": 10,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10]"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10]"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 35,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10]"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 35,
       "phase": "commit",
       "renderCount": 1,
       "variables": [],
@@ -1217,14 +919,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1236,17 +930,159 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
           "status": "scheduled"
         }
       ],
-      "dom": "<div id=\"root\"><div><p>mirrored: <span id=\"mirrored\">10</span></p><p>derived: <span id=\"derived\">10</span></p><button id=\"add\">add $10</button><button id=\"rerender\">re-render</button></div></div>",
+      "dom": "<div id=\"root\"><div><p>mirrored: <span id=\"mirrored\">10</span></p><p>derived: <span id=\"derived\">10</span></p><button id=\"add\">add $10</button></div></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 14,
+      "line": 16,
+      "phase": "passive-effect",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10]"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 16,
+      "phase": "passive-effect",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "sum",
+          "value": "0",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "p",
+          "value": "10",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "prices",
+          "value": "[10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10]"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
     },
     {
       "i": 16,
@@ -1271,12 +1107,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -1292,20 +1122,14 @@
           "index": 1,
           "type": "useState",
           "memoized": "10",
-          "queue": [],
+          "queue": [
+            "10"
+          ],
           "deps": null,
-          "changed": false
+          "changed": true
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1317,7 +1141,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -1329,22 +1153,10 @@
     },
     {
       "i": 17,
-      "line": 17,
-      "phase": "passive-effect",
+      "line": 32,
+      "phase": "event",
       "renderCount": 1,
       "variables": [
-        {
-          "name": "sum",
-          "value": "0",
-          "kind": "number",
-          "changed": true
-        },
-        {
-          "name": "p",
-          "value": "10",
-          "kind": "number",
-          "changed": true
-        },
         {
           "name": "prices",
           "value": "[10]",
@@ -1359,12 +1171,6 @@
         },
         {
           "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -1383,20 +1189,14 @@
           "index": 1,
           "type": "useState",
           "memoized": "10",
-          "queue": [],
+          "queue": [
+            "10"
+          ],
           "deps": null,
           "changed": false
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1408,7 +1208,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -1420,10 +1220,16 @@
     },
     {
       "i": 18,
-      "line": 18,
-      "phase": "passive-effect",
+      "line": 32,
+      "phase": "event",
       "renderCount": 1,
       "variables": [
+        {
+          "name": "p",
+          "value": "[10]",
+          "kind": "array",
+          "changed": true
+        },
         {
           "name": "prices",
           "value": "[10]",
@@ -1441,12 +1247,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -1454,9 +1254,11 @@
           "index": 0,
           "type": "useState",
           "memoized": "[10]",
-          "queue": [],
+          "queue": [
+            "ƒ anonymous()"
+          ],
           "deps": null,
-          "changed": false
+          "changed": true
         },
         {
           "index": 1,
@@ -1466,18 +1268,10 @@
             "10"
           ],
           "deps": null,
-          "changed": true
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
           "changed": false
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1489,7 +1283,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -1501,7 +1295,7 @@
     },
     {
       "i": 19,
-      "line": 33,
+      "line": 32,
       "phase": "event",
       "renderCount": 1,
       "variables": [
@@ -1522,12 +1316,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -1535,7 +1323,9 @@
           "index": 0,
           "type": "useState",
           "memoized": "[10]",
-          "queue": [],
+          "queue": [
+            "ƒ anonymous()"
+          ],
           "deps": null,
           "changed": false
         },
@@ -1551,14 +1341,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1570,7 +1352,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -1582,49 +1364,16 @@
     },
     {
       "i": 20,
-      "line": 33,
-      "phase": "event",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "p",
-          "value": "[10]",
-          "kind": "array",
-          "changed": true
-        },
-        {
-          "name": "prices",
-          "value": "[10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
+      "line": 7,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
       "hooks": [
         {
           "index": 0,
           "type": "useState",
           "memoized": "[10]",
-          "queue": [
-            "ƒ anonymous()"
-          ],
+          "queue": [],
           "deps": null,
           "changed": true
         },
@@ -1632,22 +1381,12 @@
           "index": 1,
           "type": "useState",
           "memoized": "10",
-          "queue": [
-            "10"
-          ],
+          "queue": [],
           "deps": null,
-          "changed": false
+          "changed": true
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1659,7 +1398,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -1671,66 +1410,42 @@
     },
     {
       "i": 21,
-      "line": 33,
-      "phase": "event",
-      "renderCount": 1,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 2,
       "variables": [
         {
           "name": "prices",
-          "value": "[10]",
+          "value": "[10,10]",
           "kind": "array",
-          "changed": false
+          "changed": true
         },
         {
           "name": "setPrices",
           "value": "ƒ anonymous()",
           "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
+          "changed": true
         }
       ],
       "hooks": [
         {
           "index": 0,
           "type": "useState",
-          "memoized": "[10]",
-          "queue": [
-            "ƒ anonymous()"
-          ],
+          "memoized": "[10,10]",
+          "queue": [],
           "deps": null,
-          "changed": false
+          "changed": true
         },
         {
           "index": 1,
           "type": "useState",
           "memoized": "10",
-          "queue": [
-            "10"
-          ],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
           "queue": [],
           "deps": null,
           "changed": false
         },
         {
-          "index": 3,
+          "index": 2,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1742,7 +1457,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -1754,128 +1469,7 @@
     },
     {
       "i": 22,
-      "line": 7,
-      "phase": "render",
-      "renderCount": 2,
-      "variables": [],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10]",
-          "queue": [],
-          "deps": null,
-          "changed": true
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": true
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 23,
-      "line": 8,
-      "phase": "render",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": true
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": true
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": true
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 24,
-      "line": 9,
+      "line": 15,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -1923,14 +1517,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -1942,92 +1528,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
-          "deps": [
-            "[10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 25,
-      "line": 16,
-      "phase": "render",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": true
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10]"
           ],
@@ -2039,8 +1540,8 @@
       "note": "This is the anti-pattern: total is fully determined by prices, yet it is"
     },
     {
-      "i": 26,
-      "line": 23,
+      "i": 23,
+      "line": 22,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -2067,12 +1568,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -2094,14 +1589,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -2113,7 +1600,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -2125,8 +1612,8 @@
       "note": "The fix: derive it. Anything computable from props or state should be"
     },
     {
-      "i": 27,
-      "line": 23,
+      "i": 24,
+      "line": 22,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -2159,12 +1646,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -2186,14 +1667,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -2205,7 +1678,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -2217,8 +1690,8 @@
       "note": "The fix: derive it. Anything computable from props or state should be"
     },
     {
-      "i": 28,
-      "line": 23,
+      "i": 25,
+      "line": 22,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -2251,12 +1724,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -2278,14 +1745,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -2297,7 +1756,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -2309,8 +1768,8 @@
       "note": "The fix: derive it. Anything computable from props or state should be"
     },
     {
-      "i": 29,
-      "line": 25,
+      "i": 26,
+      "line": 24,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -2334,12 +1793,6 @@
         },
         {
           "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -2370,14 +1823,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -2389,7 +1834,238 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
+          "deps": [
+            "[10,10]"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10,10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10,10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10,10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10,10]"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10,10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10,10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10,10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10,10]"
+          ],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10,10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "10",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10,10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "10",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10,10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -2401,7 +2077,7 @@
     },
     {
       "i": 30,
-      "line": 28,
+      "line": 29,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -2425,12 +2101,6 @@
         },
         {
           "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -2461,14 +2131,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -2480,7 +2142,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -2492,7 +2154,7 @@
     },
     {
       "i": 31,
-      "line": 27,
+      "line": 32,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -2516,12 +2178,6 @@
         },
         {
           "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -2552,14 +2208,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -2571,7 +2219,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -2583,7 +2231,7 @@
     },
     {
       "i": 32,
-      "line": 31,
+      "line": 25,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -2607,12 +2255,6 @@
         },
         {
           "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -2643,14 +2285,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -2662,7 +2296,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -2674,7 +2308,7 @@
     },
     {
       "i": 33,
-      "line": 30,
+      "line": 35,
       "phase": "render",
       "renderCount": 2,
       "variables": [
@@ -2698,12 +2332,6 @@
         },
         {
           "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -2734,14 +2362,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -2753,7 +2373,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -2765,371 +2385,7 @@
     },
     {
       "i": 34,
-      "line": 33,
-      "phase": "render",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 35,
-      "line": 36,
-      "phase": "render",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 36,
-      "line": 26,
-      "phase": "render",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 37,
-      "line": 39,
-      "phase": "render",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "10",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "scheduled"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 38,
-      "line": 39,
+      "line": 35,
       "phase": "commit",
       "renderCount": 2,
       "variables": [],
@@ -3152,14 +2408,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -3171,21 +2419,21 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
           "status": "scheduled"
         }
       ],
-      "dom": "<div id=\"root\"><div><p>mirrored: <span id=\"mirrored\">10</span></p><p>derived: <span id=\"derived\">20</span></p><button id=\"add\">add $10</button><button id=\"rerender\">re-render</button></div></div>",
+      "dom": "<div id=\"root\"><div><p>mirrored: <span id=\"mirrored\">10</span></p><p>derived: <span id=\"derived\">20</span></p><button id=\"add\">add $10</button></div></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
     },
     {
-      "i": 39,
-      "line": 17,
+      "i": 35,
+      "line": 16,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -3203,12 +2451,6 @@
         },
         {
           "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -3233,14 +2475,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -3252,7 +2486,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -3263,8 +2497,8 @@
       "lane": null
     },
     {
-      "i": 40,
-      "line": 17,
+      "i": 36,
+      "line": 16,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -3297,12 +2531,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -3324,14 +2552,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -3343,7 +2563,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -3354,8 +2574,8 @@
       "lane": null
     },
     {
-      "i": 41,
-      "line": 17,
+      "i": 37,
+      "line": 16,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -3388,12 +2608,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -3415,14 +2629,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -3434,7 +2640,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -3445,8 +2651,8 @@
       "lane": null
     },
     {
-      "i": 42,
-      "line": 18,
+      "i": 38,
+      "line": 17,
       "phase": "passive-effect",
       "renderCount": 2,
       "variables": [
@@ -3467,12 +2673,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -3496,14 +2696,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -3515,7 +2707,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -3526,171 +2718,7 @@
       "lane": null
     },
     {
-      "i": 43,
-      "line": 36,
-      "phase": "event",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [
-            "20"
-          ],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 44,
-      "line": 36,
-      "phase": "event",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "10",
-          "queue": [
-            "20"
-          ],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [
-            "ƒ anonymous()"
-          ],
-          "deps": null,
-          "changed": true
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 45,
+      "i": 39,
       "line": 7,
       "phase": "render",
       "renderCount": 3,
@@ -3714,14 +2742,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": true
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -3733,7 +2753,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -3744,7 +2764,7 @@
       "lane": null
     },
     {
-      "i": 46,
+      "i": 40,
       "line": 8,
       "phase": "render",
       "renderCount": 3,
@@ -3781,14 +2801,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -3800,7 +2812,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -3811,8 +2823,8 @@
       "lane": null
     },
     {
-      "i": 47,
-      "line": 9,
+      "i": 41,
+      "line": 15,
       "phase": "render",
       "renderCount": 3,
       "variables": [
@@ -3860,14 +2872,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -3879,177 +2883,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 48,
-      "line": 36,
-      "phase": "render",
-      "renderCount": 3,
-      "variables": [
-        {
-          "name": "n",
-          "value": "0",
-          "kind": "number",
-          "changed": true
-        },
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": true
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "20",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 49,
-      "line": 16,
-      "phase": "render",
-      "renderCount": 3,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": true
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "20",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": true
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -4061,8 +2895,8 @@
       "note": "This is the anti-pattern: total is fully determined by prices, yet it is"
     },
     {
-      "i": 50,
-      "line": 23,
+      "i": 42,
+      "line": 22,
       "phase": "render",
       "renderCount": 3,
       "variables": [
@@ -4089,12 +2923,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -4116,14 +2944,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -4135,7 +2955,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -4147,8 +2967,8 @@
       "note": "The fix: derive it. Anything computable from props or state should be"
     },
     {
-      "i": 51,
-      "line": 23,
+      "i": 43,
+      "line": 22,
       "phase": "render",
       "renderCount": 3,
       "variables": [
@@ -4181,12 +3001,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -4208,14 +3022,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -4227,7 +3033,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -4239,8 +3045,8 @@
       "note": "The fix: derive it. Anything computable from props or state should be"
     },
     {
-      "i": 52,
-      "line": 23,
+      "i": 44,
+      "line": 22,
       "phase": "render",
       "renderCount": 3,
       "variables": [
@@ -4273,12 +3079,6 @@
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
         }
       ],
       "hooks": [
@@ -4300,14 +3100,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -4319,7 +3111,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -4331,8 +3123,8 @@
       "note": "The fix: derive it. Anything computable from props or state should be"
     },
     {
-      "i": 53,
-      "line": 25,
+      "i": 45,
+      "line": 24,
       "phase": "render",
       "renderCount": 3,
       "variables": [
@@ -4356,12 +3148,6 @@
         },
         {
           "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -4392,14 +3178,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -4411,7 +3189,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -4422,98 +3200,7 @@
       "lane": null
     },
     {
-      "i": 54,
-      "line": 28,
-      "phase": "render",
-      "renderCount": 3,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "20",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 55,
+      "i": 46,
       "line": 27,
       "phase": "render",
       "renderCount": 3,
@@ -4543,12 +3230,6 @@
           "changed": false
         },
         {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
           "name": "derivedTotal",
           "value": "20",
           "kind": "number",
@@ -4574,14 +3255,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -4593,7 +3266,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -4604,371 +3277,7 @@
       "lane": null
     },
     {
-      "i": 56,
-      "line": 31,
-      "phase": "render",
-      "renderCount": 3,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "20",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 57,
-      "line": 30,
-      "phase": "render",
-      "renderCount": 3,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "20",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 58,
-      "line": 33,
-      "phase": "render",
-      "renderCount": 3,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "20",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 59,
-      "line": 36,
-      "phase": "render",
-      "renderCount": 3,
-      "variables": [
-        {
-          "name": "prices",
-          "value": "[10,10]",
-          "kind": "array",
-          "changed": false
-        },
-        {
-          "name": "setPrices",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "mirroredTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        },
-        {
-          "name": "setMirroredTotal",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "derivedTotal",
-          "value": "20",
-          "kind": "number",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "[10,10]",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "20",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "[10,10]"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e3",
-          "deps": [
-            "[10,10]"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 60,
+      "i": 47,
       "line": 26,
       "phase": "render",
       "renderCount": 3,
@@ -4998,12 +3307,6 @@
           "changed": false
         },
         {
-          "name": "forceRender",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
           "name": "derivedTotal",
           "value": "20",
           "kind": "number",
@@ -5029,14 +3332,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -5048,7 +3343,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -5059,8 +3354,8 @@
       "lane": null
     },
     {
-      "i": 61,
-      "line": 39,
+      "i": 48,
+      "line": 30,
       "phase": "render",
       "renderCount": 3,
       "variables": [
@@ -5089,7 +3384,78 @@
           "changed": false
         },
         {
-          "name": "forceRender",
+          "name": "derivedTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10,10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "20",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10,10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10,10]"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 49,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10,10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
@@ -5120,14 +3486,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -5139,7 +3497,7 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
@@ -5150,8 +3508,239 @@
       "lane": null
     },
     {
-      "i": 62,
-      "line": 39,
+      "i": 50,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10,10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10,10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "20",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10,10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10,10]"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 51,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10,10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10,10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "20",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10,10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10,10]"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 52,
+      "line": 35,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "prices",
+          "value": "[10,10]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setPrices",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "mirroredTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setMirroredTotal",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "derivedTotal",
+          "value": "20",
+          "kind": "number",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[10,10]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "20",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "[10,10]"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "[10,10]"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 53,
+      "line": 35,
       "phase": "commit",
       "renderCount": 3,
       "variables": [],
@@ -5174,14 +3763,6 @@
         },
         {
           "index": 2,
-          "type": "useState",
-          "memoized": "1",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
           "type": "useEffect",
           "memoized": "undefined",
           "queue": [],
@@ -5193,14 +3774,14 @@
       ],
       "effects": [
         {
-          "id": "e3",
+          "id": "e2",
           "deps": [
             "[10,10]"
           ],
           "status": "fired"
         }
       ],
-      "dom": "<div id=\"root\"><div><p>mirrored: <span id=\"mirrored\">20</span></p><p>derived: <span id=\"derived\">20</span></p><button id=\"add\">add $10</button><button id=\"rerender\">re-render</button></div></div>",
+      "dom": "<div id=\"root\"><div><p>mirrored: <span id=\"mirrored\">20</span></p><p>derived: <span id=\"derived\">20</span></p><button id=\"add\">add $10</button></div></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."

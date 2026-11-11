@@ -21,7 +21,7 @@
         "detail": "App holds the theme state and wraps its subtree in a Provider. The value prop is what consumers receive — changing it triggers re-renders in all subscribed consumers."
       }
     ],
-    "recordedAt": "2026-08-19T12:57:23.024Z"
+    "recordedAt": "2026-11-11T21:41:18.587Z"
   },
   "steps": [
     {
@@ -721,7 +721,7 @@
         }
       ],
       "effects": [],
-      "dom": "<div id=\"root\"></div>",
+      "dom": "<div id=\"root\"><div id=\"box\" style=\"color: rgb(204, 204, 204); padding: 8px; border-radius: 4px; background: rgb(30, 30, 30);\">dark</div><button id=\"toggle\">toggle</button></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
@@ -838,34 +838,6 @@
           "changed": false
         }
       ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "\"dark\"",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useContext",
-          "memoized": "\"dark\"",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        }
-      ],
-      "effects": [],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 25,
-      "line": 24,
-      "phase": "idle",
-      "renderCount": 2,
-      "variables": [],
       "hooks": [
         {
           "index": 0,

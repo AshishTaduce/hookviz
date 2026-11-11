@@ -1,0 +1,4543 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "useoptimistic-pending",
+    "title": "useOptimistic — show the result now, confirm when the server answers",
+    "hook": "useOptimistic",
+    "category": "useoptimistic",
+    "reactVersion": "19.2.8",
+    "source": "// @title useOptimistic — show the result now, confirm when the server answers\n// @hook useOptimistic\nimport { useState, useOptimistic, useTransition } from 'react';\n\nconst fakeServer = (text: string) => new Promise<string>((resolve) => setTimeout(() => resolve(text), 200));\n\n// @annotate:function-decl Component declaration | Todos adds an item instantly with useOptimistic while the (fake) server call is still in flight. The optimistic item disappears and is replaced by the real one when the request finishes.\nexport default function Todos() {\n  const [todos, setTodos] = useState<string[]>(['write tests']);\n  const [, startTransition] = useTransition();\n\n  // @note useOptimistic takes the real state and a reducer. During an async\n  // transition it shows real state PLUS the optimistic item. When the transition\n  // ends, React throws the optimistic layer away and shows the real state again.\n  // @annotate:closure Optimistic layer over real state | optimisticTodos is derived from todos on every render. While the transition is pending it includes the extra item; once setTodos commits the real list, the extra item is no longer needed.\n  const [optimisticTodos, addOptimistic] = useOptimistic(todos, (current: string[], item: string) => [...current, `${item} (sending…)`]);\n\n  const add = () => {\n    startTransition(async () => {\n      addOptimistic('buy milk');\n      const saved = await fakeServer('buy milk');\n      setTodos((t) => [...t, saved]);\n    });\n  };\n\n  return (\n    <div>\n      <ul id=\"list\">\n        {optimisticTodos.map((t) => (\n          <li key={t}>{t}</li>\n        ))}\n      </ul>\n      <button id=\"add\" onClick={add}>add \"buy milk\"</button>\n    </div>\n  );\n}\n\nexport const scenario = async ({\n  click,\n  tick,\n}: {\n  click: (s: string) => void;\n  tick: (ms?: number) => Promise<void>;\n}) => {\n  click('#add'); // optimistic item appears immediately\n  await tick(400); // server answers, real item replaces the optimistic one\n};\n",
+    "annotations": [
+      {
+        "line": 8,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "Todos adds an item instantly with useOptimistic while the (fake) server call is still in flight. The optimistic item disappears and is replaced by the real one when the request finishes."
+      },
+      {
+        "line": 16,
+        "type": "closure",
+        "label": "Optimistic layer over real state",
+        "detail": "optimisticTodos is derived from todos on every render. While the transition is pending it includes the extra item; once setTodos commits the real list, the extra item is no longer needed."
+      }
+    ],
+    "recordedAt": "2026-11-11T21:43:01.322Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useOptimistic takes the real state and a reducer. During an async"
+    },
+    {
+      "i": 3,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 4,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"write tests\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"write tests\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 10,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 34,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><ul id=\"list\"><li>write tests</li></ul><button id=\"add\">add \"buy milk\"</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 13,
+      "line": 19,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 20,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 21,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [
+            "\"buy milk\""
+          ],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": "optimistic"
+    },
+    {
+      "i": 16,
+      "line": 5,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [
+            "\"buy milk\""
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 5,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "resolve",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "text",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [
+            "\"buy milk\""
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 5,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "text",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [
+            "\"buy milk\""
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 19,
+      "line": 24,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [
+            "\"buy milk\""
+          ],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 20,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useOptimistic takes the real state and a reducer. During an async"
+    },
+    {
+      "i": 23,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "current",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "item",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useOptimistic takes the real state and a reducer. During an async"
+    },
+    {
+      "i": 24,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"write tests\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"write tests\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 29,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"buy milk (sending…)\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"buy milk (sending…)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 31,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 32,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 33,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 34,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 35,
+      "line": 34,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><ul id=\"list\"><li>write tests</li><li>buy milk (sending…)</li></ul><button id=\"add\">add \"buy milk\"</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 36,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 37,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 38,
+      "line": 10,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 39,
+      "line": 5,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "resolve",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "text",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 40,
+      "line": 22,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "saved",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 41,
+      "line": 23,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "saved",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 42,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 43,
+      "line": 22,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "t",
+          "value": "[\"write tests\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "saved",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 44,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 45,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useOptimistic takes the real state and a reducer. During an async"
+    },
+    {
+      "i": 46,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "current",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "item",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useOptimistic takes the real state and a reducer. During an async"
+    },
+    {
+      "i": 47,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 48,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 49,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 50,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"write tests\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 51,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"write tests\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 52,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 53,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 54,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"buy milk (sending…)\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 55,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"buy milk (sending…)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 56,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 57,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 58,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 59,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 60,
+      "line": 34,
+      "phase": "commit",
+      "renderCount": 4,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><ul id=\"list\"><li>write tests</li><li>buy milk</li><li>buy milk (sending…)</li></ul><button id=\"add\">add \"buy milk\"</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 61,
+      "line": 9,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 62,
+      "line": 10,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 63,
+      "line": 16,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\",\"buy milk (sending…)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "useOptimistic takes the real state and a reducer. During an async"
+    },
+    {
+      "i": 64,
+      "line": 18,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 65,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 66,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 67,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"write tests\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 68,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"write tests\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 69,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 70,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "t",
+          "value": "\"buy milk\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 71,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": true
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 72,
+      "line": 33,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 73,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 74,
+      "line": 34,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "todos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "setTodos",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "startTransition",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "optimisticTodos",
+          "value": "[\"write tests\",\"buy milk\"]",
+          "kind": "array",
+          "changed": false
+        },
+        {
+          "name": "addOptimistic",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "add",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 75,
+      "line": 34,
+      "phase": "commit",
+      "renderCount": 5,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useTransition",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useOptimistic",
+          "memoized": "[\"write tests\",\"buy milk\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div><ul id=\"list\"><li>write tests</li><li>buy milk</li></ul><button id=\"add\">add \"buy milk\"</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    }
+  ]
+}

@@ -21,7 +21,7 @@
         "detail": "The returned cleanup function closes over the specific intervalId created in this effect run. Each re-run creates a new id; each cleanup disposes exactly its own run's interval."
       }
     ],
-    "recordedAt": "2026-08-19T12:57:28.282Z"
+    "recordedAt": "2026-11-11T21:41:32.055Z"
   },
   "steps": [
     {
@@ -1513,8 +1513,8 @@
       "variables": [
         {
           "name": "id",
-          "value": "6",
-          "kind": "object",
+          "value": "1",
+          "kind": "number",
           "changed": true
         },
         {
@@ -1578,10 +1578,16 @@
     },
     {
       "i": 25,
-      "line": 29,
-      "phase": "event",
+      "line": 19,
+      "phase": "commit",
       "renderCount": 2,
       "variables": [
+        {
+          "name": "id",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
         {
           "name": "active",
           "value": "true",
@@ -1643,10 +1649,16 @@
     },
     {
       "i": 26,
-      "line": 29,
-      "phase": "event",
+      "line": 20,
+      "phase": "commit",
       "renderCount": 2,
       "variables": [
+        {
+          "name": "id",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
         {
           "name": "active",
           "value": "true",
@@ -1671,19 +1683,19 @@
           "index": 0,
           "type": "useState",
           "memoized": "true",
-          "queue": [
-            "ƒ anonymous()"
-          ],
+          "queue": [],
           "deps": null,
-          "changed": true
+          "changed": false
         },
         {
           "index": 1,
           "type": "useState",
           "memoized": "0",
-          "queue": [],
+          "queue": [
+            "ƒ anonymous()"
+          ],
           "deps": null,
-          "changed": false
+          "changed": true
         },
         {
           "index": 2,
@@ -1721,7 +1733,7 @@
           "memoized": "true",
           "queue": [],
           "deps": null,
-          "changed": true
+          "changed": false
         },
         {
           "index": 1,
@@ -1729,7 +1741,7 @@
           "memoized": "0",
           "queue": [],
           "deps": null,
-          "changed": false
+          "changed": true
         },
         {
           "index": 2,
@@ -1756,16 +1768,10 @@
     },
     {
       "i": 28,
-      "line": 29,
+      "line": 8,
       "phase": "render",
       "renderCount": 3,
       "variables": [
-        {
-          "name": "a",
-          "value": "true",
-          "kind": "boolean",
-          "changed": true
-        },
         {
           "name": "active",
           "value": "true",
@@ -1774,12 +1780,6 @@
         },
         {
           "name": "setActive",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": true
-        },
-        {
-          "name": "setTicks",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": true
@@ -1827,31 +1827,49 @@
     },
     {
       "i": 29,
-      "line": 8,
+      "line": 19,
       "phase": "render",
       "renderCount": 3,
       "variables": [
         {
-          "name": "active",
-          "value": "false",
-          "kind": "boolean",
+          "name": "t",
+          "value": "0",
+          "kind": "number",
           "changed": true
+        },
+        {
+          "name": "id",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
         },
         {
           "name": "setActive",
           "value": "ƒ anonymous()",
           "kind": "function",
           "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
         }
       ],
       "hooks": [
         {
           "index": 0,
           "type": "useState",
-          "memoized": "false",
+          "memoized": "true",
           "queue": [],
           "deps": null,
-          "changed": true
+          "changed": false
         },
         {
           "index": 1,
@@ -1892,7 +1910,7 @@
       "variables": [
         {
           "name": "active",
-          "value": "false",
+          "value": "true",
           "kind": "boolean",
           "changed": false
         },
@@ -1904,7 +1922,7 @@
         },
         {
           "name": "ticks",
-          "value": "0",
+          "value": "1",
           "kind": "number",
           "changed": true
         },
@@ -1912,14 +1930,14 @@
           "name": "setTicks",
           "value": "ƒ anonymous()",
           "kind": "function",
-          "changed": true
+          "changed": false
         }
       ],
       "hooks": [
         {
           "index": 0,
           "type": "useState",
-          "memoized": "false",
+          "memoized": "true",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1927,10 +1945,10 @@
         {
           "index": 1,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
           "queue": [],
           "deps": null,
-          "changed": false
+          "changed": true
         },
         {
           "index": 2,
@@ -1964,7 +1982,7 @@
       "variables": [
         {
           "name": "active",
-          "value": "false",
+          "value": "true",
           "kind": "boolean",
           "changed": false
         },
@@ -1976,7 +1994,7 @@
         },
         {
           "name": "ticks",
-          "value": "0",
+          "value": "1",
           "kind": "number",
           "changed": false
         },
@@ -1991,7 +2009,7 @@
         {
           "index": 0,
           "type": "useState",
-          "memoized": "false",
+          "memoized": "true",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1999,7 +2017,7 @@
         {
           "index": 1,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2010,7 +2028,7 @@
           "memoized": "undefined",
           "queue": [],
           "deps": [
-            "false"
+            "true"
           ],
           "changed": false
         }
@@ -2019,9 +2037,9 @@
         {
           "id": "e2",
           "deps": [
-            "false"
+            "true"
           ],
-          "status": "cleanup-pending"
+          "status": "fired"
         }
       ],
       "dom": null,
@@ -2035,7 +2053,7 @@
       "variables": [
         {
           "name": "active",
-          "value": "false",
+          "value": "true",
           "kind": "boolean",
           "changed": false
         },
@@ -2047,7 +2065,7 @@
         },
         {
           "name": "ticks",
-          "value": "0",
+          "value": "1",
           "kind": "number",
           "changed": false
         },
@@ -2062,7 +2080,7 @@
         {
           "index": 0,
           "type": "useState",
-          "memoized": "false",
+          "memoized": "true",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2070,7 +2088,7 @@
         {
           "index": 1,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2081,7 +2099,7 @@
           "memoized": "undefined",
           "queue": [],
           "deps": [
-            "false"
+            "true"
           ],
           "changed": false
         }
@@ -2090,9 +2108,9 @@
         {
           "id": "e2",
           "deps": [
-            "false"
+            "true"
           ],
-          "status": "cleanup-pending"
+          "status": "fired"
         }
       ],
       "dom": null,
@@ -2106,7 +2124,7 @@
       "variables": [
         {
           "name": "active",
-          "value": "false",
+          "value": "true",
           "kind": "boolean",
           "changed": false
         },
@@ -2118,7 +2136,7 @@
         },
         {
           "name": "ticks",
-          "value": "0",
+          "value": "1",
           "kind": "number",
           "changed": false
         },
@@ -2133,7 +2151,7 @@
         {
           "index": 0,
           "type": "useState",
-          "memoized": "false",
+          "memoized": "true",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2141,7 +2159,7 @@
         {
           "index": 1,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2152,7 +2170,7 @@
           "memoized": "undefined",
           "queue": [],
           "deps": [
-            "false"
+            "true"
           ],
           "changed": false
         }
@@ -2161,9 +2179,9 @@
         {
           "id": "e2",
           "deps": [
-            "false"
+            "true"
           ],
-          "status": "cleanup-pending"
+          "status": "fired"
         }
       ],
       "dom": null,
@@ -2177,7 +2195,7 @@
       "variables": [
         {
           "name": "active",
-          "value": "false",
+          "value": "true",
           "kind": "boolean",
           "changed": false
         },
@@ -2189,7 +2207,7 @@
         },
         {
           "name": "ticks",
-          "value": "0",
+          "value": "1",
           "kind": "number",
           "changed": false
         },
@@ -2204,7 +2222,7 @@
         {
           "index": 0,
           "type": "useState",
-          "memoized": "false",
+          "memoized": "true",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2212,7 +2230,7 @@
         {
           "index": 1,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2223,7 +2241,7 @@
           "memoized": "undefined",
           "queue": [],
           "deps": [
-            "false"
+            "true"
           ],
           "changed": false
         }
@@ -2232,9 +2250,9 @@
         {
           "id": "e2",
           "deps": [
-            "false"
+            "true"
           ],
-          "status": "cleanup-pending"
+          "status": "fired"
         }
       ],
       "dom": null,
@@ -2248,7 +2266,7 @@
       "variables": [
         {
           "name": "active",
-          "value": "false",
+          "value": "true",
           "kind": "boolean",
           "changed": false
         },
@@ -2260,7 +2278,7 @@
         },
         {
           "name": "ticks",
-          "value": "0",
+          "value": "1",
           "kind": "number",
           "changed": false
         },
@@ -2275,7 +2293,7 @@
         {
           "index": 0,
           "type": "useState",
-          "memoized": "false",
+          "memoized": "true",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2283,7 +2301,7 @@
         {
           "index": 1,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2294,7 +2312,7 @@
           "memoized": "undefined",
           "queue": [],
           "deps": [
-            "false"
+            "true"
           ],
           "changed": false
         }
@@ -2303,9 +2321,9 @@
         {
           "id": "e2",
           "deps": [
-            "false"
+            "true"
           ],
-          "status": "cleanup-pending"
+          "status": "fired"
         }
       ],
       "dom": null,
@@ -2321,6 +2339,1188 @@
         {
           "index": 0,
           "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": "<div id=\"root\"><div><span id=\"ticks\">1</span><button id=\"toggle\">stop</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 37,
+      "line": 19,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "id",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 38,
+      "line": 20,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "id",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 39,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 40,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 41,
+      "line": 19,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "t",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "id",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 42,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null,
+      "note": "The cleanup function (the return value) runs before the next effect"
+    },
+    {
+      "i": 43,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 44,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 45,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 46,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 47,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 48,
+      "line": 32,
+      "phase": "commit",
+      "renderCount": 4,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": "<div id=\"root\"><div><span id=\"ticks\">2</span><button id=\"toggle\">stop</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 49,
+      "line": 29,
+      "phase": "event",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 50,
+      "line": 29,
+      "phase": "event",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 51,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 52,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "a",
+          "value": "true",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "active",
+          "value": "true",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "true",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 53,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "active",
+          "value": "false",
+          "kind": "boolean",
+          "changed": true
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 54,
+      "line": 15,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "active",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
           "memoized": "false",
           "queue": [],
           "deps": null,
@@ -2329,7 +3529,79 @@
         {
           "index": 1,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "true"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "true"
+          ],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null,
+      "note": "The cleanup function (the return value) runs before the next effect"
+    },
+    {
+      "i": 55,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "active",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2354,21 +3626,351 @@
           "status": "cleanup-pending"
         }
       ],
-      "dom": "<div id=\"root\"></div>",
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 56,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "active",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "false"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "false"
+          ],
+          "status": "cleanup-pending"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 57,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "active",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "false"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "false"
+          ],
+          "status": "cleanup-pending"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 58,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "active",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "false"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "false"
+          ],
+          "status": "cleanup-pending"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 59,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 5,
+      "variables": [
+        {
+          "name": "active",
+          "value": "false",
+          "kind": "boolean",
+          "changed": false
+        },
+        {
+          "name": "setActive",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "ticks",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setTicks",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "false"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "false"
+          ],
+          "status": "cleanup-pending"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 60,
+      "line": 32,
+      "phase": "commit",
+      "renderCount": 5,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "false",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [
+            "false"
+          ],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [
+            "false"
+          ],
+          "status": "cleanup-pending"
+        }
+      ],
+      "dom": "<div id=\"root\"><div><span id=\"ticks\">2</span><button id=\"toggle\">start</button></div></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
     },
     {
-      "i": 37,
+      "i": 61,
       "line": 23,
       "phase": "passive-effect",
-      "renderCount": 3,
+      "renderCount": 5,
       "variables": [
         {
           "name": "id",
-          "value": "6",
-          "kind": "object",
+          "value": "1",
+          "kind": "number",
           "changed": true
         },
         {
@@ -2402,7 +4004,7 @@
         {
           "index": 1,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "2",
           "queue": [],
           "deps": null,
           "changed": false
@@ -2431,81 +4033,10 @@
       "lane": null
     },
     {
-      "i": 38,
-      "line": 23,
-      "phase": "passive-effect",
-      "renderCount": 3,
-      "variables": [
-        {
-          "name": "id",
-          "value": "{\"_idleTimeout\":-1,\"_idlePrev\":null,\"_idleNext\":null,\"_idleStart\":3174,\"_repeat\":100,\"_destroyed\":true}",
-          "kind": "object",
-          "changed": true
-        },
-        {
-          "name": "active",
-          "value": "true",
-          "kind": "boolean",
-          "changed": false
-        },
-        {
-          "name": "setActive",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "setTicks",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "false",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "false"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e2",
-          "deps": [
-            "false"
-          ],
-          "status": "cleaned-up"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 39,
+      "i": 62,
       "line": 16,
       "phase": "passive-effect",
-      "renderCount": 3,
+      "renderCount": 5,
       "variables": [
         {
           "name": "active",
@@ -2538,53 +4069,7 @@
         {
           "index": 1,
           "type": "useState",
-          "memoized": "0",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useEffect",
-          "memoized": "undefined",
-          "queue": [],
-          "deps": [
-            "false"
-          ],
-          "changed": false
-        }
-      ],
-      "effects": [
-        {
-          "id": "e2",
-          "deps": [
-            "false"
-          ],
-          "status": "fired"
-        }
-      ],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 40,
-      "line": 16,
-      "phase": "idle",
-      "renderCount": 3,
-      "variables": [],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "false",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "0",
+          "memoized": "2",
           "queue": [],
           "deps": null,
           "changed": false

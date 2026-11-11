@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 export default function Cart() {
   const [prices, setPrices] = useState<number[]>([10]);
   const [mirroredTotal, setMirroredTotal] = useState(10);
-  const [, forceRender] = useState(0);
 
   // @note This is the anti-pattern: total is fully determined by prices, yet it is
   // stored as separate state and synced in an effect. After setPrices, React renders
@@ -33,9 +32,6 @@ export default function Cart() {
       <button id="add" onClick={() => setPrices((p) => [...p, 10])}>
         add $10
       </button>
-      <button id="rerender" onClick={() => forceRender((n) => n + 1)}>
-        re-render
-      </button>
     </div>
   );
 }
@@ -48,7 +44,5 @@ export const scenario = async ({
   tick: (ms?: number) => Promise<void>;
 }) => {
   click('#add'); // derived is 20 immediately; mirrored is still 10 on this frame
-  await tick(400);
-  click('#rerender'); // next render: the effect's update lands and mirrored catches up
-  await tick(400);
+  await tick(50); // the effect fires and a second render lets mirrored catch up
 };

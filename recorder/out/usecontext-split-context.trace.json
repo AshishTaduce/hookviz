@@ -33,7 +33,7 @@
         "detail": "App provides both contexts. Changing count only notifies CountContext subscribers; changing theme only notifies ThemeContext subscribers. No consumer sees changes it doesn't care about."
       }
     ],
-    "recordedAt": "2026-08-19T12:57:19.643Z"
+    "recordedAt": "2026-11-11T21:41:15.382Z"
   },
   "steps": [
     {
@@ -875,32 +875,16 @@
     },
     {
       "i": 18,
-      "line": 31,
-      "phase": "event",
-      "renderCount": 1,
-      "variables": [
-        {
-          "name": "setCount",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "setTheme",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
-        }
-      ],
+      "line": 23,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
       "hooks": [
         {
           "index": 0,
           "type": "useState",
           "memoized": "0",
-          "queue": [
-            "ƒ anonymous()",
-            "ƒ anonymous()"
-          ],
+          "queue": [],
           "deps": null,
           "changed": true
         },
@@ -935,34 +919,31 @@
     },
     {
       "i": 19,
-      "line": 32,
-      "phase": "event",
-      "renderCount": 1,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 2,
       "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
         {
           "name": "setCount",
           "value": "ƒ anonymous()",
           "kind": "function",
-          "changed": false
-        },
-        {
-          "name": "setTheme",
-          "value": "ƒ anonymous()",
-          "kind": "function",
-          "changed": false
+          "changed": true
         }
       ],
       "hooks": [
         {
           "index": 0,
           "type": "useState",
-          "memoized": "0",
-          "queue": [
-            "ƒ anonymous()",
-            "ƒ anonymous()"
-          ],
+          "memoized": "1",
+          "queue": [],
           "deps": null,
-          "changed": false
+          "changed": true
         },
         {
           "index": 1,
@@ -995,10 +976,16 @@
     },
     {
       "i": 20,
-      "line": 32,
-      "phase": "event",
-      "renderCount": 1,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 2,
       "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
         {
           "name": "setCount",
           "value": "ƒ anonymous()",
@@ -1006,21 +993,24 @@
           "changed": false
         },
         {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
           "name": "setTheme",
           "value": "ƒ anonymous()",
           "kind": "function",
-          "changed": false
+          "changed": true
         }
       ],
       "hooks": [
         {
           "index": 0,
           "type": "useState",
-          "memoized": "0",
-          "queue": [
-            "ƒ anonymous()",
-            "ƒ anonymous()"
-          ],
+          "memoized": "1",
+          "queue": [],
           "deps": null,
           "changed": false
         },
@@ -1028,11 +1018,9 @@
           "index": 1,
           "type": "useState",
           "memoized": "\"dark\"",
-          "queue": [
-            "ƒ anonymous()"
-          ],
+          "queue": [],
           "deps": null,
-          "changed": true
+          "changed": false
         },
         {
           "index": 2,
@@ -1057,18 +1045,43 @@
     },
     {
       "i": 21,
-      "line": 23,
+      "line": 29,
       "phase": "render",
       "renderCount": 2,
-      "variables": [],
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
       "hooks": [
         {
           "index": 0,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
           "queue": [],
           "deps": null,
-          "changed": true
+          "changed": false
         },
         {
           "index": 1,
@@ -1076,7 +1089,7 @@
           "memoized": "\"dark\"",
           "queue": [],
           "deps": null,
-          "changed": true
+          "changed": false
         },
         {
           "index": 2,
@@ -1101,34 +1114,40 @@
     },
     {
       "i": 22,
-      "line": 31,
+      "line": 30,
       "phase": "render",
       "renderCount": 2,
       "variables": [
         {
-          "name": "c",
+          "name": "count",
           "value": "1",
           "kind": "number",
-          "changed": true
+          "changed": false
         },
         {
           "name": "setCount",
           "value": "ƒ anonymous()",
           "kind": "function",
-          "changed": true
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
         },
         {
           "name": "setTheme",
           "value": "ƒ anonymous()",
           "kind": "function",
-          "changed": true
+          "changed": false
         }
       ],
       "hooks": [
         {
           "index": 0,
           "type": "useState",
-          "memoized": "0",
+          "memoized": "1",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1164,9 +1183,813 @@
     },
     {
       "i": 23,
-      "line": 24,
+      "line": 31,
       "phase": "render",
       "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 24,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 26,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 27,
+      "line": 36,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 28,
+      "line": 36,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div id=\"theme\">theme: dark</div><div id=\"count\">count: 1</div><button id=\"inc\">+count</button><button id=\"theme-btn\">toggle theme</button></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 29,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 30,
+      "line": 12,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 31,
+      "line": 17,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":0}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 32,
+      "line": 18,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "count",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 33,
+      "line": 31,
+      "phase": "event",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 34,
+      "line": 31,
+      "phase": "event",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 35,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 36,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "c",
+          "value": "1",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "1",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 37,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 3,
       "variables": [
         {
           "name": "count",
@@ -1209,7 +2032,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":1}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1220,10 +2043,1015 @@
       "lane": null
     },
     {
-      "i": 24,
+      "i": 38,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 39,
+      "line": 29,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 40,
+      "line": 30,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 41,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 42,
       "line": 32,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 43,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 44,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 45,
+      "line": 36,
+      "phase": "render",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": false
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 46,
+      "line": 36,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": "<div id=\"root\"><div id=\"theme\">theme: dark</div><div id=\"count\">count: 2</div><button id=\"inc\">+count</button><button id=\"theme-btn\">toggle theme</button></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 47,
+      "line": 11,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 48,
+      "line": 12,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "theme",
+          "value": "\"dark\"",
+          "kind": "string",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 49,
+      "line": 17,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":1}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 50,
+      "line": 18,
+      "phase": "commit",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":2}",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 51,
+      "line": 32,
+      "phase": "event",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":2}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 52,
+      "line": 32,
+      "phase": "event",
+      "renderCount": 3,
+      "variables": [
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "setTheme",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [
+            "ƒ anonymous()"
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":2}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 53,
+      "line": 23,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":2}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 54,
+      "line": 24,
+      "phase": "render",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        },
+        {
+          "name": "setCount",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "2",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useState",
+          "memoized": "\"dark\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useContext",
+          "memoized": "{\"theme\":\"dark\"}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useContext",
+          "memoized": "{\"count\":2}",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 55,
+      "line": 32,
+      "phase": "render",
+      "renderCount": 4,
       "variables": [
         {
           "name": "t",
@@ -1272,7 +3100,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1283,10 +3111,10 @@
       "lane": null
     },
     {
-      "i": 25,
+      "i": 56,
       "line": 26,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [
         {
           "name": "count",
@@ -1341,7 +3169,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1352,10 +3180,10 @@
       "lane": null
     },
     {
-      "i": 26,
+      "i": 57,
       "line": 29,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [
         {
           "name": "count",
@@ -1410,7 +3238,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1421,10 +3249,10 @@
       "lane": null
     },
     {
-      "i": 27,
+      "i": 58,
       "line": 30,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [
         {
           "name": "count",
@@ -1479,7 +3307,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1490,10 +3318,10 @@
       "lane": null
     },
     {
-      "i": 28,
+      "i": 59,
       "line": 31,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [
         {
           "name": "count",
@@ -1548,7 +3376,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1559,10 +3387,10 @@
       "lane": null
     },
     {
-      "i": 29,
+      "i": 60,
       "line": 32,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [
         {
           "name": "count",
@@ -1617,7 +3445,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1628,10 +3456,10 @@
       "lane": null
     },
     {
-      "i": 30,
+      "i": 61,
       "line": 28,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [
         {
           "name": "count",
@@ -1686,7 +3514,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1697,10 +3525,10 @@
       "lane": null
     },
     {
-      "i": 31,
+      "i": 62,
       "line": 27,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [
         {
           "name": "count",
@@ -1755,7 +3583,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1766,10 +3594,10 @@
       "lane": null
     },
     {
-      "i": 32,
+      "i": 63,
       "line": 36,
       "phase": "render",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [
         {
           "name": "count",
@@ -1824,7 +3652,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1835,10 +3663,10 @@
       "lane": null
     },
     {
-      "i": 33,
+      "i": 64,
       "line": 36,
       "phase": "commit",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [],
       "hooks": [
         {
@@ -1868,23 +3696,23 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
         }
       ],
       "effects": [],
-      "dom": "<div id=\"root\"></div>",
+      "dom": "<div id=\"root\"><div id=\"theme\">theme: light</div><div id=\"count\">count: 2</div><button id=\"inc\">+count</button><button id=\"theme-btn\">toggle theme</button></div>",
       "lane": null,
       "synthetic": true,
       "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
     },
     {
-      "i": 34,
+      "i": 65,
       "line": 11,
       "phase": "commit",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [],
       "hooks": [
         {
@@ -1914,7 +3742,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1925,10 +3753,10 @@
       "lane": null
     },
     {
-      "i": 35,
+      "i": 66,
       "line": 12,
       "phase": "commit",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [
         {
           "name": "theme",
@@ -1965,7 +3793,7 @@
         {
           "index": 3,
           "type": "useContext",
-          "memoized": "{\"count\":0}",
+          "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
           "changed": false
@@ -1976,62 +3804,11 @@
       "lane": null
     },
     {
-      "i": 36,
+      "i": 67,
       "line": 17,
       "phase": "commit",
-      "renderCount": 2,
+      "renderCount": 4,
       "variables": [],
-      "hooks": [
-        {
-          "index": 0,
-          "type": "useState",
-          "memoized": "2",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 1,
-          "type": "useState",
-          "memoized": "\"light\"",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 2,
-          "type": "useContext",
-          "memoized": "{\"theme\":\"light\"}",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        },
-        {
-          "index": 3,
-          "type": "useContext",
-          "memoized": "{\"count\":0}",
-          "queue": [],
-          "deps": null,
-          "changed": false
-        }
-      ],
-      "effects": [],
-      "dom": null,
-      "lane": null
-    },
-    {
-      "i": 37,
-      "line": 18,
-      "phase": "commit",
-      "renderCount": 2,
-      "variables": [
-        {
-          "name": "count",
-          "value": "2",
-          "kind": "number",
-          "changed": true
-        }
-      ],
       "hooks": [
         {
           "index": 0,
@@ -2063,7 +3840,7 @@
           "memoized": "{\"count\":2}",
           "queue": [],
           "deps": null,
-          "changed": true
+          "changed": false
         }
       ],
       "effects": [],
@@ -2071,11 +3848,18 @@
       "lane": null
     },
     {
-      "i": 38,
+      "i": 68,
       "line": 18,
-      "phase": "idle",
-      "renderCount": 2,
-      "variables": [],
+      "phase": "commit",
+      "renderCount": 4,
+      "variables": [
+        {
+          "name": "count",
+          "value": "2",
+          "kind": "number",
+          "changed": true
+        }
+      ],
       "hooks": [
         {
           "index": 0,
