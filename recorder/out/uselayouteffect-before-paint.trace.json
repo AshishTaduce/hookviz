@@ -1,0 +1,1725 @@
+{
+  "meta": {
+    "schemaVersion": 2,
+    "id": "uselayouteffect-before-paint",
+    "title": "useLayoutEffect — runs before paint, useEffect runs after",
+    "hook": "useLayoutEffect",
+    "category": "uselayouteffect",
+    "reactVersion": "19.2.8",
+    "source": "// @title useLayoutEffect — runs before paint, useEffect runs after\n// @hook useLayoutEffect\nimport { useState, useEffect, useLayoutEffect, useRef } from 'react';\n\n// @annotate:function-decl Component declaration | EffectOrder records when each effect runs into a ref, then lets you reveal the order. The surprise: the useEffect is declared FIRST in the source but runs LAST.\nexport default function EffectOrder() {\n  const [shown, setShown] = useState('(click to reveal)');\n  const log = useRef<string[]>([]);\n\n  // @note Declared first, but passive effects are deferred until after the browser\n  // has painted the committed DOM. Their callbacks run later, so this logs second.\n  // @annotate:side-effect Passive effect (post-paint) | useEffect is scheduled after paint so it never delays the screen update. Right for subscriptions and fetching; wrong for work that must finish before the user sees the frame.\n  useEffect(() => {\n    log.current.push('useEffect (after paint)');\n  }, []);\n\n  // @note Declared second, but layout effects run synchronously during the commit,\n  // before the browser paints. Reading layout here (sizes, scroll) and updating state\n  // is invisible to users because the re-render lands before the frame is shown.\n  // @annotate:side-effect Layout effect (before paint) | useLayoutEffect blocks painting. Use it to measure the DOM and adjust synchronously (tooltip position, scroll restore). Keep the work tiny, because it delays every frame.\n  useLayoutEffect(() => {\n    log.current.push('useLayoutEffect (before paint)');\n  }, []);\n\n  return (\n    <div>\n      <span id=\"order\">{shown}</span>\n      <button id=\"reveal\" onClick={() => setShown(log.current.join(' -> '))}>\n        reveal order\n      </button>\n    </div>\n  );\n}\n\nexport const scenario = async ({\n  click,\n  tick,\n}: {\n  click: (s: string) => void;\n  tick: (ms?: number) => Promise<void>;\n}) => {\n  await tick(400); // mount: layout effect fires at commit, passive effect after\n  click('#reveal'); // shows: useLayoutEffect first, useEffect second\n  await tick(400);\n};\n",
+    "annotations": [
+      {
+        "line": 6,
+        "type": "function-decl",
+        "label": "Component declaration",
+        "detail": "EffectOrder records when each effect runs into a ref, then lets you reveal the order. The surprise: the useEffect is declared FIRST in the source but runs LAST."
+      },
+      {
+        "line": 13,
+        "type": "side-effect",
+        "label": "Passive effect (post-paint)",
+        "detail": "useEffect is scheduled after paint so it never delays the screen update. Right for subscriptions and fetching; wrong for work that must finish before the user sees the frame."
+      },
+      {
+        "line": 21,
+        "type": "side-effect",
+        "label": "Layout effect (before paint)",
+        "detail": "useLayoutEffect blocks painting. Use it to measure the DOM and adjust synchronously (tooltip position, scroll restore). Keep the work tiny, because it delays every frame."
+      }
+    ],
+    "recordedAt": "2026-11-11T20:29:08.419Z"
+  },
+  "steps": [
+    {
+      "i": 0,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 1,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"(click to reveal)\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 2,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"(click to reveal)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[]}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        }
+      ],
+      "effects": [],
+      "dom": null,
+      "lane": null,
+      "note": "Declared first, but passive effects are deferred until after the browser"
+    },
+    {
+      "i": 3,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"(click to reveal)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": true
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null,
+      "note": "Declared second, but layout effects run synchronously during the commit,"
+    },
+    {
+      "i": 4,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"(click to reveal)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": true
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "scheduled"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 5,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"(click to reveal)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "scheduled"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 6,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"(click to reveal)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "scheduled"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 7,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"(click to reveal)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "scheduled"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 8,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"(click to reveal)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "scheduled"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "scheduled"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 9,
+      "line": 31,
+      "phase": "commit",
+      "renderCount": 1,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "scheduled"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "scheduled"
+        }
+      ],
+      "dom": "<div id=\"root\"><div><span id=\"order\">(click to reveal)</span><button id=\"reveal\">reveal order</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    },
+    {
+      "i": 10,
+      "line": 22,
+      "phase": "passive-effect",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "scheduled"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 11,
+      "line": 23,
+      "phase": "passive-effect",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\"]}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "scheduled"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 12,
+      "line": 14,
+      "phase": "passive-effect",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\"]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 13,
+      "line": 15,
+      "phase": "passive-effect",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 14,
+      "line": 28,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 15,
+      "line": 28,
+      "phase": "event",
+      "renderCount": 1,
+      "variables": [
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [
+            "\"useLayoutEffect (before paint) -> useEffect (after paint)\""
+          ],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 16,
+      "line": 7,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"(click to reveal)\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 17,
+      "line": 8,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "kind": "string",
+          "changed": true
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 18,
+      "line": 13,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": true
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": true
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null,
+      "note": "Declared first, but passive effects are deferred until after the browser"
+    },
+    {
+      "i": 19,
+      "line": 21,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null,
+      "note": "Declared second, but layout effects run synchronously during the commit,"
+    },
+    {
+      "i": 20,
+      "line": 25,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 21,
+      "line": 27,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 22,
+      "line": 28,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 23,
+      "line": 26,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 24,
+      "line": 31,
+      "phase": "render",
+      "renderCount": 2,
+      "variables": [
+        {
+          "name": "shown",
+          "value": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "kind": "string",
+          "changed": false
+        },
+        {
+          "name": "setShown",
+          "value": "ƒ anonymous()",
+          "kind": "function",
+          "changed": false
+        },
+        {
+          "name": "log",
+          "value": "{\"current\":[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]}",
+          "kind": "object",
+          "changed": false
+        }
+      ],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": null,
+      "lane": null
+    },
+    {
+      "i": 25,
+      "line": 31,
+      "phase": "commit",
+      "renderCount": 2,
+      "variables": [],
+      "hooks": [
+        {
+          "index": 0,
+          "type": "useState",
+          "memoized": "\"useLayoutEffect (before paint) -> useEffect (after paint)\"",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 1,
+          "type": "useRef",
+          "memoized": "[\"useLayoutEffect (before paint)\",\"useEffect (after paint)\"]",
+          "queue": [],
+          "deps": null,
+          "changed": false
+        },
+        {
+          "index": 2,
+          "type": "useEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        },
+        {
+          "index": 3,
+          "type": "useLayoutEffect",
+          "memoized": "undefined",
+          "queue": [],
+          "deps": [],
+          "changed": false
+        }
+      ],
+      "effects": [
+        {
+          "id": "e2",
+          "deps": [],
+          "status": "fired"
+        },
+        {
+          "id": "e3",
+          "deps": [],
+          "status": "fired"
+        }
+      ],
+      "dom": "<div id=\"root\"><div><span id=\"order\">useLayoutEffect (before paint) -&gt; useEffect (after paint)</span><button id=\"reveal\">reveal order</button></div></div>",
+      "lane": null,
+      "synthetic": true,
+      "note": "Render finished. React commits this tree to the DOM — effects have not run yet."
+    }
+  ]
+}

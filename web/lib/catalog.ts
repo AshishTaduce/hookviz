@@ -34,10 +34,22 @@ const catalog: CatalogEntry[] = [
     "category": "useeffect"
   },
   {
+    "id": "useeffect-object-dep-loop",
+    "title": "useEffect — an inline object dependency re-runs the effect every render",
+    "hook": "useEffect",
+    "category": "useeffect"
+  },
+  {
     "id": "useeffect-stale-closure",
     "title": "useEffect — stale closure in an empty-deps effect",
     "hook": "useEffect",
     "category": "useeffect"
+  },
+  {
+    "id": "uselayouteffect-before-paint",
+    "title": "useLayoutEffect — runs before paint, useEffect runs after",
+    "hook": "useLayoutEffect",
+    "category": "uselayouteffect"
   },
   {
     "id": "usememo-filter-list",
@@ -84,6 +96,12 @@ const catalog: CatalogEntry[] = [
   {
     "id": "usestate-counter",
     "title": "useState — basic counter",
+    "hook": "useState",
+    "category": "usestate"
+  },
+  {
+    "id": "usestate-derived-state",
+    "title": "useState — derived state mirrored in an effect lags a render behind",
     "hook": "useState",
     "category": "usestate"
   },

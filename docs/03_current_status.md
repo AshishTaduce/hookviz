@@ -9,9 +9,8 @@
 > **When updating project knowledge, replace this file. Leave 00–02 alone
 > unless a real decision changed.**
 >
-> **Last updated: 2026-08-19 (Rei — post-Phase 5: all milestones complete,
-> v1 set of 8 hook examples recorded, web/ frontend fully scaffolded and
-> running)**
+> **Last updated: 2026-11-11 (19 examples recorded; deployed to Vercel;
+> Next.js 15.5.29)**
 
 ---
 
@@ -21,7 +20,7 @@
 |---|---|---|
 | `react` | `19.2.8` | Exact pin, no caret. Latest stable as of Aug 2026. |
 | `react-dom` | `19.2.8` | Must match `react` exactly. |
-| `next` | `15.3.4` | Web workspace only. |
+| `next` | `15.5.29` | Web workspace only. |
 
 **React 19.2 chosen deliberately** — it's the line that introduced
 `useEffectEvent`, which is one of the newer hooks we want to cover.
@@ -39,7 +38,7 @@ policy in doc 01.
 | Trace schema v2 | ✅ Done — `dom`, `lane`, `annotations`, `schemaVersion: 2`, `category` all implemented |
 | Recorder (Stream 1–3) | ✅ Done — CDP stepper, dispatcher instrumentation, DOM snapshot on commit, lane capture |
 | Schema v2 validated | ✅ Done — hand-checked against doc 01 schema; all fields populate correctly |
-| v1 hook examples | ✅ Done — 8 examples across 8 hooks (see list below) |
+| v1 hook examples | ✅ Done — 19 examples (8 original hooks + gotcha/second examples + `useLayoutEffect`); the table below lists the original 8 |
 | Web scaffold | ✅ Done — Next.js 15, React 19, Zustand v5, Monaco, static export |
 | All 5 panels | ✅ Done — Code (Monaco), DOM (iframe), Hooks, Effects, Variables |
 | Player + timeline | ✅ Done — play/pause/seek/speed, phase-colored timeline segments |

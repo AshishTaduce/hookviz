@@ -16,20 +16,23 @@ HookViz records a React component's execution at the V8 statement level, capture
 - **Effects Queue** — passive effects with status: scheduled → fired → cleanup pending → cleaned up
 - **Variables** — local variable values at the current statement
 - **Player** — play/pause/step/seek, phase-colored timeline, speed control (0.5×–4×)
-- **Breadcrumb navigation** — switch between all 16 examples in-place
+- **Breadcrumb navigation** — switch between all 19 examples in-place
 - **Guided/Expert toggle** — show/hide educational annotations in the gutter
 - **Font zoom** — A−/A+ controls to adjust panel and editor font size
 
 ---
 
-## Examples (v1)
+## Examples
 
 | Hook | Example | Concept |
 |---|---|---|
 | `useState` | basic counter | state initialization, setter, re-render |
 | `useState` | batching gotcha | why two `setCount(count+1)` calls only increment once |
+| `useState` | derived state | mirroring state in an effect renders a stale frame; derive it instead |
 | `useEffect` | stale closure | empty dep array freezes a value at mount |
 | `useEffect` | cleanup | how cleanup prevents interval/subscription leaks |
+| `useEffect` | inline object dep | an object created during render re-runs the effect every render |
+| `useLayoutEffect` | before paint | layout effects run before paint, `useEffect` after, whatever the declaration order |
 | `useRef` | render counter | mutable container that doesn't trigger re-renders |
 | `useRef` | DOM ref | `ref.current` for imperative DOM access (focus, select) |
 | `useMemo` | filter list | caching a computation, stable vs. changing deps |
