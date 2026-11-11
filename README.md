@@ -2,7 +2,7 @@
 
 Step-by-step React hooks visualizer. Watch `useState`, `useEffect`, `useReducer`, and more execute line-by-line with a synchronized source view, hook fiber list, DOM snapshot, effects queue, and variables panel.
 
-**Live:** [hookviz.vercel.app](https://hookviz.vercel.app) *(deploy in progress)*
+**Live:** deployed on Vercel (private for now)
 
 ---
 
