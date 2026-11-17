@@ -155,7 +155,7 @@ interface TimelineProps {
   onSeek: (i: number) => void;
 }
 
-function PhaseTimeline({ segments, total, stepIndex, onSeek }: TimelineProps) {
+export function PhaseTimeline({ segments, total, stepIndex, onSeek }: TimelineProps) {
   const [hover, setHover] = useState<{
     x: number;
     stepIndex: number;

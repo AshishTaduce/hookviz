@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import ThemeToggle from '@/components/ThemeToggle';
+import Logo from '@/components/Logo';
 
 export function Stripe() {
   return (
@@ -17,8 +18,8 @@ export function SiteNav() {
     <header className="site-nav">
       <Stripe />
       <div className="wrap">
-        <Link className="logo" href="/">
-          HookViz
+        <Link className="logo" href="/" aria-label="HookViz home">
+          <Logo />
         </Link>
         <Link className="link" href="/#examples">
           Examples
@@ -39,7 +40,7 @@ export function SiteFooter() {
   return (
     <footer className="foot">
       <div className="wrap">
-        <span>HookViz</span>
+        <Logo size={20} />
         <span>Traces are recorded at build time, so every visit replays the same run.</span>
         <a className="r" href="https://ashishtaduce.co.in">
           Built by Ashish Taduce

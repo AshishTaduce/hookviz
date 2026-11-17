@@ -15,6 +15,8 @@ import VariablesPanel from '@/components/panels/VariablesPanel';
 import Player from '@/components/Player';
 import BreadcrumbPopover from '@/components/BreadcrumbPopover';
 import FirstVisitHint from '@/components/FirstVisitHint';
+import MobilePlayer from '@/components/MobilePlayer';
+import { useIsNarrow } from '@/lib/use-narrow';
 
 interface Props {
   trace: Trace;
@@ -25,6 +27,7 @@ interface Props {
 export default function PlayerShell({ trace }: Props) {
   const loadTrace = useStore((s) => s.loadTrace);
   const fontSize = useStore((s) => s.fontSize);
+  const narrow = useIsNarrow();
 
   // The player is a fixed-viewport app; marketing pages scroll
   useEffect(() => {
@@ -72,6 +75,17 @@ export default function PlayerShell({ trace }: Props) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trace.meta.id]);
+
+  // Wait one tick for the viewport check so phones never flash the desktop layout
+  if (narrow === null) return <div style={{ height: '100dvh', background: 'var(--bg-base)' }} />;
+  if (narrow) {
+    return (
+      <>
+        <MobilePlayer trace={trace} />
+        <BreadcrumbPopover />
+      </>
+    );
+  }
 
   return (
     <div

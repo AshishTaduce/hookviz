@@ -2,7 +2,9 @@
 
 Step-by-step React hooks visualizer. Watch `useState`, `useEffect`, `useReducer`, and more execute line-by-line with a synchronized source view, hook fiber list, DOM snapshot, effects queue, and variables panel.
 
-**Live:** deployed on Vercel (private for now)
+**Live:** https://hookviz.ashishtaduce.co.in
+
+**Pages:** `/` landing, `/guide` how to read the player, `/<example-id>` the player (desktop layout above 768px, a stepper layout on phones). Light and dark themes follow the OS setting.
 
 ---
 

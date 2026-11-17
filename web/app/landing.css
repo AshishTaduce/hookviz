@@ -13,7 +13,7 @@
 
 /* Navigation */
 .site-nav { position: relative; }
-.site-nav .wrap { height: 64px; }
+.site-nav .wrap { height: 80px; }
 .site-nav .wrap { display: flex; align-items: center; gap: 20px; }
 .site-nav .logo { font-size: 17px; font-weight: 500; color: var(--text-primary); text-decoration: none; margin-right: auto; }
 .site-nav a.link { color: var(--text-secondary); font-size: 14px; text-decoration: none; transition: color 150ms var(--ease); }
@@ -143,3 +143,5 @@
 .scribble .pen { stroke: var(--text-primary); stroke-width: 2.2; animation-delay: 950ms; animation-duration: 600ms; }
 .scribble .flick { stroke: var(--text-primary); stroke-width: 2.2; animation-delay: 1500ms; animation-duration: 250ms; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
+
+@media (max-width: 860px) { .site-nav .btn-primary { display: none; } .site-nav .wrap { height: 64px; } .site .logo-word { font-size: 21px; } }

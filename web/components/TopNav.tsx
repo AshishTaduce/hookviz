@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useStore } from '@/store';
 import Icon from '@/components/Icon';
 import ThemeToggle from '@/components/ThemeToggle';
+import Logo from '@/components/Logo';
 
 interface Props {
   trace: Trace;
@@ -49,8 +50,8 @@ export default function TopNav({ trace }: Props) {
       </div>
 
       {/* Wordmark links home; the breadcrumb below lists all examples */}
-      <Link href="/" style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: 15, textDecoration: 'none', padding: '2px 4px' }}>
-        HookViz
+      <Link href="/" aria-label="HookViz home" style={{ color: 'var(--text-primary)', textDecoration: 'none', padding: '2px 4px' }}>
+        <Logo size={26} />
       </Link>
       <Separator />
       <button

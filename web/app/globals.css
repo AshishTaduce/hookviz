@@ -299,3 +299,17 @@ body { transition: background-color 200ms var(--ease), color 200ms var(--ease); 
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 ::view-transition-old(root) { z-index: 1; }
 ::view-transition-new(root) { z-index: 2; }
+
+/* Logo */
+.logo-lockup { display: inline-flex; align-items: center; gap: 10px; }
+.logo-word { font-size: 26px; font-weight: 500; letter-spacing: -0.01em; color: var(--text-primary); line-height: 1; }
+.logo-word b { font-weight: 500; color: var(--text-secondary); }
+.logo-mark path, .logo-mark circle { stroke-linecap: butt; }
+.logo-hook { transform-origin: 10px 3.6px; transition: transform 500ms var(--ease); }
+.logo-lockup:hover .logo-hook { transform: rotate(10deg); }
+
+/* Mobile player controls */
+.m-ctl { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--border-strong); background: var(--bg-elevated); color: var(--text-primary); cursor: pointer; transition: transform 150ms var(--ease), background-color 150ms var(--ease); }
+.m-ctl:active { transform: scale(0.96); }
+.m-ctl:disabled { opacity: 0.4; cursor: default; }
+.m-ctl-main { background: var(--accent); border-color: transparent; color: var(--accent-contrast); }
