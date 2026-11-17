@@ -1,0 +1,31 @@
+name: Suggest an example
+description: Propose a hook behaviour that deserves its own example
+labels: [example-request]
+body:
+  - type: input
+    id: hook
+    attributes:
+      label: Hook
+      placeholder: useEffect
+    validations:
+      required: true
+  - type: textarea
+    id: mistake
+    attributes:
+      label: The confusing behaviour or common mistake
+      description: What do people get wrong, and what do they expect to happen instead?
+    validations:
+      required: true
+  - type: textarea
+    id: sketch
+    attributes:
+      label: Sketch (optional)
+      description: A rough component, or a few lines describing what the user clicks.
+      render: tsx
+  - type: checkboxes
+    id: who
+    attributes:
+      label: Who will write it?
+      options:
+        - label: I would like to write it myself
+        - label: I am suggesting it for someone else

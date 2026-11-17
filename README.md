@@ -4,6 +4,8 @@ Step-by-step React hooks visualizer. Watch `useState`, `useEffect`, `useReducer`
 
 **Live:** https://hookviz.ashishtaduce.co.in
 
+**Contribute:** new examples are welcome, see [CONTRIBUTING.md](CONTRIBUTING.md). AI agents and bots: read [AGENTS.md](AGENTS.md).
+
 **Pages:** `/` landing, `/guide` how to read the player, `/<example-id>` the player (desktop layout above 768px, a stepper layout on phones). Light and dark themes follow the OS setting.
 
 ---
@@ -143,15 +145,13 @@ export const scenario = async ({ click, type, tick }: ScenarioApi) => {
 # 1. Install dependencies
 npm install
 
-# 2. Copy Monaco assets (one-time setup — gitignored)
-cp -r web/node_modules/monaco-editor/min/vs web/public/monaco/vs
-
-# 3. Record all examples
-npm run record:all -w recorder
-
-# 4. Start the dev server
+# 2. Start the dev server (copies Monaco and generates the catalog first)
 npm run dev -w web
 # → http://localhost:3000
+
+# Traces are committed, so you only need to record when you add or change an example.
+# Record all examples (about 2 minutes)
+npm run record:all
 
 # Record a single example
 npm run record -w recorder -- --example=usestate-counter
@@ -159,7 +159,15 @@ npm run record -w recorder -- --example=usestate-counter --verbose
 
 # Production build
 npm run build -w web
+
+# Checks that CI also runs on every pull request
+npm run check:examples   # static rules for examples, fast
+npm run verify:traces    # re-record and compare with committed traces, about 2 minutes
 ```
+
+## Contributing
+
+The easiest way to help is to add an example: one `.tsx` file in `recorder/examples/` plus its recorded trace. [CONTRIBUTING.md](CONTRIBUTING.md) walks through it for humans, and [AGENTS.md](AGENTS.md) has the same rules for AI agents. Pull requests are checked by CI with no access to secrets, reviewed by the maintainer, and only deployed to the live site after the maintainer merges them.
 
 ---
 
