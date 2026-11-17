@@ -6,6 +6,7 @@ import { useStore, useStepNote } from '@/store';
 import { useShallow } from 'zustand/react/shallow';
 import { getPhaseSegments, PHASE_COLORS, PHASE_LABELS } from '@/lib/phase-segments';
 import type { PhaseSegment } from '@/types/trace';
+import Icon from '@/components/Icon';
 
 interface Props {
   trace: Trace;
@@ -47,15 +48,15 @@ export default function Player({ trace }: Props) {
         style={{
           display: 'flex',
           alignItems: 'center',
-          padding: '0 12px',
-          height: '40px',
+          padding: '0 16px',
+          height: '44px',
           gap: '10px',
           flexShrink: 0,
         }}
       >
         {/* Prev */}
         <ControlButton onClick={prev} disabled={stepIndex === 0} title="Previous step (←)">
-          ◀
+          <Icon name="prev" />
         </ControlButton>
 
         {/* Play/Pause */}
@@ -64,12 +65,12 @@ export default function Player({ trace }: Props) {
           disabled={stepIndex >= total - 1 && !isPlaying}
           title={isPlaying ? 'Pause' : 'Play'}
         >
-          {isPlaying ? '⏸' : '▶'}
+          <Icon name={isPlaying ? 'pause' : 'play'} />
         </ControlButton>
 
         {/* Next */}
         <ControlButton onClick={next} disabled={stepIndex >= total - 1} title="Next step (→)">
-          ▶|
+          <Icon name="next" />
         </ControlButton>
 
         {/* Step counter */}
@@ -117,7 +118,7 @@ export default function Player({ trace }: Props) {
               borderLeft: '1px solid var(--border)',
             }}
           >
-            ⓘ
+            <Icon name="info" size={14} />
           </span>
         )}
 
@@ -215,7 +216,7 @@ function PhaseTimeline({ segments, total, stepIndex, onSeek }: TimelineProps) {
         style={{
           display: 'flex',
           height: '14px',
-          borderRadius: '3px',
+          borderRadius: '4px',
           overflow: 'hidden',
           border: '1px solid var(--border)',
         }}
@@ -228,7 +229,7 @@ function PhaseTimeline({ segments, total, stepIndex, onSeek }: TimelineProps) {
               style={{
                 width: `${pct}%`,
                 background: PHASE_COLORS[seg.phase],
-                opacity: 0.8,
+                opacity: 0.9,
                 position: 'relative',
               }}
               title={PHASE_LABELS[seg.phase]}
@@ -246,7 +247,7 @@ function PhaseTimeline({ segments, total, stepIndex, onSeek }: TimelineProps) {
           transform: 'translate(-50%, -50%)',
           width: '2px',
           height: '20px',
-          background: 'white',
+          background: 'var(--text-primary)',
           borderRadius: '1px',
           pointerEvents: 'none',
           opacity: 0.9,
@@ -270,7 +271,7 @@ function PhaseTimeline({ segments, total, stepIndex, onSeek }: TimelineProps) {
             pointerEvents: 'none',
             whiteSpace: 'nowrap',
             zIndex: 50,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
           }}
         >
           step {hover.stepIndex + 1} · {hover.phase}
@@ -307,11 +308,11 @@ function ControlButton({
         cursor: disabled ? 'default' : 'pointer',
         fontFamily: 'var(--sans)',
         fontSize: '13px',
-        padding: '4px 6px',
-        borderRadius: '3px',
+        padding: '6px',
+        borderRadius: '6px',
         lineHeight: 1,
         opacity: disabled ? 0.4 : 1,
-        transition: 'background 100ms',
+        transition: 'background-color 150ms var(--ease)',
       }}
       onMouseEnter={(e) => {
         if (!disabled) (e.currentTarget as HTMLElement).style.background = 'var(--bg-hover)';
@@ -340,16 +341,16 @@ function SpeedButton({
       onClick={() => onSelect(value)}
       title={`${value}× speed`}
       style={{
-        background: active ? 'var(--accent)' : 'var(--bg-elevated)',
-        border: active ? '1px solid var(--accent)' : '1px solid var(--border)',
-        color: active ? '#fff' : 'var(--text-secondary)',
+        background: active ? 'var(--bg-hover)' : 'transparent',
+        border: active ? '1px solid var(--border-strong)' : '1px solid transparent',
+        color: active ? 'var(--text-primary)' : 'var(--text-muted)',
         cursor: 'pointer',
         fontFamily: 'var(--mono)',
         fontSize: '11px',
-        padding: '2px 6px',
-        borderRadius: '3px',
+        padding: '2px 8px',
+        borderRadius: '6px',
         lineHeight: 1.4,
-        transition: 'background 100ms, color 100ms',
+        transition: 'background-color 150ms var(--ease), color 150ms var(--ease)',
       }}
     >
       {value}×

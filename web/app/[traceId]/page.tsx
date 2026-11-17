@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { traceId } = await params;
   const entry = catalog.find((e) => e.id === traceId);
   return {
-    title: entry ? `${entry.title} — HookViz` : 'HookViz',
+    title: entry ? entry.title : 'Example',
   };
 }
 

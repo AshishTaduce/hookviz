@@ -1,7 +1,9 @@
 'use client';
 
 import type { Trace } from '@/types/trace';
+import Link from 'next/link';
 import { useStore } from '@/store';
+import Icon from '@/components/Icon';
 
 interface Props {
   trace: Trace;
@@ -29,7 +31,7 @@ export default function TopNav({ trace }: Props) {
         display: 'flex',
         alignItems: 'center',
         height: 'var(--nav-height)',
-        padding: '0 12px',
+        padding: '0 16px',
         background: 'var(--bg-surface)',
         borderBottom: 'var(--panel-border)',
         gap: '8px',
@@ -38,14 +40,18 @@ export default function TopNav({ trace }: Props) {
         zIndex: 100,
       }}
     >
-      {/* Wordmark / root breadcrumb */}
+      {/* Wordmark links home; the breadcrumb below lists all examples */}
+      <Link href="/" style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: 15, textDecoration: 'none', padding: '2px 4px' }}>
+        HookViz
+      </Link>
+      <Separator />
       <button
         className="breadcrumb-btn"
         onClick={() => openPopover('root')}
         style={breadcrumbStyle}
         title="All examples"
       >
-        HookViz
+        Examples
       </button>
 
       <Separator />
@@ -97,17 +103,17 @@ export default function TopNav({ trace }: Props) {
         style={{
           background: 'none',
           border: '1px solid var(--border)',
-          borderRadius: '4px',
-          color: audience === 'guided' ? 'var(--accent)' : 'var(--text-secondary)',
+          borderRadius: '8px',
+          color: audience === 'guided' ? 'var(--text-primary)' : 'var(--text-secondary)',
           cursor: 'pointer',
           fontFamily: 'var(--sans)',
           fontSize: '13px',
-          padding: '2px 8px',
-          lineHeight: 1.6,
-          transition: 'color 100ms, border-color 100ms',
+          padding: '4px 10px',
+          lineHeight: 1.5,
+          transition: 'color 150ms var(--ease), border-color 150ms var(--ease)',
         }}
       >
-        {audience === 'guided' ? '◑ Guided' : '◐ Expert'}
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}><Icon name={audience === 'guided' ? 'guided' : 'expert'} size={14} />{audience === 'guided' ? 'Guided' : 'Expert'}</span>
       </button>
 
       {/* Font size controls */}
@@ -118,7 +124,7 @@ export default function TopNav({ trace }: Props) {
           title="Decrease font size"
           style={{ ...zoomBtnStyle, opacity: fontSize <= 10 ? 0.3 : 1 }}
         >
-          A−
+          −
         </button>
         <span style={{ color: 'var(--text-muted)', fontSize: '11px', minWidth: '24px', textAlign: 'center' }}>
           {fontSize}
@@ -129,27 +135,13 @@ export default function TopNav({ trace }: Props) {
           title="Increase font size"
           style={{ ...zoomBtnStyle, opacity: fontSize >= 20 ? 0.3 : 1 }}
         >
-          A+
+          +
         </button>
       </div>
 
-      {/* ⌘K placeholder */}
-      <button
-        style={{
-          background: 'none',
-          border: '1px solid var(--border)',
-          borderRadius: '4px',
-          color: 'var(--text-muted)',
-          cursor: 'pointer',
-          fontFamily: 'var(--sans)',
-          fontSize: '12px',
-          padding: '2px 8px',
-          lineHeight: 1.6,
-        }}
-        title="Command palette (coming soon)"
-      >
-        ⌘K
-      </button>
+      <Link href="/guide" style={{ color: 'var(--text-secondary)', fontSize: 13, textDecoration: 'none', padding: '4px 8px' }}>
+        Guide
+      </Link>
     </nav>
   );
 }

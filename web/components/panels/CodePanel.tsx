@@ -155,7 +155,29 @@ export default function CodePanel({ trace }: Props) {
           height="100%"
           language="typescript"
           value={source}
-          theme="vs-dark"
+          theme="hookviz"
+          beforeMount={(monaco) => {
+            monaco.editor.defineTheme('hookviz', {
+              base: 'vs-dark',
+              inherit: true,
+              rules: [
+                { token: 'comment', foreground: '85858b' },
+                { token: 'keyword', foreground: 'b99be8' },
+                { token: 'string', foreground: 'e0b15a' },
+                { token: 'number', foreground: '5fc4a0' },
+                { token: 'type', foreground: '6aa6ff' },
+              ],
+              colors: {
+                'editor.background': '#141415',
+                'editor.foreground': '#ededed',
+                'editorLineNumber.foreground': '#85858b',
+                'editorLineNumber.activeForeground': '#ededed',
+                'editor.lineHighlightBackground': '#1f1f21',
+                'editorGutter.background': '#141415',
+                'scrollbarSlider.background': '#ededed22',
+              },
+            });
+          }}
           options={{
             readOnly: true,
             minimap: { enabled: false },
@@ -164,7 +186,7 @@ export default function CodePanel({ trace }: Props) {
             scrollBeyondLastLine: false,
             renderLineHighlight: 'none', // we handle highlight via decorations
             fontSize,
-            fontFamily: 'Consolas, Menlo, Monaco, "Cascadia Code", "Courier New", monospace',
+            fontFamily: '"JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace',
             scrollbar: {
               vertical: 'auto',
               horizontal: 'auto',
@@ -191,22 +213,22 @@ export default function CodePanel({ trace }: Props) {
 const lineHighlightStyles = `
 .hv-line-render {
   background: rgba(59, 130, 246, 0.1) !important;
-  border-left: 3px solid #3b82f6 !important;
+  border-left: 3px solid #6aa6ff !important;
 }
 .hv-line-commit {
   background: rgba(245, 158, 11, 0.12) !important;
-  border-left: 3px solid #f59e0b !important;
+  border-left: 3px solid #e0b15a !important;
 }
 .hv-line-passive-effect {
   background: rgba(34, 197, 94, 0.1) !important;
-  border-left: 3px solid #22c55e !important;
+  border-left: 3px solid #5fc4a0 !important;
 }
 .hv-line-event {
   background: rgba(168, 85, 247, 0.1) !important;
-  border-left: 3px solid #a855f7 !important;
+  border-left: 3px solid #b99be8 !important;
 }
 .hv-line-idle {
   background: rgba(107, 114, 128, 0.08) !important;
-  border-left: 3px solid #6b7280 !important;
+  border-left: 3px solid #7a7a80 !important;
 }
 `;

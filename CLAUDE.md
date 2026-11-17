@@ -16,9 +16,10 @@ traces (`recorder/out/*.trace.json`, committed to git). The frontend
   committed to git on purpose.
 - v1 needs no server — static deploy to Vercel free tier. Don't provision
   infrastructure.
-- No landing/explainer page in v1. Breadcrumb navigation (category / hook /
-  example) is an anchored popover, not a route — see docs/02_ui_spec.md,
-  "Navigation" section.
+- Landing page (`/`) and guide (`/guide`) were added 2026-11-17, reversing the
+  earlier "no landing page in v1" decision. Player URLs stay `/<traceId>`.
+  Breadcrumb navigation (category / hook / example) is still an anchored
+  popover, not a route — see docs/02_ui_spec.md, "Navigation" section.
 - Recorder entry point must be `record(sourceCode: string, meta): Promise<Trace>`
   with a thin `recordFromFile(path)` wrapper — the one deliberate coupling
   to the deferred live mode.

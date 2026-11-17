@@ -46,7 +46,7 @@ policy in doc 01.
 | Experience toggle | ✅ Done — Guided (annotations visible) / Expert (annotations hidden) |
 | Visual design | ✅ Done for v1 |
 | Live mode | ⬜ Deferred to milestone 2 (explicit decision, see decisions log) |
-| Landing / explainer page | ⬜ Out of scope for v1 (explicit decision, see doc 00) |
+| Landing / explainer page | ✅ Added 2026-11-17: `/` landing, `/guide`, first-visit hint, ←/→/Space shortcuts. Reverses the v1 decision. |
 
 ---
 

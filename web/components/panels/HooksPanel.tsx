@@ -66,16 +66,16 @@ function HookRow({ hook }: { hook: HookSnapshot }) {
             ←
           </span>
         )}
-        <span style={{ color: '#4fc1ff', fontWeight: 600 }}>{type}</span>
+        <span style={{ color: '#6aa6ff', fontWeight: 500 }}>{type}</span>
         {changed && (
           <span
             style={{
               fontSize: '9px',
               background: 'rgba(255, 200, 0, 0.2)',
-              color: '#ffc800',
+              color: '#e0b15a',
               borderRadius: '2px',
               padding: '0 4px',
-              fontWeight: 700,
+              fontWeight: 500,
               letterSpacing: '0.05em',
             }}
           >
@@ -87,14 +87,14 @@ function HookRow({ hook }: { hook: HookSnapshot }) {
       {/* Memoized value */}
       <div style={{ paddingLeft: '26px', color: 'var(--text-secondary)' }}>
         <span style={{ color: 'var(--text-muted)' }}>memoized: </span>
-        <span style={{ color: '#9cdcfe' }}>{memoized}</span>
+        <span style={{ color: '#ededed' }}>{memoized}</span>
       </div>
 
       {/* Queue (only if non-empty) */}
       {queue.length > 0 && (
         <div style={{ paddingLeft: '26px' }}>
           <span style={{ color: 'var(--text-muted)' }}>queue: </span>
-          <span style={{ color: '#f59e0b' }}>[{queue.join(', ')}]</span>
+          <span style={{ color: '#e0b15a' }}>[{queue.join(', ')}]</span>
         </div>
       )}
 
@@ -102,7 +102,7 @@ function HookRow({ hook }: { hook: HookSnapshot }) {
       {deps !== null && (
         <div style={{ paddingLeft: '26px' }}>
           <span style={{ color: 'var(--text-muted)' }}>deps: </span>
-          <span style={{ color: '#ce9178' }}>[{deps.join(', ')}]</span>
+          <span style={{ color: '#a1a1a6' }}>[{deps.join(', ')}]</span>
         </div>
       )}
     </div>

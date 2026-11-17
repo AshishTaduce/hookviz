@@ -10,19 +10,19 @@ const RESET_CSS = `
     margin: 0; padding: 8px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 14px;
-    background: #1e1e1e;
-    color: #cccccc;
+    background: #141415;
+    color: #ededed;
   }
   button {
-    background: #3c3c3c;
-    color: #ccc;
-    border: 1px solid #555;
-    border-radius: 4px;
+    background: #232325;
+    color: #ededed;
+    border: 1px solid rgba(237,237,237,0.16);
+    border-radius: 8px;
     padding: 4px 10px;
     cursor: pointer;
     font-size: 13px;
   }
-  button:hover { background: #4a4a4a; }
+  button:hover { background: #2b2b2e; }
 `;
 
 function wrapHtml(dom: string): string {

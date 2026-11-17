@@ -14,6 +14,7 @@ import EffectsPanel from '@/components/panels/EffectsPanel';
 import VariablesPanel from '@/components/panels/VariablesPanel';
 import Player from '@/components/Player';
 import BreadcrumbPopover from '@/components/BreadcrumbPopover';
+import FirstVisitHint from '@/components/FirstVisitHint';
 
 interface Props {
   trace: Trace;
@@ -24,6 +25,28 @@ interface Props {
 export default function PlayerShell({ trace }: Props) {
   const loadTrace = useStore((s) => s.loadTrace);
   const fontSize = useStore((s) => s.fontSize);
+
+  // The player is a fixed-viewport app; marketing pages scroll
+  useEffect(() => {
+    document.body.classList.add('app');
+    return () => document.body.classList.remove('app');
+  }, []);
+
+  // Keyboard: ← / → step, Space plays or pauses. Ignored while typing or when
+  // a control has focus (so Space still activates buttons).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(el.tagName))) return;
+      if (el?.closest?.('.monaco-editor')) return;
+      const s = useStore.getState();
+      if (e.key === 'ArrowRight') { e.preventDefault(); s.next(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); s.prev(); }
+      else if (e.key === ' ') { e.preventDefault(); s.toggle(); }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   // Sync font size to CSS variable so all panels pick it up automatically
   useEffect(() => {
@@ -120,6 +143,8 @@ export default function PlayerShell({ trace }: Props) {
 
       {/* Breadcrumb popover (portal-like, positioned by TopNav trigger) */}
       <BreadcrumbPopover />
+
+      <FirstVisitHint />
     </div>
   );
 }

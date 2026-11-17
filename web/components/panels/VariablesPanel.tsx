@@ -4,13 +4,13 @@ import { useVariables } from '@/store';
 import type { Variable } from '@/types/trace';
 
 const KIND_COLORS: Record<string, string> = {
-  number: '#b5cea8',
-  string: '#ce9178',
-  boolean: '#569cd6',
-  function: '#dcdcaa',
-  object: '#9cdcfe',
-  undefined: '#6b7280',
-  null: '#6b7280',
+  number: '#5fc4a0',
+  string: '#e0b15a',
+  boolean: '#6aa6ff',
+  function: '#b99be8',
+  object: '#a1a1a6',
+  undefined: '#85858b',
+  null: '#85858b',
 };
 
 export default function VariablesPanel() {
@@ -63,7 +63,7 @@ function VariableRow({ variable }: { variable: Variable }) {
       </span>
 
       {/* Name */}
-      <span style={{ color: '#9cdcfe', flex: '0 0 auto' }}>{name}</span>
+      <span style={{ color: '#a1a1a6', flex: '0 0 auto' }}>{name}</span>
 
       <span style={{ color: 'var(--text-muted)' }}>=</span>
 
@@ -87,10 +87,10 @@ function VariableRow({ variable }: { variable: Variable }) {
           style={{
             fontSize: '9px',
             background: 'rgba(255, 200, 0, 0.2)',
-            color: '#ffc800',
+            color: '#e0b15a',
             borderRadius: '2px',
             padding: '0 4px',
-            fontWeight: 700,
+            fontWeight: 500,
             flexShrink: 0,
           }}
         >

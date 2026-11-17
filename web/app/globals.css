@@ -1,38 +1,48 @@
-/* HookViz global styles — VS Code dark+ vibe */
+/* HookViz global styles — graphite surfaces, one off-white accent.
+   Colour is reserved for phases (render / commit / effect / event), because
+   those are the thing the product teaches. Everything else stays neutral. */
 
 :root {
-  --bg-base: #1e1e1e;
-  --bg-surface: #252526;
-  --bg-elevated: #2d2d2d;
-  --bg-hover: #2a2d2e;
-  --border: #3c3c3c;
-  --border-focus: #007fd4;
+  /* Surfaces (graphite ramp) */
+  --bg-deep: #0f0f10;
+  --bg-base: #141415;
+  --bg-surface: #19191b;
+  --bg-elevated: #232325;
+  --bg-hover: #1f1f21;
 
-  --text-primary: #cccccc;
-  --text-secondary: #9d9d9d;
-  --text-muted: #6a6a6a;
-  --text-inverse: #1e1e1e;
+  /* Hairlines: primary text at 8% */
+  --border: rgba(237, 237, 237, 0.08);
+  --border-strong: rgba(237, 237, 237, 0.16);
+  --border-focus: rgba(237, 237, 237, 0.5);
 
-  /* Phase colors */
-  --phase-render: #3b82f6;
-  --phase-commit: #f59e0b;
-  --phase-passive-effect: #22c55e;
-  --phase-event: #a855f7;
-  --phase-idle: #6b7280;
+  --text-primary: #ededed;
+  --text-secondary: #a1a1a6;
+  --text-muted: #85858b;
+  --text-inverse: #141415;
 
-  /* Accent */
-  --accent: #007fd4;
-  --accent-hover: #1a90e5;
+  /* Phase colours: each one means exactly one phase */
+  --phase-render: #6aa6ff;
+  --phase-commit: #e0b15a;
+  --phase-passive-effect: #5fc4a0;
+  --phase-event: #b99be8;
+  --phase-idle: #7a7a80;
+
+  /* Accent: off-white fill for the primary action and selection */
+  --accent: #ededed;
+  --accent-hover: #ffffff;
+  --accent-contrast: #141415;
 
   /* Change highlight */
-  --changed-bg: rgba(255, 200, 0, 0.15);
-  --changed-border: rgba(255, 200, 0, 0.6);
+  --changed-bg: rgba(224, 177, 90, 0.14);
+  --changed-border: rgba(224, 177, 90, 0.55);
 
-  --mono: 'Consolas', 'Menlo', 'Monaco', 'Cascadia Code', 'Courier New', monospace;
-  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --mono: var(--font-geist-mono), 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+  --sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  --nav-height: 40px;
-  --player-height: 80px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --nav-height: 44px;
+  --player-height: 88px;
   --panel-border: 1px solid var(--border);
   --ui-font-size: 13px;
 }
@@ -48,17 +58,24 @@ html, body {
   background: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overflow: hidden;
+}
+
+/* The player is a fixed-viewport app; marketing pages scroll. */
+body.app { overflow: hidden; }
+
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
 }
 
 /* Scrollbars */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-surface); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #555; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(237, 237, 237, 0.28); }
 
 /* Change highlight animation */
 @keyframes changed-flash {
@@ -85,18 +102,16 @@ html, body {
   animation: dom-flash 500ms ease-out forwards;
 }
 
-/* Panel headers */
+/* Panel headers: sentence case, quiet */
 .panel-header {
   display: flex;
   align-items: center;
-  height: 28px;
-  padding: 0 10px;
+  height: 32px;
+  padding: 0 12px;
   background: var(--bg-surface);
   border-bottom: var(--panel-border);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text-secondary);
   flex-shrink: 0;
 }
@@ -112,33 +127,82 @@ html, body {
   font-size: var(--ui-font-size);
 }
 
-/* Phase badge */
+/* Phase label: tinted text on a quiet chip */
 .phase-badge {
   display: inline-block;
-  padding: 1px 6px;
-  border-radius: 3px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
   font-family: var(--mono);
+  line-height: 16px;
 }
 
-.phase-render       { background: rgba(59, 130, 246, 0.2); color: var(--phase-render); }
-.phase-commit       { background: rgba(245, 158, 11, 0.2); color: var(--phase-commit); }
-.phase-passive-effect { background: rgba(34, 197, 94, 0.2); color: var(--phase-passive-effect); }
-.phase-event        { background: rgba(168, 85, 247, 0.2); color: var(--phase-event); }
-.phase-idle         { background: rgba(107, 114, 128, 0.2); color: var(--phase-idle); }
+.phase-render         { background: rgba(106, 166, 255, 0.14); color: var(--phase-render); }
+.phase-commit         { background: rgba(224, 177, 90, 0.14);  color: var(--phase-commit); }
+.phase-passive-effect { background: rgba(95, 196, 160, 0.14);  color: var(--phase-passive-effect); }
+.phase-event          { background: rgba(185, 155, 232, 0.14); color: var(--phase-event); }
+.phase-idle           { background: rgba(122, 122, 128, 0.18); color: var(--text-secondary); }
 
-/* Effect status badges */
-.effect-scheduled    { color: #f59e0b; }
-.effect-fired        { color: #22c55e; }
-.effect-cleanup-pending { color: #f97316; }
-.effect-cleaned-up   { color: #6b7280; }
+/* Effect status colours */
+.effect-scheduled       { color: var(--phase-commit); }
+.effect-fired           { color: var(--phase-passive-effect); }
+.effect-cleanup-pending { color: var(--phase-event); }
+.effect-cleaned-up      { color: var(--text-muted); }
 
 /* Annotation glyph marker shapes via CSS */
 .hv-annot { display: inline-block; width: 10px; height: 10px; }
-.hv-annot-comment       { background: #9d9d9d; border-radius: 2px; }
-.hv-annot-function-decl { background: #4fc1ff; border-radius: 50%; }
-.hv-annot-side-effect   { background: #f59e0b; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
-.hv-annot-closure       { background: #a855f7; border-radius: 2px; transform: rotate(45deg); }
+.hv-annot-comment       { background: var(--text-secondary); border-radius: 2px; }
+.hv-annot-function-decl { background: var(--phase-render); border-radius: 50%; }
+.hv-annot-side-effect   { background: var(--phase-commit); clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+.hv-annot-closure       { background: var(--phase-event); border-radius: 2px; transform: rotate(45deg); }
+
+/* Shared controls */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease), border-color 150ms var(--ease),
+    transform 150ms var(--ease);
+}
+.btn:hover { background: #2b2b2e; }
+.btn:active { transform: scale(0.98); }
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-lg { height: 44px; padding: 0 20px; font-size: 15px; }
+
+.keycap {
+  display: inline-block;
+  min-width: 20px;
+  padding: 0 6px;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

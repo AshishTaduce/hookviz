@@ -42,11 +42,11 @@ export function getCommitStepIndices(trace: Trace): number[] {
 }
 
 export const PHASE_COLORS: Record<Phase, string> = {
-  render: '#3b82f6',         // blue-500
-  commit: '#f59e0b',         // amber-500
-  'passive-effect': '#22c55e', // green-500
-  event: '#a855f7',          // purple-500
-  idle: '#6b7280',           // gray-500
+  render: '#6aa6ff',
+  commit: '#e0b15a',
+  'passive-effect': '#5fc4a0',
+  event: '#b99be8',
+  idle: '#7a7a80',
 };
 
 export const PHASE_LABELS: Record<Phase, string> = {

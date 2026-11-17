@@ -11,10 +11,10 @@ const STATUS_LABELS: Record<EffectStatus, string> = {
 };
 
 const STATUS_COLORS: Record<EffectStatus, string> = {
-  scheduled: '#f59e0b',
-  fired: '#22c55e',
-  'cleanup-pending': '#f97316',
-  'cleaned-up': '#6b7280',
+  scheduled: '#e0b15a',
+  fired: '#5fc4a0',
+  'cleanup-pending': '#b99be8',
+  'cleaned-up': '#85858b',
 };
 
 const STATUS_BG: Record<EffectStatus, string> = {
@@ -69,7 +69,7 @@ function EffectRow({ effect }: { effect: EffectSnapshot }) {
             background: bg,
             color,
             fontSize: '10px',
-            fontWeight: 700,
+            fontWeight: 500,
             letterSpacing: '0.05em',
             border: `1px solid ${color}40`,
           }}
@@ -80,7 +80,7 @@ function EffectRow({ effect }: { effect: EffectSnapshot }) {
       {/* Deps */}
       <div>
         <span style={{ color: 'var(--text-muted)' }}>deps: </span>
-        <span style={{ color: '#ce9178' }}>
+        <span style={{ color: '#e0b15a' }}>
           [{deps.length === 0 ? '' : deps.join(', ')}]
         </span>
       </div>
