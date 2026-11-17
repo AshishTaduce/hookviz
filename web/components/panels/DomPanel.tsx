@@ -2,36 +2,43 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { useDomHtml, useStore } from '@/store';
+import { useTheme } from '@/lib/theme';
 
-// Minimal reset injected into the iframe for clean presentation
-const RESET_CSS = `
+// Minimal reset injected into the iframe, filled from the page's current
+// theme tokens so the sandboxed output matches light and dark.
+function resetCss(): string {
+  const cs = getComputedStyle(document.documentElement);
+  const v = (n: string, f: string) => cs.getPropertyValue(n).trim() || f;
+  return `
   *, *::before, *::after { box-sizing: border-box; }
   html, body {
     margin: 0; padding: 8px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 14px;
-    background: #141415;
-    color: #ededed;
+    background: ${v('--bg-surface', '#11141c')};
+    color: ${v('--text-primary', '#eef0f5')};
   }
   button {
-    background: #232325;
-    color: #ededed;
-    border: 1px solid rgba(237,237,237,0.16);
+    background: ${v('--bg-elevated', '#1a1e28')};
+    color: ${v('--text-primary', '#eef0f5')};
+    border: 1px solid ${v('--border-strong', '#444')};
     border-radius: 8px;
     padding: 4px 10px;
     cursor: pointer;
     font-size: 13px;
   }
-  button:hover { background: #2b2b2e; }
+  button:hover { background: ${v('--btn-hover', '#232836')}; }
 `;
+}
 
 function wrapHtml(dom: string): string {
-  return `<!doctype html><html><head><style>${RESET_CSS}</style></head><body>${dom}</body></html>`;
+  return `<!doctype html><html><head><style>${resetCss()}</style></head><body>${dom}</body></html>`;
 }
 
 export default function DomPanel() {
   const dom = useDomHtml();
   const stepIndex = useStore((s) => s.stepIndex);
+  const theme = useTheme();
 
   // Carry-forward ref: hold last non-null dom
   const lastDomRef = useRef<string | null>(null);
@@ -40,10 +47,12 @@ export default function DomPanel() {
   // Flash state: incremented when a new commit dom arrives
   const [flashKey, setFlashKey] = useState(0);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const themeRef = useRef(theme);
 
   // Update carry-forward and trigger flash when new dom arrives
   useEffect(() => {
-    if (dom !== null && dom !== lastDomRef.current) {
+    if (dom !== null && (dom !== lastDomRef.current || themeRef.current !== theme)) {
+      themeRef.current = theme;
       lastDomRef.current = dom;
       const wrapped = wrapHtml(dom);
       lastWrappedRef.current = wrapped;
@@ -52,7 +61,7 @@ export default function DomPanel() {
       }
       setFlashKey((k) => k + 1);
     }
-  }, [dom, stepIndex]);
+  }, [dom, stepIndex, theme]);
 
   const currentWrapped = lastWrappedRef.current;
 

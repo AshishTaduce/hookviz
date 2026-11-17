@@ -11,10 +11,10 @@ const STATUS_LABELS: Record<EffectStatus, string> = {
 };
 
 const STATUS_COLORS: Record<EffectStatus, string> = {
-  scheduled: '#e0b15a',
-  fired: '#5fc4a0',
-  'cleanup-pending': '#b99be8',
-  'cleaned-up': '#85858b',
+  scheduled: 'var(--phase-commit)',
+  fired: 'var(--phase-passive-effect)',
+  'cleanup-pending': 'var(--phase-event)',
+  'cleaned-up': 'var(--text-muted)',
 };
 
 const STATUS_BG: Record<EffectStatus, string> = {
@@ -80,7 +80,7 @@ function EffectRow({ effect }: { effect: EffectSnapshot }) {
       {/* Deps */}
       <div>
         <span style={{ color: 'var(--text-muted)' }}>deps: </span>
-        <span style={{ color: '#e0b15a' }}>
+        <span style={{ color: 'var(--phase-commit)' }}>
           [{deps.length === 0 ? '' : deps.join(', ')}]
         </span>
       </div>

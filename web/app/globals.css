@@ -1,40 +1,38 @@
-/* HookViz global styles — graphite surfaces, one off-white accent.
-   Colour is reserved for phases (render / commit / effect / event), because
-   those are the thing the product teaches. Everything else stays neutral. */
+/* HookViz global styles.
+   One system for the landing page and the player. The four phase colours
+   (render / commit / effect / event) are the brand: they appear in the stripe,
+   the timeline and the chips, and each one means exactly one phase. A single
+   lime accent marks the primary action, links and focus. Surfaces are warm
+   paper in light and night ink in dark. */
 
 :root {
-  /* Surfaces (graphite ramp) */
-  --bg-deep: #0f0f10;
-  --bg-base: #141415;
-  --bg-surface: #19191b;
-  --bg-elevated: #232325;
-  --bg-hover: #1f1f21;
+  /* Light: pale citrus paper */
+  --bg-deep: #f0f0e6;
+  --bg-base: #fbfbf6;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f0f0e6;
+  --bg-hover: #f5f5ec;
+  --border: rgba(20, 21, 15, 0.12);
+  --border-strong: rgba(20, 21, 15, 0.22);
+  --text-primary: #14150f;
+  --text-secondary: #4d4f44;
+  --text-muted: #5f6155;
+  --text-inverse: #ffffff;
+  --phase-render: #2457f5;
+  --phase-commit: #b86e00;
+  --phase-passive-effect: #0a8f63;
+  --phase-event: #8a3ffc;
+  --phase-idle: #7b7266;
+  --accent: #c4ee2e;
+  --accent-hover: #b3dd1c;
+  --accent-contrast: #14150f;
+  --accent-text: #3d5a00;
+  --btn-hover: #e8e8da;
+  --shadow: 0 8px 24px rgba(20, 21, 15, 0.1);
 
-  /* Hairlines: primary text at 8% */
-  --border: rgba(237, 237, 237, 0.08);
-  --border-strong: rgba(237, 237, 237, 0.16);
-  --border-focus: rgba(237, 237, 237, 0.5);
-
-  --text-primary: #ededed;
-  --text-secondary: #a1a1a6;
-  --text-muted: #85858b;
-  --text-inverse: #141415;
-
-  /* Phase colours: each one means exactly one phase */
-  --phase-render: #6aa6ff;
-  --phase-commit: #e0b15a;
-  --phase-passive-effect: #5fc4a0;
-  --phase-event: #b99be8;
-  --phase-idle: #7a7a80;
-
-  /* Accent: off-white fill for the primary action and selection */
-  --accent: #ededed;
-  --accent-hover: #ffffff;
-  --accent-contrast: #141415;
-
-  /* Change highlight */
-  --changed-bg: rgba(224, 177, 90, 0.14);
-  --changed-border: rgba(224, 177, 90, 0.55);
+  --border-focus: var(--accent-text);
+  --changed-bg: color-mix(in srgb, var(--phase-commit) 16%, transparent);
+  --changed-border: color-mix(in srgb, var(--phase-commit) 60%, transparent);
 
   --mono: var(--font-geist-mono), 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, monospace;
   --sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -45,6 +43,63 @@
   --player-height: 88px;
   --panel-border: 1px solid var(--border);
   --ui-font-size: 13px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    /* Dark: night ink */
+    --bg-deep: #07080d;
+    --bg-base: #0b0d14;
+    --bg-surface: #11141c;
+    --bg-elevated: #1a1e28;
+    --bg-hover: #151925;
+    --border: rgba(238, 240, 245, 0.1);
+    --border-strong: rgba(238, 240, 245, 0.18);
+    --text-primary: #eef0f5;
+    --text-secondary: #a3a9b8;
+    --text-muted: #7a8296;
+    --text-inverse: #0b0d14;
+    --phase-render: #6b9bff;
+    --phase-commit: #ffb547;
+    --phase-passive-effect: #3ddc97;
+    --phase-event: #c58bff;
+    --phase-idle: #7a8296;
+    --accent: #c4ee2e;
+    --accent-hover: #d3f75a;
+    --accent-contrast: #14150f;
+    --accent-text: #c4ee2e;
+    --btn-hover: #232836;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  /* Dark: night ink */
+  --bg-deep: #07080d;
+  --bg-base: #0b0d14;
+  --bg-surface: #11141c;
+  --bg-elevated: #1a1e28;
+  --bg-hover: #151925;
+  --border: rgba(238, 240, 245, 0.1);
+  --border-strong: rgba(238, 240, 245, 0.18);
+  --text-primary: #eef0f5;
+  --text-secondary: #a3a9b8;
+  --text-muted: #7a8296;
+  --text-inverse: #0b0d14;
+  --phase-render: #6b9bff;
+  --phase-commit: #ffb547;
+  --phase-passive-effect: #3ddc97;
+  --phase-event: #c58bff;
+  --phase-idle: #7a8296;
+  --accent: #c4ee2e;
+  --accent-hover: #d3f75a;
+  --accent-contrast: #14150f;
+  --accent-text: #c4ee2e;
+  --btn-hover: #232836;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
 }
 
 *, *::before, *::after {
@@ -75,7 +130,7 @@ body.app { overflow: hidden; }
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(237, 237, 237, 0.28); }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
 /* Change highlight animation */
 @keyframes changed-flash {
@@ -138,11 +193,11 @@ body.app { overflow: hidden; }
   line-height: 16px;
 }
 
-.phase-render         { background: rgba(106, 166, 255, 0.14); color: var(--phase-render); }
-.phase-commit         { background: rgba(224, 177, 90, 0.14);  color: var(--phase-commit); }
-.phase-passive-effect { background: rgba(95, 196, 160, 0.14);  color: var(--phase-passive-effect); }
-.phase-event          { background: rgba(185, 155, 232, 0.14); color: var(--phase-event); }
-.phase-idle           { background: rgba(122, 122, 128, 0.18); color: var(--text-secondary); }
+.phase-render         { background: color-mix(in srgb, var(--phase-render) 16%, transparent); color: var(--phase-render); }
+.phase-commit         { background: color-mix(in srgb, var(--phase-commit) 16%, transparent); color: var(--phase-commit); }
+.phase-passive-effect { background: color-mix(in srgb, var(--phase-passive-effect) 16%, transparent); color: var(--phase-passive-effect); }
+.phase-event          { background: color-mix(in srgb, var(--phase-event) 16%, transparent); color: var(--phase-event); }
+.phase-idle { background: color-mix(in srgb, var(--phase-idle) 18%, transparent); color: var(--text-secondary); }
 
 /* Effect status colours */
 .effect-scheduled       { color: var(--phase-commit); }
@@ -177,15 +232,28 @@ body.app { overflow: hidden; }
   transition: background-color 150ms var(--ease), border-color 150ms var(--ease),
     transform 150ms var(--ease);
 }
-.btn:hover { background: #2b2b2e; }
+.btn:hover { background: var(--btn-hover); }
 .btn:active { transform: scale(0.98); }
 .btn-primary {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-contrast);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  border-color: transparent;
 }
 .btn-primary:hover { background: var(--accent-hover); }
+
+a { color: var(--accent-text); text-underline-offset: 3px; }
+
+.icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: var(--text-secondary); cursor: pointer; transition: background-color 150ms var(--ease), color 150ms var(--ease); }
+.icon-btn:hover { background: var(--bg-elevated); color: var(--text-primary); }
+
+/* Signature: the four phases as a thin stripe */
+.stripe { display: flex; height: 3px; }
+.stripe i { flex: 1; }
+.stripe i:nth-child(1) { background: var(--phase-render); flex: 5; }
+.stripe i:nth-child(2) { background: var(--phase-commit); flex: 1; }
+.stripe i:nth-child(3) { background: var(--phase-event); flex: 2; }
+.stripe i:nth-child(4) { background: var(--phase-passive-effect); flex: 2; }
 .btn-lg { height: 44px; padding: 0 20px; font-size: 15px; }
 
 .keycap {
@@ -206,3 +274,28 @@ body.app { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* ---- Motion: short, one easing curve, transform and opacity only ---- */
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(-4px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes slide-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+body { transition: background-color 200ms var(--ease), color 200ms var(--ease); }
+.rise { animation: rise 450ms var(--ease) both; animation-delay: calc(var(--i, 0) * 60ms); }
+.stripe i { transform-origin: left; animation: grow 700ms var(--ease) both; }
+.stripe i:nth-child(2) { animation-delay: 80ms; }
+.stripe i:nth-child(3) { animation-delay: 160ms; }
+.stripe i:nth-child(4) { animation-delay: 240ms; }
+.timeline .bar i { transform-origin: left; animation: grow 600ms var(--ease) both; animation-delay: calc(500ms + var(--k, 0) * 40ms); }
+.pop-in { animation: pop-in 160ms var(--ease) both; }
+.slide-in { animation: slide-in 300ms var(--ease) both; }
+@media (scripting: enabled) {
+  .reveal { opacity: 0; transform: translateY(12px); transition: opacity 450ms var(--ease), transform 450ms var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+}
+
+/* Theme switch: the new theme is revealed by a circle (animated in lib/theme.ts) */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2; }

@@ -4,6 +4,7 @@ import type { Trace } from '@/types/trace';
 import Link from 'next/link';
 import { useStore } from '@/store';
 import Icon from '@/components/Icon';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface Props {
   trace: Trace;
@@ -40,6 +41,13 @@ export default function TopNav({ trace }: Props) {
         zIndex: 100,
       }}
     >
+      <div className="stripe" aria-hidden="true" style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+        <i />
+        <i />
+        <i />
+        <i />
+      </div>
+
       {/* Wordmark links home; the breadcrumb below lists all examples */}
       <Link href="/" style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: 15, textDecoration: 'none', padding: '2px 4px' }}>
         HookViz
@@ -142,6 +150,7 @@ export default function TopNav({ trace }: Props) {
       <Link href="/guide" style={{ color: 'var(--text-secondary)', fontSize: 13, textDecoration: 'none', padding: '4px 8px' }}>
         Guide
       </Link>
+      <ThemeToggle />
     </nav>
   );
 }

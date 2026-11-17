@@ -4,6 +4,7 @@ import type { Trace } from '@/types/trace';
 import { getPhaseSegments, PHASE_COLORS } from '@/lib/phase-segments';
 import { SiteNav, SiteFooter } from '@/components/SiteChrome';
 import Icon from '@/components/Icon';
+import Reveal from '@/components/Reveal';
 import './landing.css';
 import batching from '@/../recorder/out/usestate-batching.trace.json';
 
@@ -47,13 +48,30 @@ export default function Landing() {
 
       <main>
         <section className="hero wrap">
-          <h1>Watch React hooks run, one line at a time</h1>
-          <p className="sub">
+          <h1 className="rise" style={{ ['--i' as string]: 0 }}>
+            Watch React hooks run, <em>
+              one line at a time
+              <svg className="scribble" viewBox="0 0 300 26" aria-hidden="true">
+                <defs>
+                  <filter id="rough" x="-5%" y="-40%" width="110%" height="180%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="7" result="n" />
+                    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" />
+                  </filter>
+                </defs>
+                <g filter="url(#rough)">
+                  <path className="marker" pathLength="1" d="M5 15 C 42 8, 78 19, 128 12 S 214 9, 262 14 S 288 13, 295 11" />
+                  <path className="pen" pathLength="1" d="M9 19 C 58 11, 104 23, 160 16 S 244 12, 289 18" />
+                  <path className="flick" pathLength="1" d="M276 8 L 297 15 L 281 22" />
+                </g>
+              </svg>
+            </em>
+          </h1>
+          <p className="sub rise" style={{ ['--i' as string]: 1 }}>
             HookViz replays real React executions statement by statement. See the source line, the
             hook list, the effects queue and the DOM change together, so a stale closure or a
             missing dependency shows up as a step you can point at.
           </p>
-          <div className="actions">
+          <div className="actions rise" style={{ ['--i' as string]: 2 }}>
             <Link className="btn btn-primary btn-lg" href={`/${HERO_ID}`}>
               Open the player <Icon name="arrow" />
             </Link>
@@ -61,11 +79,11 @@ export default function Landing() {
               Read the guide
             </Link>
           </div>
-          <p className="meta">
+          <p className="meta rise" style={{ ['--i' as string]: 3 }}>
             {catalog.length} examples · React {trace.meta.reactVersion} · recorded, not simulated
           </p>
 
-          <div className="view" aria-label="Preview of the player at one step of a recorded trace">
+          <div className="view rise" style={{ ['--i' as string]: 4 }} aria-label="Preview of the player at one step of a recorded trace">
             <div className="view-bar">
               <span>{trace.meta.title.replace(/^[^—]+—\s*/, '')}</span>
               <span className="step">
@@ -115,6 +133,7 @@ export default function Landing() {
                   <i
                     key={i}
                     style={{
+                      ['--k' as string]: i,
                       flexGrow: seg.end - seg.start + 1,
                       background: PHASE_COLORS[seg.phase],
                     }}
@@ -134,7 +153,7 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="section wrap" id="panels">
+        <section className="section wrap reveal" id="panels">
           <h2>Six views of the same step</h2>
           <p className="lead">
             Every panel shows the same moment in the recording. Move the timeline and they all move
@@ -150,7 +169,7 @@ export default function Landing() {
           </dl>
         </section>
 
-        <section className="section wrap">
+        <section className="section wrap reveal">
           <h2>Four phases, four colours</h2>
           <p className="lead">
             Colour appears in HookViz only where it names a phase. If you can tell the phase, you
@@ -158,7 +177,7 @@ export default function Landing() {
           </p>
           <div className="phases">
             {PHASES.map((p) => (
-              <div className="phase" key={p.key}>
+              <div className="phase" key={p.key} style={{ ['--c' as string]: PHASE_COLORS[p.key] }}>
                 <span className="tag">
                   <i style={{ background: PHASE_COLORS[p.key] }} />
                   {p.label}
@@ -169,7 +188,7 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="section wrap" id="examples">
+        <section className="section wrap reveal" id="examples">
           <h2>{catalog.length} examples, grouped by hook</h2>
           <p className="lead">
             Each one is a real component recorded under a debugger. Start with the gotchas: batching,
@@ -193,6 +212,7 @@ export default function Landing() {
       </main>
 
       <SiteFooter />
+      <Reveal />
     </div>
   );
 }

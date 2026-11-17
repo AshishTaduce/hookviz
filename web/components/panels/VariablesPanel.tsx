@@ -4,13 +4,13 @@ import { useVariables } from '@/store';
 import type { Variable } from '@/types/trace';
 
 const KIND_COLORS: Record<string, string> = {
-  number: '#5fc4a0',
-  string: '#e0b15a',
-  boolean: '#6aa6ff',
-  function: '#b99be8',
-  object: '#a1a1a6',
-  undefined: '#85858b',
-  null: '#85858b',
+  number: 'var(--phase-passive-effect)',
+  string: 'var(--phase-commit)',
+  boolean: 'var(--phase-render)',
+  function: 'var(--phase-event)',
+  object: 'var(--text-secondary)',
+  undefined: 'var(--text-muted)',
+  null: 'var(--text-muted)',
 };
 
 export default function VariablesPanel() {
@@ -63,7 +63,7 @@ function VariableRow({ variable }: { variable: Variable }) {
       </span>
 
       {/* Name */}
-      <span style={{ color: '#a1a1a6', flex: '0 0 auto' }}>{name}</span>
+      <span style={{ color: 'var(--text-secondary)', flex: '0 0 auto' }}>{name}</span>
 
       <span style={{ color: 'var(--text-muted)' }}>=</span>
 
@@ -87,7 +87,7 @@ function VariableRow({ variable }: { variable: Variable }) {
           style={{
             fontSize: '9px',
             background: 'rgba(255, 200, 0, 0.2)',
-            color: '#e0b15a',
+            color: 'var(--phase-commit)',
             borderRadius: '2px',
             padding: '0 4px',
             fontWeight: 500,

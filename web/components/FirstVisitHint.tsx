@@ -32,6 +32,7 @@ export default function FirstVisitHint() {
   return (
     <div
       role="status"
+      className="slide-in"
       style={{
         position: 'fixed',
         right: 16,

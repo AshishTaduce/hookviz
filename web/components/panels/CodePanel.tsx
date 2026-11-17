@@ -5,6 +5,7 @@ import Editor, { loader, OnMount } from '@monaco-editor/react';
 import type * as MonacoType from 'monaco-editor';
 import type { Trace, Annotation } from '@/types/trace';
 import { useCodeCursor, useStore } from '@/store';
+import { useTheme } from '@/lib/theme';
 
 // Serve Monaco from /public/monaco/vs (copied from node_modules at setup time).
 // MonacoEnvironment.getWorkerUrl must return absolute URLs — inside a Web
@@ -44,6 +45,7 @@ export default function CodePanel({ trace }: Props) {
   const cursor = useCodeCursor();
   const audience = useStore((s) => s.audience);
   const fontSize = useStore((s) => s.fontSize);
+  const theme = useTheme();
 
   const editorRef = useRef<MonacoType.editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<typeof MonacoType | null>(null);
@@ -155,26 +157,44 @@ export default function CodePanel({ trace }: Props) {
           height="100%"
           language="typescript"
           value={source}
-          theme="hookviz"
+          theme={theme === 'dark' ? 'hookviz-dark' : 'hookviz-light'}
           beforeMount={(monaco) => {
-            monaco.editor.defineTheme('hookviz', {
+            monaco.editor.defineTheme('hookviz-dark', {
               base: 'vs-dark',
               inherit: true,
               rules: [
-                { token: 'comment', foreground: '85858b' },
-                { token: 'keyword', foreground: 'b99be8' },
-                { token: 'string', foreground: 'e0b15a' },
-                { token: 'number', foreground: '5fc4a0' },
-                { token: 'type', foreground: '6aa6ff' },
+                { token: 'comment', foreground: '7a8296' },
+                { token: 'keyword', foreground: 'c58bff' },
+                { token: 'string', foreground: 'ffb547' },
+                { token: 'number', foreground: '3ddc97' },
+                { token: 'type', foreground: '6b9bff' },
               ],
               colors: {
-                'editor.background': '#141415',
-                'editor.foreground': '#ededed',
-                'editorLineNumber.foreground': '#85858b',
-                'editorLineNumber.activeForeground': '#ededed',
-                'editor.lineHighlightBackground': '#1f1f21',
-                'editorGutter.background': '#141415',
-                'scrollbarSlider.background': '#ededed22',
+                'editor.background': '#0b0d14',
+                'editor.foreground': '#eef0f5',
+                'editorLineNumber.foreground': '#7a8296',
+                'editorLineNumber.activeForeground': '#eef0f5',
+                'editor.lineHighlightBackground': '#151925',
+                'editorGutter.background': '#0b0d14',
+              },
+            });
+            monaco.editor.defineTheme('hookviz-light', {
+              base: 'vs',
+              inherit: true,
+              rules: [
+                { token: 'comment', foreground: '8a8173' },
+                { token: 'keyword', foreground: '8a3ffc' },
+                { token: 'string', foreground: 'b86e00' },
+                { token: 'number', foreground: '0a8f63' },
+                { token: 'type', foreground: '2457f5' },
+              ],
+              colors: {
+                'editor.background': '#f7f3ea',
+                'editor.foreground': '#1f1b16',
+                'editorLineNumber.foreground': '#6d6458',
+                'editorLineNumber.activeForeground': '#1f1b16',
+                'editor.lineHighlightBackground': '#f3eee2',
+                'editorGutter.background': '#f7f3ea',
               },
             });
           }}
@@ -212,20 +232,20 @@ export default function CodePanel({ trace }: Props) {
 // These add the colored left-border + background tint
 const lineHighlightStyles = `
 .hv-line-render {
-  background: rgba(59, 130, 246, 0.1) !important;
-  border-left: 3px solid #6aa6ff !important;
+  background: color-mix(in srgb, var(--phase-render) 14%, transparent) !important;
+  border-left: 3px solid var(--phase-render) !important;
 }
 .hv-line-commit {
-  background: rgba(245, 158, 11, 0.12) !important;
-  border-left: 3px solid #e0b15a !important;
+  background: color-mix(in srgb, var(--phase-commit) 14%, transparent) !important;
+  border-left: 3px solid var(--phase-commit) !important;
 }
 .hv-line-passive-effect {
-  background: rgba(34, 197, 94, 0.1) !important;
-  border-left: 3px solid #5fc4a0 !important;
+  background: color-mix(in srgb, var(--phase-passive-effect) 14%, transparent) !important;
+  border-left: 3px solid var(--phase-passive-effect) !important;
 }
 .hv-line-event {
-  background: rgba(168, 85, 247, 0.1) !important;
-  border-left: 3px solid #b99be8 !important;
+  background: color-mix(in srgb, var(--phase-event) 14%, transparent) !important;
+  border-left: 3px solid var(--phase-event) !important;
 }
 .hv-line-idle {
   background: rgba(107, 114, 128, 0.08) !important;

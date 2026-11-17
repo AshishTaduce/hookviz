@@ -3,18 +3,6 @@
    an app chrome. Colour appears only where it means a phase. */
 
 .site {
-  --bg-base: #0b0d14;
-  --bg-surface: #11141c;
-  --bg-elevated: #1a1e28;
-  --bg-hover: #151925;
-  --border: rgba(238, 240, 245, 0.08);
-  --border-strong: rgba(238, 240, 245, 0.16);
-  --text-primary: #eef0f5;
-  --text-secondary: #a3a9b8;
-  --text-muted: #7a8296;
-  --accent: #eef0f5;
-  --accent-contrast: #0b0d14;
-
   min-height: 100dvh;
   background: var(--bg-base);
   color: var(--text-primary);
@@ -24,8 +12,9 @@
 .site .wrap { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
 /* Navigation */
-.site-nav { height: 64px; display: flex; align-items: center; }
-.site-nav .wrap { display: flex; align-items: center; gap: 24px; }
+.site-nav { position: relative; }
+.site-nav .wrap { height: 64px; }
+.site-nav .wrap { display: flex; align-items: center; gap: 20px; }
 .site-nav .logo { font-size: 17px; font-weight: 500; color: var(--text-primary); text-decoration: none; margin-right: auto; }
 .site-nav a.link { color: var(--text-secondary); font-size: 14px; text-decoration: none; transition: color 150ms var(--ease); }
 .site-nav a.link:hover { color: var(--text-primary); }
@@ -34,7 +23,7 @@
 /* Hero */
 .site .hero.wrap { padding-top: 96px; }
 .hero h1 {
-  max-width: 14ch;
+  max-width: 16ch;
   font-size: clamp(40px, 7vw, 68px);
   font-weight: 500;
   line-height: 1.05;
@@ -42,7 +31,7 @@
 }
 .hero .sub {
   max-width: 36rem;
-  margin-top: 24px;
+  margin-top: 40px;
   font-size: 19px;
   line-height: 28px;
   color: var(--text-secondary);
@@ -58,6 +47,7 @@
   border-radius: 16px 16px 0 0;
   background: var(--bg-surface);
   overflow: hidden;
+  box-shadow: var(--shadow);
 }
 .view-bar {
   display: flex; align-items: center; gap: 12px;
@@ -70,8 +60,9 @@
 .code { padding: 16px 0; border-right: 1px solid var(--border); font-family: var(--mono); font-size: 13px; line-height: 24px; }
 .code .ln { display: grid; grid-template-columns: 48px 1fr; color: var(--text-secondary); white-space: pre; overflow: hidden; }
 .code .ln > span:first-child { padding-right: 16px; text-align: right; color: var(--text-muted); }
-.code .ln.on { background: rgba(224, 177, 90, 0.1); box-shadow: inset 2px 0 0 var(--phase-commit); color: var(--text-primary); }
+.code .ln.on { background: color-mix(in srgb, var(--phase-commit) 16%, transparent); box-shadow: inset 3px 0 0 var(--phase-commit); color: var(--text-primary); }
 .code .ln.on > span:first-child { color: var(--phase-commit); }
+.code code, .note code { color: var(--accent-text); }
 .inspect { padding: 16px 20px; display: flex; flex-direction: column; gap: 20px; }
 .inspect h3 { margin-bottom: 8px; font-size: 12px; font-weight: 500; color: var(--text-muted); }
 .inspect .row { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; font-family: var(--mono); font-size: 13px; color: var(--text-secondary); }
@@ -97,20 +88,23 @@
 .panels dd { color: var(--text-secondary); font-size: 15px; line-height: 22px; max-width: 44rem; }
 
 .phases { margin-top: 40px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.phase { padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-surface); }
+.phase { transition: transform 200ms var(--ease), border-color 200ms var(--ease); --c: var(--phase-render); padding: 20px; border: 1px solid var(--border); border-top: 3px solid var(--c); border-radius: 12px; background: color-mix(in srgb, var(--c) 7%, var(--bg-surface)); }
+.phase .tag { color: var(--c); }
 .phase .tag { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 13px; }
-.phase .tag i { width: 8px; height: 8px; border-radius: 2px; }
+.phase .tag i { width: 8px; height: 8px; border-radius: 2px; background: var(--c); }
 .phase p { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--text-secondary); }
 
 .examples { margin-top: 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 24px; }
 .examples h3 { display: flex; justify-content: space-between; padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 13px; font-weight: 400; }
 .examples h3 span { color: var(--text-muted); }
 .examples a { display: block; padding: 6px 0; color: var(--text-secondary); font-size: 14px; line-height: 20px; text-decoration: none; transition: color 150ms var(--ease); }
-.examples a:hover { color: var(--text-primary); }
+.examples a:hover { color: var(--accent-text); }
+.examples h3 { color: var(--text-primary); }
 
 .foot { margin-top: 128px; padding: 32px 0 48px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 13px; }
 .foot .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .foot a { color: var(--text-secondary); text-decoration: none; }
+.foot a:hover { color: var(--accent-text); }
 .foot a:hover { color: var(--text-primary); }
 .foot .r { margin-left: auto; }
 
@@ -121,6 +115,9 @@
 .guide p, .guide li { margin-top: 12px; color: var(--text-secondary); font-size: 16px; line-height: 26px; }
 .guide ol, .guide ul { padding-left: 20px; }
 .guide li { margin-top: 8px; }
+.guide a { color: var(--accent-text); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.guide a:hover { color: var(--accent-hover); }
+.guide code { font-family: var(--mono); font-size: 14px; color: var(--text-primary); }
 .guide strong { color: var(--text-primary); font-weight: 500; }
 .guide .keys { display: grid; grid-template-columns: 96px 1fr; gap: 12px 16px; margin-top: 16px; align-items: center; color: var(--text-secondary); font-size: 15px; }
 
@@ -134,3 +131,15 @@
   .site .section.wrap { padding-top: 80px; }
   .site-nav a.link { display: none; }
 }
+
+.phase:hover { transform: translateY(-3px); }
+.view { transition: transform 300ms var(--ease); }
+
+/* Hand-drawn underline: a lime marker pass and a thin ink pen pass */
+.hero h1 em { position: relative; display: inline-block; font-style: normal; }
+.scribble { position: absolute; left: -2%; top: 88%; width: 104%; height: auto; overflow: visible; pointer-events: none; }
+.scribble path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 700ms var(--ease) forwards; }
+.scribble .marker { stroke: var(--accent); stroke-width: 9; opacity: 0.95; animation-delay: 700ms; }
+.scribble .pen { stroke: var(--text-primary); stroke-width: 2.2; animation-delay: 950ms; animation-duration: 600ms; }
+.scribble .flick { stroke: var(--text-primary); stroke-width: 2.2; animation-delay: 1500ms; animation-duration: 250ms; }
+@keyframes draw { to { stroke-dashoffset: 0; } }

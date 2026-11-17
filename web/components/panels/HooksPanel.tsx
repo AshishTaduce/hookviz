@@ -66,13 +66,13 @@ function HookRow({ hook }: { hook: HookSnapshot }) {
             ←
           </span>
         )}
-        <span style={{ color: '#6aa6ff', fontWeight: 500 }}>{type}</span>
+        <span style={{ color: 'var(--phase-render)', fontWeight: 500 }}>{type}</span>
         {changed && (
           <span
             style={{
               fontSize: '9px',
               background: 'rgba(255, 200, 0, 0.2)',
-              color: '#e0b15a',
+              color: 'var(--phase-commit)',
               borderRadius: '2px',
               padding: '0 4px',
               fontWeight: 500,
@@ -87,14 +87,14 @@ function HookRow({ hook }: { hook: HookSnapshot }) {
       {/* Memoized value */}
       <div style={{ paddingLeft: '26px', color: 'var(--text-secondary)' }}>
         <span style={{ color: 'var(--text-muted)' }}>memoized: </span>
-        <span style={{ color: '#ededed' }}>{memoized}</span>
+        <span style={{ color: 'var(--text-primary)' }}>{memoized}</span>
       </div>
 
       {/* Queue (only if non-empty) */}
       {queue.length > 0 && (
         <div style={{ paddingLeft: '26px' }}>
           <span style={{ color: 'var(--text-muted)' }}>queue: </span>
-          <span style={{ color: '#e0b15a' }}>[{queue.join(', ')}]</span>
+          <span style={{ color: 'var(--phase-commit)' }}>[{queue.join(', ')}]</span>
         </div>
       )}
 
@@ -102,7 +102,7 @@ function HookRow({ hook }: { hook: HookSnapshot }) {
       {deps !== null && (
         <div style={{ paddingLeft: '26px' }}>
           <span style={{ color: 'var(--text-muted)' }}>deps: </span>
-          <span style={{ color: '#a1a1a6' }}>[{deps.join(', ')}]</span>
+          <span style={{ color: 'var(--text-secondary)' }}>[{deps.join(', ')}]</span>
         </div>
       )}
     </div>

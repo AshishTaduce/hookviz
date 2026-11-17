@@ -1,8 +1,21 @@
 import Link from 'next/link';
+import ThemeToggle from '@/components/ThemeToggle';
+
+export function Stripe() {
+  return (
+    <div className="stripe" aria-hidden="true">
+      <i />
+      <i />
+      <i />
+      <i />
+    </div>
+  );
+}
 
 export function SiteNav() {
   return (
     <header className="site-nav">
+      <Stripe />
       <div className="wrap">
         <Link className="logo" href="/">
           HookViz
@@ -13,7 +26,8 @@ export function SiteNav() {
         <Link className="link" href="/guide">
           Guide
         </Link>
-        <Link className="btn" href="/usestate-batching">
+        <ThemeToggle />
+        <Link className="btn btn-primary" href="/usestate-batching">
           Open the player
         </Link>
       </div>

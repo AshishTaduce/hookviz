@@ -93,6 +93,7 @@ export default function BreadcrumbPopover() {
   return (
     <div
       ref={popoverRef}
+      className="pop-in"
       style={{
         position: 'fixed',
         top: 'var(--nav-height)',
