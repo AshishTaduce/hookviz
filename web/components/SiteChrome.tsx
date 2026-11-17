@@ -42,6 +42,9 @@ export function SiteFooter() {
       <div className="wrap">
         <Logo size={20} />
         <span>Traces are recorded at build time, so every visit replays the same run.</span>
+        <a href="https://github.com/AshishTaduce/hookviz/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">
+          Want to contribute? Add an example
+        </a>
         <a className="r" href="https://ashishtaduce.co.in">
           Built by Ashish Taduce
         </a>

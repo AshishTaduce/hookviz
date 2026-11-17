@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "predev": "rm -rf .next && node scripts/copy-monaco.mjs",
+    "predev": "rm -rf .next && node scripts/copy-monaco.mjs && tsx lib/generate-catalog.ts",
     "dev": "next dev",
     "prebuild": "rm -rf .next && node scripts/copy-monaco.mjs && tsx lib/generate-catalog.ts",
     "build": "next build",

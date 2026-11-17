@@ -8,7 +8,10 @@
   ],
   "scripts": {
     "record": "npm run record --workspace=recorder --",
-    "record:all": "npm run record:all --workspace=recorder"
+    "record:all": "npm run record:all --workspace=recorder",
+    "check:examples": "node scripts/check-examples.mjs",
+    "verify:traces": "node scripts/verify-traces.mjs",
+    "check": "npm run check:examples && npm run verify:traces"
   },
   "allowScripts": {
     "esbuild@0.24.2": true,

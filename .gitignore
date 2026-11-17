@@ -3,3 +3,6 @@ recorder/.build/
 *.log
 .DS_Store
 .rei/
+
+# Generated from recorder/out by web/lib/generate-catalog.ts (predev and prebuild)
+web/lib/catalog.ts

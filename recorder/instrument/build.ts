@@ -5,7 +5,8 @@ import path from 'node:path';
 export const RECORDER_ROOT = path.resolve(import.meta.dirname, '..');
 export const BUILD_DIR = path.join(RECORDER_ROOT, '.build');
 export const EXAMPLES_DIR = path.join(RECORDER_ROOT, 'examples');
-export const OUT_DIR = path.join(RECORDER_ROOT, 'out');
+// HOOKVIZ_OUT_DIR lets scripts/verify-traces.mjs record into a temp folder and compare, without touching recorder/out.
+export const OUT_DIR = process.env.HOOKVIZ_OUT_DIR ? path.resolve(process.env.HOOKVIZ_OUT_DIR) : path.join(RECORDER_ROOT, 'out');
 
 /** Everything React needs at runtime stays external so the example keeps its own line numbers. */
 const RUNTIME_EXTERNALS = ['react', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'react-dom', 'react-dom/client', 'jsdom'];

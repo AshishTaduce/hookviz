@@ -1,0 +1,69 @@
+name: CI
+
+# Runs on pull requests, including ones from forks. It uses `pull_request`
+# (not `pull_request_target`), so fork code runs with a read-only token and no
+# access to repository secrets. Do not change this to pull_request_target.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  examples:
+    name: Check examples and traces
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Static example rules
+        run: npm run check:examples
+      - name: Re-record and compare traces
+        run: npm run verify:traces
+
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w web
+
+  guard:
+    name: Flag sensitive file changes
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Warn when maintainer-owned files change
+        run: |
+          changed=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          sensitive=$(echo "$changed" | grep -E '^(\.github/|scripts/|package(-lock)?\.json$|recorder/(package\.json|instrument/)|web/package\.json)' || true)
+          if [ -n "$sensitive" ]; then
+            echo "::warning title=Maintainer review needed::This pull request changes files that affect how examples run or how CI works:"
+            echo "$sensitive" | while read -r f; do echo "::warning file=$f::Changes here need a careful maintainer review"; done
+          fi
